@@ -1,0 +1,357 @@
+Deepwater Brand Guidelines
+1. Brand Overview
+
+Brand Name: Deepwater
+Industry: AI Systems & Automation
+Brand Archetype: The Strategic Operator
+
+Brand Meaning
+
+Deepwater represents power beneath the surface.
+Like deep ocean waters where powerful forces move quietly, Deepwater builds intelligent AI automation systems that operate efficiently and invisibly beneath the surface of businesses.
+
+Brand Personality
+
+Intelligent
+
+Strategic
+
+Calm but powerful
+
+Precise
+
+Technical
+
+Minimalist
+
+Deepwater communicates strength without noise.
+
+2. Logo System
+Primary Logo
+
+The Deepwater logo consists of two elements:
+
+Shark emblem
+
+Deepwater wordmark
+
+The shark symbolizes:
+
+precision
+
+strength
+
+focus
+
+dominance in deep environments
+
+The clean wordmark reinforces a modern AI / technology company identity.
+
+Logo Variations
+Primary Version
+
+Red shark icon + white wordmark on dark background.
+
+Used for:
+
+website headers
+
+presentations
+
+product branding
+
+Icon Only
+
+The shark symbol can be used independently for:
+
+favicon
+
+social media avatar
+
+app icon
+
+product branding
+
+Monochrome Version
+
+For limited use:
+
+all white
+
+all black
+
+Used in:
+
+print
+
+embossing
+
+merchandise
+
+3. Color System
+
+The Deepwater palette reflects power, depth, and precision technology.
+
+Primary Colors
+Deepwater Red
+
+Used for emphasis and iconography.
+
+HEX
+
+#FF2A2A
+
+RGB
+
+255, 42, 42
+
+Meaning:
+
+strength
+
+energy
+
+authority
+
+Deepwater Black
+
+Main background color.
+
+HEX
+
+#0A0A0A
+
+Meaning:
+
+depth
+
+intelligence
+
+sophistication
+
+Graphite Dark
+
+Used for gradients and UI elements.
+
+HEX
+
+#1A1A1A
+Neutral Colors
+White
+
+Used for typography.
+
+HEX
+
+#FFFFFF
+Light Grey
+
+Used for secondary UI text.
+
+HEX
+
+#9A9A9A
+Color Ratio
+
+Recommended usage:
+
+70% dark tones
+
+20% neutral greys
+
+10% Deepwater red
+
+The red should be used strategically as an accent, not the dominant background.
+
+4. Typography
+
+The typography should feel modern, minimal, and technical.
+
+Primary Font (Headings)
+
+Recommended fonts:
+
+Sora
+
+Space Grotesk
+
+Eurostile
+
+Orbitron
+
+Characteristics:
+
+geometric
+
+futuristic
+
+strong readability
+
+Secondary Font (Body)
+
+Recommended fonts:
+
+Inter
+
+Manrope
+
+Roboto
+
+These maintain clean UI readability.
+
+5. Iconography
+
+Icon design should follow these principles:
+
+minimal
+
+thin line icons
+
+geometric
+
+modern tech aesthetic
+
+Icons should relate to:
+
+AI systems
+
+automation
+
+network architecture
+
+infrastructure
+
+workflows
+
+Avoid:
+
+cartoon icons
+
+overly detailed illustrations
+
+6. Visual Style
+
+Deepwater visuals should evoke:
+
+deep ocean
+
+quiet power
+
+hidden intelligence
+
+technical infrastructure
+
+Common visual elements:
+
+dark gradients
+
+glowing highlights
+
+data flow lines
+
+network grids
+
+subtle motion graphics
+
+7. Photography / Illustration Style
+
+Images should feel:
+
+cinematic
+
+minimal
+
+high contrast
+
+technological
+
+Preferred imagery:
+
+ocean depths
+
+underwater environments
+
+abstract technology visuals
+
+system networks
+
+AI infrastructure graphics
+
+Avoid:
+
+stock corporate photos
+
+overly bright visuals
+
+playful cartoon imagery
+
+8. UI / Website Style
+
+Deepwater’s interface should reflect a premium AI technology brand.
+
+Design characteristics:
+
+dark UI
+
+subtle red highlights
+
+minimal layout
+
+strong typography
+
+large negative space
+
+Example structure:
+
+Hero
+Services
+Systems
+Automation Solutions
+About
+Contact
+
+9. Tone of Voice
+
+Deepwater communication should be:
+
+clear
+
+confident
+
+technical
+
+concise
+
+Example tone:
+
+❌ Weak tone
+"We build cool AI automations."
+
+✅ Deepwater tone
+"Deepwater engineers intelligent automation systems designed to operate beneath the surface of modern businesses."
+
+10. Tagline Options
+
+Primary:
+
+Automation Beneath the Surface
+
+Alternatives:
+
+Intelligent Systems. Quiet Execution.
+
+Deep Intelligence. Powerful Automation.
+
+Precision Automation Infrastructure.
+
+Engineering the Future of AI Systems.
+
+11. Brand Mission
+
+Deepwater builds AI automation infrastructure that allows businesses to operate with greater speed, intelligence, and efficiency.
+
+Our mission is to engineer systems that quietly power the next generation of organizations.
+
+12. Brand Vision
+
+To become a global leader in AI-driven automation systems and intelligent infrastructure.

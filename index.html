@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deepwater — Automation Beneath the Surface</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #FF2A2A;
+      --red-dim: rgba(255,42,42,0.12);
+      --red-border: rgba(255,42,42,0.22);
+      --black: #0A0A0A;
+      --graphite: #1A1A1A;
+      --grey: #9A9A9A;
+      --white: #FFFFFF;
+      --red-glow: 0 0 24px rgba(255,42,42,0.5), 0 0 72px rgba(255,42,42,0.15);
+      --red-glow-sm: 0 0 14px rgba(255,42,42,0.4);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--black);
+      color: var(--white);
+      font-family: 'Manrope', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Canvas ── */
+    #neural-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: #0A0A0A;
+      border-bottom: 1px solid rgba(255,42,42,0.08);
+    }
+
+    .nav-logo { height: 64px; width: auto; display: block; opacity: 0; transition: opacity 0.3s ease; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--grey);
+      text-decoration: none;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-cta {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--red);
+      background: transparent;
+      border: 1px solid var(--red-border);
+      padding: 0.6rem 1.5rem;
+      text-decoration: none;
+      transition: background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, transform 0.15s ease;
+    }
+
+    .nav-cta:hover {
+      background: var(--red);
+      color: var(--white);
+      box-shadow: var(--red-glow-sm);
+    }
+
+    .nav-cta:active { transform: scale(0.97); }
+
+    /* ── Hero ── */
+    #hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10rem 2rem 6rem;
+      overflow: hidden;
+    }
+
+    .hero-video-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .hero-video-bg video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.18;
+      filter: saturate(0.3) contrast(1.2);
+    }
+
+    .hero-video-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,42,42,0.06) 0%, transparent 70%),
+        linear-gradient(to bottom, rgba(10,10,10,0.5) 0%, rgba(10,10,10,0.2) 50%, rgba(10,10,10,0.85) 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: var(--red-dim);
+      border: 1px solid var(--red-border);
+      color: var(--red);
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.45rem 1.1rem;
+      margin-bottom: 2.5rem;
+      animation: fadeDown 0.8s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    .badge-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 6px var(--red);
+      animation: blink 2.2s ease infinite;
+    }
+
+    .hero-headline {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: clamp(2.8rem, 8vw, 7rem);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.75rem;
+    }
+
+    .hero-line { display: block; color: var(--white); }
+
+    .hero-line-accent {
+      display: block;
+      color: var(--red);
+      text-shadow: var(--red-glow);
+    }
+
+    .hero-line:nth-child(1) { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s both; }
+    .hero-line:nth-child(2) { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.12s both; }
+    .hero-line-accent      { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.2s both; }
+
+    .hero-sub {
+      max-width: 520px;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.85;
+      color: var(--grey);
+      margin-bottom: 3rem;
+      animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.3s both;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+      animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.4s both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--red);
+      color: var(--white);
+      font-family: 'Orbitron', monospace;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.95rem 2.4rem;
+      text-decoration: none;
+      transition: box-shadow 0.25s ease, transform 0.15s ease;
+      box-shadow: 0 0 32px rgba(255,42,42,0.45);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 0 56px rgba(255,42,42,0.7), 0 0 110px rgba(255,42,42,0.2);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:active { transform: translateY(0) scale(0.97); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: var(--grey);
+      font-size: 0.82rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .btn-ghost:hover { color: var(--white); }
+    .btn-ghost .arrow { display: inline-block; transition: transform 0.2s ease; }
+    .btn-ghost:hover .arrow { transform: translateX(4px); }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      z-index: 2;
+      animation: fadeUp 1s ease 1.4s both;
+    }
+
+    .scroll-hint span {
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(154,154,154,0.4);
+    }
+
+    .scroll-bar {
+      width: 1px;
+      height: 44px;
+      background: linear-gradient(to bottom, var(--red), transparent);
+      animation: scrollDrop 2s ease infinite;
+    }
+
+    /* ── Stats ── */
+    #stats {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(255,42,42,0.08);
+      border-bottom: 1px solid rgba(255,42,42,0.08);
+      background: rgba(26,26,26,0.6);
+      backdrop-filter: blur(10px);
+    }
+
+    .stats-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.75rem 3rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .stat {
+      text-align: center;
+      padding: 0.75rem 1rem;
+      border-right: 1px solid rgba(255,42,42,0.07);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-number {
+      font-family: 'Orbitron', monospace;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--red);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 0.55rem;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      color: var(--grey);
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* ── Section Base ── */
+    .section-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 3rem;
+    }
+
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 1.5rem;
+    }
+
+    .section-eyebrow::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--red);
+    }
+
+    .section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2rem, 4.5vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin-bottom: 1.25rem;
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--grey);
+      max-width: 520px;
+    }
+
+    /* ── Services ── */
+    #services {
+      position: relative;
+      z-index: 1;
+      padding: 9rem 0;
+    }
+
+    .services-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5px;
+      background: rgba(255,42,42,0.08);
+    }
+
+    .service-card {
+      background: var(--black);
+      padding: 2.25rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s ease;
+      cursor: default;
+    }
+
+    .service-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: transparent;
+      transition: background 0.3s ease;
+    }
+
+    .service-card:hover { background: rgba(26,26,26,0.9); }
+    .service-card:hover::after { background: var(--red); }
+
+    .service-icon {
+      width: 36px;
+      height: 36px;
+      margin-bottom: 1.25rem;
+      color: var(--red);
+      opacity: 0.9;
+    }
+
+    .service-name {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+
+    .service-desc {
+      font-size: 0.84rem;
+      line-height: 1.75;
+      color: var(--grey);
+    }
+
+    /* ── Video Reel Section ── */
+    #reel {
+      position: relative;
+      z-index: 1;
+      padding: 9rem 0;
+      overflow: hidden;
+    }
+
+    .reel-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .reel-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 2px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 3rem;
+    }
+
+    .reel-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2px;
+      max-width: 1200px;
+      margin: 2px auto 0;
+      padding: 0 3rem;
+    }
+
+    .reel-strip .reel-item video { min-height: 260px; }
+
+    .reel-item {
+      position: relative;
+      overflow: hidden;
+      background: var(--graphite);
+      cursor: pointer;
+    }
+
+    .reel-item:nth-child(1) {
+      grid-row: span 2;
+    }
+
+    .reel-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.7s cubic-bezier(0.16,1,0.3,1), filter 0.4s ease;
+      filter: saturate(0.7) contrast(1.1);
+    }
+
+    .reel-item:nth-child(1) video { min-height: 600px; }
+    .reel-item:nth-child(2) video,
+    .reel-item:nth-child(3) video { min-height: 295px; }
+
+    .reel-item:hover video {
+      transform: scale(1.03);
+      filter: saturate(1) contrast(1.1);
+    }
+
+    .reel-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.15) 50%, transparent 100%);
+      transition: opacity 0.3s ease;
+    }
+
+    .reel-item:hover .reel-overlay {
+      background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.3) 60%, rgba(255,42,42,0.04) 100%);
+    }
+
+    .reel-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 2rem 1.75rem 1.75rem;
+      z-index: 2;
+    }
+
+    .reel-tag {
+      display: inline-block;
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      border: 1px solid var(--red-border);
+      padding: 0.25rem 0.65rem;
+      margin-bottom: 0.6rem;
+      background: rgba(255,42,42,0.05);
+    }
+
+    .reel-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    /* Play button */
+    .reel-play {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 52px;
+      height: 52px;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease, border-color 0.3s ease, transform 0.3s cubic-bezier(0.16,1,0.3,1);
+      z-index: 3;
+    }
+
+    .reel-item:hover .reel-play {
+      opacity: 1;
+      border-color: var(--red);
+      box-shadow: 0 0 20px rgba(255,42,42,0.3);
+    }
+
+    .reel-play svg { fill: var(--white); width: 16px; height: 16px; margin-left: 3px; }
+
+    /* ── Principle / How We Work ── */
+    #principle {
+      position: relative;
+      z-index: 1;
+      padding: 9rem 0;
+    }
+
+    .principle-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .principle-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .step {
+      display: flex;
+      gap: 1.5rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.2s ease;
+    }
+
+    .step:first-child { border-top: 1px solid rgba(255,255,255,0.05); }
+
+    .step-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--red);
+      letter-spacing: 0.1em;
+      min-width: 28px;
+      padding-top: 0.2rem;
+      opacity: 0.7;
+    }
+
+    .step-body {}
+
+    .step-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .step-desc {
+      font-size: 0.88rem;
+      line-height: 1.75;
+      color: var(--grey);
+    }
+
+    .principle-visual {
+      position: relative;
+      aspect-ratio: 4/5;
+      background: var(--graphite);
+      overflow: hidden;
+    }
+
+    .principle-visual video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.5) contrast(1.15);
+      opacity: 0.85;
+    }
+
+    .principle-visual-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255,42,42,0.06) 0%, transparent 60%),
+        linear-gradient(to bottom, transparent 50%, rgba(10,10,10,0.7) 100%);
+    }
+
+    .principle-visual-border {
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(255,42,42,0.12);
+      pointer-events: none;
+    }
+
+    .principle-metric {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      z-index: 2;
+      background: rgba(10,10,10,0.75);
+      border: 1px solid rgba(255,42,42,0.15);
+      backdrop-filter: blur(10px);
+      padding: 1rem 1.5rem;
+    }
+
+    .principle-metric-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--red);
+      letter-spacing: -0.02em;
+    }
+
+    .principle-metric-label {
+      font-size: 0.68rem;
+      color: var(--grey);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* ── Marquee ── */
+    #marquee {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      border-top: 1px solid rgba(255,42,42,0.07);
+      border-bottom: 1px solid rgba(255,42,42,0.07);
+      padding: 1.4rem 0;
+      background: rgba(26,26,26,0.4);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 0;
+      animation: marquee 28s linear infinite;
+      white-space: nowrap;
+    }
+
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0 3rem;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(154,154,154,0.45);
+      flex-shrink: 0;
+    }
+
+    .marquee-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--red);
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+
+    /* ── CTA ── */
+    #cta {
+      position: relative;
+      z-index: 1;
+      padding: 9rem 0;
+      overflow: hidden;
+    }
+
+    .cta-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 5rem;
+      text-align: center;
+      position: relative;
+      background: var(--graphite);
+      border: 1px solid rgba(255,42,42,0.12);
+    }
+
+    .cta-glow {
+      position: absolute;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 300px;
+      background: radial-gradient(ellipse at center, rgba(255,42,42,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin-bottom: 1.25rem;
+      line-height: 1.1;
+    }
+
+    .cta-sub {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--grey);
+      max-width: 480px;
+      margin: 0 auto 2.75rem;
+    }
+
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    .cta-corner {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-color: var(--red);
+      border-style: solid;
+      opacity: 0.4;
+    }
+
+    .cta-corner-tl { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+    .cta-corner-tr { top: -1px; right: -1px; border-width: 1px 1px 0 0; }
+    .cta-corner-bl { bottom: -1px; left: -1px; border-width: 0 0 1px 1px; }
+    .cta-corner-br { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(255,42,42,0.07);
+      padding: 3.5rem 3rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 3rem;
+    }
+
+    .footer-brand {}
+    .footer-logo { height: 52px; width: auto; margin-bottom: 0.9rem; display: block; opacity: 0; transition: opacity 0.3s ease; }
+
+    .footer-tagline {
+      font-size: 0.76rem;
+      color: rgba(154,154,154,0.5);
+      letter-spacing: 0.06em;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 4rem;
+    }
+
+    .footer-col-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 1rem;
+    }
+
+    .footer-col-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .footer-col-links a {
+      font-size: 0.82rem;
+      color: rgba(154,154,154,0.5);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-col-links a:hover { color: var(--white); }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 2.5rem auto 0;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-copy {
+      font-size: 0.72rem;
+      color: rgba(154,154,154,0.3);
+      letter-spacing: 0.06em;
+    }
+
+    .footer-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.65rem;
+      color: rgba(154,154,154,0.3);
+      letter-spacing: 0.08em;
+    }
+
+    .footer-status-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 6px var(--red);
+      animation: blink 2.5s ease infinite;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+
+    @keyframes scrollDrop {
+      0%   { opacity: 0; transform: scaleY(0); transform-origin: top; }
+      40%  { opacity: 1; }
+      100% { opacity: 0; transform: scaleY(1); transform-origin: top; }
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── Reveal on scroll ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ── Responsive ── */
+    /* ── Hamburger ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 300;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--white);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform-origin: center;
+    }
+
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* Mobile nav overlay */
+    .nav-mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      top: 72px;
+      z-index: 150;
+      background: rgba(10,10,10,0.98);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-mobile-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .nav-mobile-overlay a {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .nav-mobile-overlay a:hover { color: var(--red); }
+
+    .nav-mobile-overlay .mobile-cta {
+      font-size: 0.7rem;
+      background: var(--red);
+      color: var(--white);
+      padding: 0.9rem 2.5rem;
+      letter-spacing: 0.14em;
+      margin-top: 1rem;
+      box-shadow: 0 0 32px rgba(255,42,42,0.4);
+    }
+
+    /* ── Tablet (≤1024px) ── */
+    @media (max-width: 1024px) {
+      .section-wrap { padding: 0 2rem; }
+      nav { padding: 1.1rem 2rem; }
+      #services, #reel, #principle, #cta { padding: 7rem 0; }
+      .services-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .services-grid { grid-template-columns: 1fr 1fr; }
+      .principle-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .principle-visual { aspect-ratio: 16/9; }
+      .reel-grid { padding: 0 2rem; }
+      .reel-strip { padding: 0 2rem; grid-template-columns: 1fr 1fr; }
+      .cta-inner { padding: 4rem 3rem; }
+      .stats-grid { padding: 2.5rem 2rem; }
+      .footer-links { gap: 3rem; }
+    }
+
+    /* ── Mobile (≤768px) ── */
+    @media (max-width: 768px) {
+      /* Nav */
+      nav { padding: 1rem 1.5rem; }
+      .nav-logo { height: 48px; }
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-mobile-overlay { display: flex; }
+
+      /* Hero */
+      #hero { padding: 7rem 1.5rem 4rem; }
+      .hero-actions { flex-direction: column; align-items: center; gap: 1.25rem; width: 100%; }
+      .btn-primary { width: 100%; justify-content: center; }
+
+      /* Stats */
+      .stats-grid { grid-template-columns: repeat(2, 1fr); padding: 2rem 1.5rem; }
+      .stat { border-right: none; border-bottom: 1px solid rgba(255,42,42,0.07); }
+      .stat:nth-child(3), .stat:nth-child(4) { border-bottom: none; }
+
+      /* Sections */
+      #services, #reel, #principle, #cta { padding: 5rem 0; }
+      .section-wrap { padding: 0 1.5rem; }
+
+      /* Services */
+      .services-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+      .services-grid { grid-template-columns: 1fr 1fr; }
+
+      /* Reel */
+      .reel-grid { grid-template-columns: 1fr; padding: 0 1.5rem; }
+      .reel-item:nth-child(1) { grid-row: span 1; }
+      .reel-strip { grid-template-columns: 1fr; padding: 0 1.5rem; }
+      .reel-header { padding: 0 1.5rem; }
+      .reel-item video, .reel-item:nth-child(1) video { min-height: 220px; }
+      .reel-strip .reel-item video { min-height: 200px; }
+
+      /* Principle */
+      .principle-layout { grid-template-columns: 1fr; }
+      .principle-visual { aspect-ratio: 4/3; }
+
+      /* CTA */
+      .cta-inner { padding: 3rem 1.5rem; }
+      .cta-actions { flex-direction: column; align-items: center; gap: 1.25rem; }
+      .cta-actions .btn-primary { width: 100%; justify-content: center; }
+
+      /* Footer */
+      .footer-inner { flex-direction: column; gap: 2rem; }
+      .footer-links { flex-direction: column; gap: 2rem; }
+      footer { padding: 3rem 1.5rem 1.5rem; }
+      .footer-bottom { flex-direction: column; gap: 0.75rem; text-align: center; }
+    }
+
+    /* ── Small mobile (≤480px) ── */
+    @media (max-width: 480px) {
+      nav { padding: 0.9rem 1.25rem; }
+      .nav-logo { height: 40px; }
+      .nav-mobile-overlay { top: 64px; }
+
+      #hero { padding: 6rem 1.25rem 3.5rem; }
+      .hero-sub { font-size: 0.9rem; }
+
+      .stats-grid { padding: 1.5rem 1.25rem; }
+      .stat-number { font-size: 1.75rem; }
+
+      .section-wrap { padding: 0 1.25rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      .service-card { padding: 1.75rem 1.5rem; }
+
+      .reel-grid { padding: 0; }
+      .reel-strip { padding: 0; }
+      .reel-header { padding: 0 1.25rem; }
+
+      .cta-inner { padding: 2.5rem 1.25rem; }
+      .cta-title { font-size: 1.75rem; }
+
+      footer { padding: 2.5rem 1.25rem 1.25rem; }
+      .section-title { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="neural-canvas"></canvas>
+
+  <!-- ── Navigation ── -->
+  <nav>
+    <img src="brand_assests/red trans.png" alt="Deepwater" class="nav-logo">
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#reel">Work</a></li>
+      <li><a href="#principle">Process</a></li>
+      <li><a href="#cta">Contact</a></li>
+    </ul>
+    <a href="#cta" class="nav-cta">Deploy Now</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav-mobile-overlay" id="mobileMenu">
+    <a href="#services" class="mobile-link">Services</a>
+    <a href="#reel" class="mobile-link">Work</a>
+    <a href="#principle" class="mobile-link">Process</a>
+    <a href="#cta" class="mobile-link">Contact</a>
+    <a href="#cta" class="nav-cta mobile-cta">Deploy Now</a>
+  </div>
+
+  <!-- ── Hero ── -->
+  <section id="hero">
+    <div class="hero-video-bg">
+      <video autoplay muted loop playsinline>
+        <source src="brand_assests/videos/cf0e7a1f-d8c9-40ff-862b-4c7f9ac8799b_hd.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-video-overlay"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        AI Automation Infrastructure
+      </div>
+
+      <h1 class="hero-headline">
+        <span class="hero-line">Intelligent</span>
+        <span class="hero-line">Systems.</span>
+        <span class="hero-line-accent">Quiet Execution.</span>
+      </h1>
+
+      <p class="hero-sub">Deepwater engineers AI automation infrastructure that operates beneath the surface of modern businesses — precise, invisible, and relentless.</p>
+
+      <div class="hero-actions">
+        <a href="#cta" class="btn-primary">
+          Engage Deepwater
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#reel" class="btn-ghost">
+          See our work <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-bar"></div>
+    </div>
+  </section>
+
+  <!-- ── Stats ── -->
+  <div id="stats">
+    <div class="stats-grid">
+      <div class="stat reveal">
+        <div class="stat-number">98%</div>
+        <div class="stat-label">Process Automation Rate</div>
+      </div>
+      <div class="stat reveal reveal-delay-1">
+        <div class="stat-number">10×</div>
+        <div class="stat-label">Operational Throughput</div>
+      </div>
+      <div class="stat reveal reveal-delay-2">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">System Uptime</div>
+      </div>
+      <div class="stat reveal reveal-delay-3">
+        <div class="stat-number">&lt;72h</div>
+        <div class="stat-label">Deployment Window</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Services ── -->
+  <section id="services">
+    <div class="section-wrap">
+      <div class="services-layout">
+        <div>
+          <div class="section-eyebrow reveal">Automation Infrastructure</div>
+          <h2 class="section-title reveal reveal-delay-1">Built to<br>Operate<br>at Depth</h2>
+          <p class="section-sub reveal reveal-delay-2">Purpose-built AI systems that integrate seamlessly into your existing infrastructure and execute without friction.</p>
+        </div>
+        <div class="services-grid reveal reveal-delay-1">
+          <div class="service-card">
+            <svg class="service-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.3">
+              <rect x="4" y="8" width="28" height="20" rx="1"/>
+              <path d="M12 8V4M24 8V4M4 16h28"/>
+              <circle cx="12" cy="22" r="1.5" fill="currentColor"/>
+              <circle cx="18" cy="22" r="1.5" fill="currentColor"/>
+              <circle cx="24" cy="22" r="1.5" fill="currentColor"/>
+            </svg>
+            <div class="service-name">Workflow Automation</div>
+            <div class="service-desc">End-to-end process automation that eliminates manual bottlenecks and scales with demand.</div>
+          </div>
+          <div class="service-card">
+            <svg class="service-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.3">
+              <circle cx="18" cy="18" r="6"/>
+              <circle cx="6" cy="10" r="2.5"/>
+              <circle cx="30" cy="10" r="2.5"/>
+              <circle cx="6" cy="26" r="2.5"/>
+              <circle cx="30" cy="26" r="2.5"/>
+              <path d="M8 11l7 5M28 11l-7 5M8 25l7-5M28 25l-7-5"/>
+            </svg>
+            <div class="service-name">AI Agent Networks</div>
+            <div class="service-desc">Interconnected AI agents that coordinate tasks, decisions, and outputs across your entire operation.</div>
+          </div>
+          <div class="service-card">
+            <svg class="service-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M4 28L12 14l6 8 5-6 9 12"/>
+              <circle cx="12" cy="10" r="2.5"/>
+            </svg>
+            <div class="service-name">Data Intelligence</div>
+            <div class="service-desc">Real-time data pipelines that surface insights and trigger automated responses at machine speed.</div>
+          </div>
+          <div class="service-card">
+            <svg class="service-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.3">
+              <rect x="10" y="4" width="16" height="20" rx="1"/>
+              <path d="M14 10h8M14 14h8M14 18h5"/>
+              <path d="M7 12v16a2 2 0 002 2h16"/>
+            </svg>
+            <div class="service-name">System Integration</div>
+            <div class="service-desc">Deep API and infrastructure integration connecting your tools into one unified intelligent system.</div>
+          </div>
+          <div class="service-card">
+            <svg class="service-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M18 4v8M18 24v8M4 18h8M24 18h8"/>
+              <circle cx="18" cy="18" r="5"/>
+              <path d="M9.5 9.5l5.7 5.7M20.8 20.8l5.7 5.7M26.5 9.5l-5.7 5.7M15.2 20.8l-5.7 5.7"/>
+            </svg>
+            <div class="service-name">LLM Deployment</div>
+            <div class="service-desc">Custom language model deployment fine-tuned for your domain, embedded directly in your workflows.</div>
+          </div>
+          <div class="service-card">
+            <svg class="service-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M18 4L4 12v12l14 8 14-8V12L18 4z"/>
+              <path d="M4 12l14 8 14-8M18 20v12"/>
+            </svg>
+            <div class="service-name">Infrastructure Ops</div>
+            <div class="service-desc">Autonomous infrastructure management — monitoring, scaling, and self-healing systems 24/7.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Marquee ── -->
+  <div id="marquee">
+    <div class="marquee-track">
+      <span class="marquee-item">Workflow Automation <span class="marquee-dot"></span></span>
+      <span class="marquee-item">AI Agent Networks <span class="marquee-dot"></span></span>
+      <span class="marquee-item">LLM Deployment <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Data Intelligence <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Infrastructure Ops <span class="marquee-dot"></span></span>
+      <span class="marquee-item">System Integration <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Process Automation <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Neural Networks <span class="marquee-dot"></span></span>
+      <!-- duplicate for seamless loop -->
+      <span class="marquee-item">Workflow Automation <span class="marquee-dot"></span></span>
+      <span class="marquee-item">AI Agent Networks <span class="marquee-dot"></span></span>
+      <span class="marquee-item">LLM Deployment <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Data Intelligence <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Infrastructure Ops <span class="marquee-dot"></span></span>
+      <span class="marquee-item">System Integration <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Process Automation <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Neural Networks <span class="marquee-dot"></span></span>
+    </div>
+  </div>
+
+  <!-- ── Video Reel ── -->
+  <section id="reel">
+    <div class="reel-header section-wrap reveal">
+      <div class="section-eyebrow" style="justify-content:center">AI in Motion</div>
+      <h2 class="section-title" style="text-align:center">Intelligence<br>Deployed</h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center">A glimpse into the systems and capabilities Deepwater builds — automation that moves as fast as the businesses it powers.</p>
+    </div>
+
+    <div class="reel-grid">
+      <!-- Video 1 — tall left panel -->
+      <div class="reel-item reveal">
+        <video autoplay muted loop playsinline>
+          <source src="brand_assests/videos/Ultra-realistic_cinematic_shot_of_a_young_woman_in_her_early_20s_1176cb07-9837-4266-b511-fff8f45eb1b1.mp4" type="video/mp4">
+        </video>
+        <div class="reel-overlay"></div>
+        <div class="reel-play">
+          <svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>
+        </div>
+        <div class="reel-label">
+          <span class="reel-tag">AI Generative</span>
+          <div class="reel-title">Visual Intelligence</div>
+        </div>
+      </div>
+
+      <!-- Video 2 — top right -->
+      <div class="reel-item reveal reveal-delay-1">
+        <video autoplay muted loop playsinline>
+          <source src="brand_assests/videos/High-fashion_Vogue_editorial_photograph,_shot_from_an_extreme_low_af601d78-3c77-42c0-b949-0ec530659bc9.mp4" type="video/mp4">
+        </video>
+        <div class="reel-overlay"></div>
+        <div class="reel-play">
+          <svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>
+        </div>
+        <div class="reel-label">
+          <span class="reel-tag">AI Creative</span>
+          <div class="reel-title">Editorial Systems</div>
+        </div>
+      </div>
+
+      <!-- Video 3 — bottom right -->
+      <div class="reel-item reveal reveal-delay-2">
+        <video autoplay muted loop playsinline>
+          <source src="brand_assests/videos/4e571bf8-70ce-4593-9205-aefbc3ec2477.mp4" type="video/mp4">
+        </video>
+        <div class="reel-overlay"></div>
+        <div class="reel-play">
+          <svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>
+        </div>
+        <div class="reel-label">
+          <span class="reel-tag">Infrastructure</span>
+          <div class="reel-title">Automation Core</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second row — 3-video strip -->
+    <div class="reel-strip">
+      <div class="reel-item reveal">
+        <video autoplay muted loop playsinline>
+          <source src="brand_assests/videos/abac6fda-86c9-4cc4-848c-b017b784de63.mp4" type="video/mp4">
+        </video>
+        <div class="reel-overlay"></div>
+        <div class="reel-play">
+          <svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>
+        </div>
+        <div class="reel-label">
+          <span class="reel-tag">AI Systems</span>
+          <div class="reel-title">Deep Intelligence</div>
+        </div>
+      </div>
+      <div class="reel-item reveal reveal-delay-1">
+        <video autoplay muted loop playsinline>
+          <source src="brand_assests/videos/Graphic_novel_panel,_close-up_of_a_wealthy_man_counting_stacks_of_2d4cb4a5-8cb6-4a1d-9480-9eb2a92a3c02.mp4" type="video/mp4">
+        </video>
+        <div class="reel-overlay"></div>
+        <div class="reel-play">
+          <svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>
+        </div>
+        <div class="reel-label">
+          <span class="reel-tag">AI Finance</span>
+          <div class="reel-title">Revenue Automation</div>
+        </div>
+      </div>
+      <div class="reel-item reveal reveal-delay-2">
+        <video autoplay muted loop playsinline>
+          <source src="brand_assests/videos/Ultra-realistic_cinematic,_captured_with_iPhone_14_Pro_Max_Og_swi_57fd8f3a-3566-4057-a70b-4d9bd1868f75.mp4" type="video/mp4">
+        </video>
+        <div class="reel-overlay"></div>
+        <div class="reel-play">
+          <svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>
+        </div>
+        <div class="reel-label">
+          <span class="reel-tag">AI Production</span>
+          <div class="reel-title">Precision Capture</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Process ── -->
+  <section id="principle">
+    <div class="section-wrap">
+      <div class="principle-layout">
+        <div>
+          <div class="section-eyebrow reveal">How We Work</div>
+          <h2 class="section-title reveal reveal-delay-1">Power<br>Beneath<br>the Surface</h2>
+          <p class="section-sub reveal reveal-delay-2" style="margin-bottom:3rem">Like the deep ocean, Deepwater's systems operate quietly — moving vast power beneath the visible surface of your business.</p>
+
+          <div class="principle-steps">
+            <div class="step reveal">
+              <span class="step-num">01</span>
+              <div class="step-body">
+                <div class="step-title">Audit & Map</div>
+                <div class="step-desc">We map your existing processes, identify automation opportunities, and define system architecture before writing a single line.</div>
+              </div>
+            </div>
+            <div class="step reveal reveal-delay-1">
+              <span class="step-num">02</span>
+              <div class="step-body">
+                <div class="step-title">Engineer & Deploy</div>
+                <div class="step-desc">Custom AI systems built precisely for your environment — deployed in under 72 hours with zero disruption to operations.</div>
+              </div>
+            </div>
+            <div class="step reveal reveal-delay-2">
+              <span class="step-num">03</span>
+              <div class="step-body">
+                <div class="step-title">Monitor & Scale</div>
+                <div class="step-desc">Continuous optimization, autonomous monitoring, and intelligent scaling — your systems get smarter over time.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="principle-visual reveal reveal-delay-1">
+          <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;filter:saturate(0.5) contrast(1.15);opacity:0.85">
+            <source src="brand_assests/videos/Ultra-realistic_wide-angle_action_shot_of_Duck_wearing_a_racing_h_6389bd7f-9e21-41fa-b5c7-191cc316cbbb.mp4" type="video/mp4">
+          </video>
+          <div class="principle-visual-overlay"></div>
+          <div class="principle-visual-border"></div>
+          <div class="principle-metric">
+            <div class="principle-metric-num">10×</div>
+            <div class="principle-metric-label">Avg. Throughput Gain</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section id="cta">
+    <div class="section-wrap">
+      <div class="cta-inner reveal">
+        <div class="cta-glow"></div>
+        <div class="cta-corner cta-corner-tl"></div>
+        <div class="cta-corner cta-corner-tr"></div>
+        <div class="cta-corner cta-corner-bl"></div>
+        <div class="cta-corner cta-corner-br"></div>
+        <div class="section-eyebrow" style="justify-content:center;margin-bottom:1.5rem">Ready to Deploy</div>
+        <h2 class="cta-title">Automate Beneath<br>the Surface</h2>
+        <p class="cta-sub">Deploy intelligent automation infrastructure that runs quietly — and scales without limits.</p>
+        <div class="cta-actions">
+          <a href="mailto:hello@deepwater.ai" class="btn-primary">
+            Start a Project
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#services" class="btn-ghost">View Services <span class="arrow">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="brand_assests/red trans.png" alt="Deepwater" class="footer-logo">
+        <div class="footer-tagline">Automation Beneath the Surface</div>
+      </div>
+      <div class="footer-links">
+        <div>
+          <div class="footer-col-title">Services</div>
+          <ul class="footer-col-links">
+            <li><a href="#services">Workflow Automation</a></li>
+            <li><a href="#services">AI Agent Networks</a></li>
+            <li><a href="#services">LLM Deployment</a></li>
+            <li><a href="#services">Infrastructure Ops</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Company</div>
+          <ul class="footer-col-links">
+            <li><a href="#principle">Process</a></li>
+            <li><a href="#reel">Work</a></li>
+            <li><a href="#cta">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Deepwater. All rights reserved.</div>
+      <div class="footer-status">
+        <span class="footer-status-dot"></span>
+        Systems Operational
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ── Neural Canvas ── */
+    const canvas = document.getElementById('neural-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, nodes = [];
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+
+    function initNodes() {
+      nodes = [];
+      const count = Math.floor((W * H) / 14000);
+      for (let i = 0; i < count; i++) {
+        nodes.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.28,
+          vy: (Math.random() - 0.5) * 0.28,
+          r: Math.random() * 1.4 + 0.6,
+          alpha: Math.random() * 0.5 + 0.15
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      const maxDist = 140;
+
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i];
+        a.x += a.vx;
+        a.y += a.vy;
+        if (a.x < 0 || a.x > W) a.vx *= -1;
+        if (a.y < 0 || a.y > H) a.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,42,42,${a.alpha})`;
+        ctx.fill();
+
+        for (let j = i + 1; j < nodes.length; j++) {
+          const b = nodes[j];
+          const dx = a.x - b.x, dy = a.y - b.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDist) {
+            const opacity = (1 - dist / maxDist) * 0.18;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = `rgba(255,42,42,${opacity})`;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    resize();
+    initNodes();
+    draw();
+    window.addEventListener('resize', () => { resize(); initNodes(); });
+
+    /* ── Scroll Reveal ── */
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    /* ── Mobile nav toggle ── */
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+    document.querySelectorAll('.mobile-link, .mobile-cta').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    /* ── Logo background removal: keep only red & white logo pixels ── */
+    (function() {
+      const imgs = document.querySelectorAll('.nav-logo, .footer-logo');
+      imgs.forEach(img => {
+        function process() {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const px = data.data;
+          for (let i = 0; i < px.length; i += 4) {
+            const r = px[i], g = px[i+1], b = px[i+2];
+            // Is this a red pixel? (shark)
+            const isRed = r > 140 && g < 80 && b < 80;
+            // Is this a white/light pixel? (wordmark text)
+            const isWhite = r > 160 && g > 160 && b > 160;
+            if (!isRed && !isWhite) {
+              // Background: scale alpha by how "logo-like" this pixel is
+              const maxCh = Math.max(r, g, b);
+              // Soft fade — brighter near-threshold pixels get partial alpha
+              const t = Math.min(1, maxCh / 160);
+              px[i+3] = Math.round(t * t * px[i+3] * 0.15);
+            }
+          }
+          ctx.putImageData(data, 0, 0);
+          img.src = canvas.toDataURL('image/png');
+          img.style.opacity = '1';
+        }
+        if (img.complete && img.naturalWidth) { process(); }
+        else { img.addEventListener('load', process); }
+      });
+    })();
+  </script>
+
+</body>
+</html>
