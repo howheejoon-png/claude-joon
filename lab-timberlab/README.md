@@ -18,11 +18,13 @@ Pages: `index.html` (home) · `projects.html` (index + home-type filter) · `pro
 
 **Positioning.** L.A.B is treated as a contemporary design-and-build practice, not a "timber" brand. The site's voice is calm, precise and specific: *"Your home, thought through."*
 
-**Visual language: the working drawing.** Warm paper (`#F4F2ED`), ink (`#161614`) and one *markup red* (`#C4432B`) used the way a red pen is used on an architect's drawing: numbers, annotations, active states, the cursor. Nothing is beige-on-wood; photography carries the warmth.
+**Visual language: the working drawing.** Neutral gallery white (`#F3F3F1`), near-black (`#0F0F0F`) and one *blueprint blue* (`#2743D9`) used the way a pen is used on an architect's drawing: numbers, annotations, active states, the cursor. Nothing is beige-on-wood; photography carries the warmth.
 
-**Typography.** Instrument Serif (display, with italics for emphasis) + Instrument Sans (body/UI) + DM Mono (labels, numbers, captions). All open-source, self-hosted via npm (no paid dependencies, no CDN calls).
+**Typography.** Archivo (variable, one family) set wide for display (`wdth` 112, weight 500, tight tracking) and at normal width for body, with DM Mono for labels, numbers and captions. Emphasis is weight and tone, not italics. All open-source, self-hosted via npm (no paid dependencies, no CDN calls).
 
-**Homepage sequence.** Brand + first project immediately → one-sentence studio statement → editorial project sequence (large, asymmetric, numbered) → services list with sticky imagery → home types → **"From plan to place"** (the Three.js process section) → credibility (designed to be populated, nothing invented) → enquiry → footer.
+**Hero.** A full-bleed photograph of the first project fills the viewport; the studio statement is set over it in large type, with the project caption, the studio's one-line description and the primary call to action on a single baseline rule beneath.
+
+**Homepage sequence.** Full-bleed project photography with the brand statement → one-sentence studio statement → editorial project sequence (large, asymmetric, numbered) → services list with sticky imagery → home types → **"From plan to place"** (the Three.js process section) → credibility (designed to be populated, nothing invented) → enquiry → footer.
 
 **Three.js concept: "From plan to place".** A floor plan draws itself as the section scrolls in; walls rise during *Design*; furniture volumes appear and the camera drops toward eye level during *Build*; at *Handover* the walls are cut away to a model and the lights come on. It visualises what a design-and-build studio does: turning a drawing into a home. HTML holds all the information; WebGL is only atmosphere.
 

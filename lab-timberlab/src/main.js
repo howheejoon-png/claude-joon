@@ -1,7 +1,5 @@
 /* Shared bootstrap — every page imports this first. */
-import '@fontsource/instrument-serif/400.css';
-import '@fontsource/instrument-serif/400-italic.css';
-import '@fontsource-variable/instrument-sans';
+import '@fontsource-variable/archivo/wdth.css';
 import '@fontsource/dm-mono/400.css';
 import '@fontsource/dm-mono/500.css';
 import './styles/tokens.css';

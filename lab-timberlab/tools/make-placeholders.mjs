@@ -2,14 +2,14 @@
 // architectural line motif. Used only when real photography is unavailable.
 import fs from 'node:fs';
 const tones = [
-  ['#5b544b', '#3a3632'], ['#8d8478', '#5f5850'], ['#a39a8d', '#6f665c'], ['#4a4843', '#2b2a27'],
-  ['#7b7268', '#4b453f'], ['#b3aa9c', '#7e766c'], ['#66605a', '#3d3934'], ['#9a9187', '#5b554e'],
+  ['#5a5a5c', '#37373a'], ['#8b8987', '#5c5b5a'], ['#a3a19d', '#6c6a68'], ['#48484a', '#28282a'],
+  ['#77756f', '#4a4845'], ['#b1afaa', '#7c7a76'], ['#64646a', '#3a3a3f'], ['#96948f', '#585652'],
 ];
 tones.forEach(([a, b], i) => {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
 <defs>
   <radialGradient id="g1" cx="30%" cy="20%" r="90%"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></radialGradient>
-  <radialGradient id="g2" cx="85%" cy="90%" r="70%"><stop offset="0" stop-color="#f4f2ed" stop-opacity=".18"/><stop offset="1" stop-color="#f4f2ed" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g2" cx="85%" cy="90%" r="70%"><stop offset="0" stop-color="#f3f3f1" stop-opacity=".18"/><stop offset="1" stop-color="#f4f2ed" stop-opacity="0"/></radialGradient>
   <filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .12 0"/></filter>
 </defs>
 <rect width="1600" height="1200" fill="url(#g1)"/>

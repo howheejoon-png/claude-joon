@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" fill="none" stroke="#F4F2ED" stroke-width="2">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" fill="none" stroke="#F3F3F1" stroke-width="2">
   <g opacity=".9">
     <rect x="0" y="0" width="1000" height="700"/>
     <path d="M380 0V310 M380 400V480 M0 370H180 M280 370H380 M660 0V170 M660 270V390 M660 390H1000 M820 390V510 M820 610V700 M620 700H1000 M0 700H520"/>
   </g>
   <g stroke-opacity=".4"><rect x="300" y="530" width="240" height="90"/><rect x="330" y="430" width="100" height="60"/><rect x="380" y="140" width="160" height="90"/><rect x="40" y="440" width="160" height="200"/><rect x="730" y="80" width="150" height="190"/></g>
-  <circle cx="570" cy="700" r="10" fill="#C4432B" stroke="none"/>
+  <circle cx="570" cy="700" r="10" fill="#2743D9" stroke="none"/>
 </svg>

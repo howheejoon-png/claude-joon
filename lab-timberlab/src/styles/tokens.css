@@ -4,21 +4,22 @@
    ------------------------------------------------------------------ */
 :root {
   /* Colour — paper, ink, and one "markup" signal (the red pen on a drawing) */
-  --paper:      #F4F2ED;
-  --paper-2:    #ECE9E2;
-  --paper-3:    #E2DED5;
-  --ink:        #161614;
-  --ink-2:      #22221F;
-  --ink-3:      #2E2E2A;
-  --stone:      #86847C;
-  --stone-2:    #B3B0A7;
-  --signal:     #C4432B;
-  --signal-soft: rgba(196, 67, 43, 0.12);
+  /* Colour — neutral gallery white, near-black, one blueprint-blue signal */
+  --paper:      #F3F3F1;
+  --paper-2:    #EAEAE7;
+  --paper-3:    #DDDDD9;
+  --ink:        #0F0F0F;
+  --ink-2:      #191919;
+  --ink-3:      #262626;
+  --stone:      #737378;
+  --stone-2:    #A7A7AA;
+  --signal:     #2743D9;
+  --signal-soft: rgba(39, 67, 217, 0.12);
 
-  --line:       rgba(22, 22, 20, 0.14);
-  --line-strong: rgba(22, 22, 20, 0.6);
-  --line-paper: rgba(244, 242, 237, 0.16);
-  --line-paper-strong: rgba(244, 242, 237, 0.55);
+  --line:       rgba(15, 15, 15, 0.14);
+  --line-strong: rgba(15, 15, 15, 0.6);
+  --line-paper: rgba(243, 243, 241, 0.16);
+  --line-paper-strong: rgba(243, 243, 241, 0.55);
 
   /* Semantic (light surface defaults) */
   --bg: var(--paper);
@@ -29,8 +30,9 @@
   --rule-strong: var(--line-strong);
 
   /* Typography */
-  --font-display: 'Instrument Serif', 'Times New Roman', Georgia, serif;
-  --font-sans: 'Instrument Sans Variable', 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Archivo Variable', 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: 'Archivo Variable', 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --display-wdth: 112;  /* Archivo width axis for display: wide, engineered */
   --font-mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   --text-xs: 0.6875rem;   /* 11 */
@@ -38,15 +40,15 @@
   --text-base: 1.0625rem; /* 17 */
   --text-md: clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem);
   --text-lg: clamp(1.375rem, 1.1rem + 1vw, 2rem);
-  --display-sm: clamp(1.75rem, 1.3rem + 1.8vw, 2.75rem);
-  --display-md: clamp(2.25rem, 1.5rem + 3vw, 4rem);
-  --display-lg: clamp(2.75rem, 1.6rem + 5.2vw, 6.25rem);
-  --display-xl: clamp(3.25rem, 1.4rem + 8.4vw, 9.5rem);
+  --display-sm: clamp(1.5rem, 1.15rem + 1.5vw, 2.35rem);
+  --display-md: clamp(1.9rem, 1.3rem + 2.6vw, 3.4rem);
+  --display-lg: clamp(2.4rem, 1.4rem + 4.4vw, 5.4rem);
+  --display-xl: clamp(2.8rem, 1.2rem + 7.2vw, 8.2rem);
 
-  --leading-tight: 0.96;
-  --leading-snug: 1.15;
-  --leading-body: 1.65;
-  --tracking-display: -0.025em;
+  --leading-tight: 0.94;
+  --leading-snug: 1.12;
+  --leading-body: 1.6;
+  --tracking-display: -0.035em;
   --tracking-label: 0.14em;
 
   /* Spacing scale (8-based, with fluid section rhythm) */
@@ -75,11 +77,11 @@
 
   /* Elevation — tinted, layered, low opacity (never flat) */
   --shadow-float:
-    0 1px 2px rgba(22, 22, 20, 0.06),
-    0 8px 24px rgba(22, 22, 20, 0.08),
-    0 24px 64px rgba(22, 22, 20, 0.10);
+    0 1px 2px rgba(15, 15, 15, 0.06),
+    0 8px 24px rgba(15, 15, 15, 0.08),
+    0 24px 64px rgba(15, 15, 15, 0.10);
   --shadow-image:
-    0 20px 60px -20px rgba(22, 22, 20, 0.35);
+    0 20px 60px -20px rgba(15, 15, 15, 0.35);
 
   /* Motion */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);

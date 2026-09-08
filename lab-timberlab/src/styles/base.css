@@ -8,7 +8,7 @@ body {
   font-family: var(--font-sans);
   font-size: var(--text-base);
   line-height: var(--leading-body);
-  font-feature-settings: 'ss01' on, 'cv11' on;
+  font-variation-settings: 'wdth' 100;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
@@ -50,13 +50,14 @@ ul, ol { padding: 0; list-style: none; }
 .full-bleed { width: 100%; }
 
 /* Typography */
-.display { font-family: var(--font-display); font-weight: 400; letter-spacing: var(--tracking-display); line-height: var(--leading-tight); }
-.display i, .display em { font-style: italic; font-weight: 400; }
+.display { font-family: var(--font-display); font-weight: 500; font-variation-settings: 'wdth' var(--display-wdth); letter-spacing: var(--tracking-display); line-height: var(--leading-tight); text-wrap: balance; }
+.display i, .display em { font-style: normal; font-weight: 300; color: var(--fg-muted); }
+.is-dark .display em { color: var(--stone-2); }
 .display-xl { font-size: var(--display-xl); }
 .display-lg { font-size: var(--display-lg); }
 .display-md { font-size: var(--display-md); line-height: 1.02; }
 .display-sm { font-size: var(--display-sm); line-height: 1.08; }
-.lead { font-size: var(--text-lg); line-height: 1.35; letter-spacing: -0.01em; }
+.lead { font-size: var(--text-lg); line-height: 1.35; letter-spacing: -0.015em; }
 .body-md { font-size: var(--text-md); line-height: 1.55; }
 .muted { color: var(--fg-muted); }
 .label {
@@ -109,7 +110,7 @@ ul, ol { padding: 0; list-style: none; }
   content: '';
   position: absolute; inset: 0;
   background:
-    linear-gradient(to top, rgba(22,22,20,0.42) 0%, rgba(22,22,20,0) 42%);
+    linear-gradient(to top, rgba(15,15,15,0.45) 0%, rgba(15,15,15,0) 42%);
   opacity: 0;
   transition: opacity var(--dur) var(--ease-out);
   pointer-events: none;
@@ -118,7 +119,7 @@ ul, ol { padding: 0; list-style: none; }
 .frame--tint::before {
   content: '';
   position: absolute; inset: 0;
-  background: linear-gradient(160deg, rgba(196,67,43,0.10), rgba(22,22,20,0.18));
+  background: linear-gradient(160deg, rgba(39,67,217,0.08), rgba(15,15,15,0.2));
   mix-blend-mode: multiply;
   pointer-events: none;
   z-index: 1;
@@ -166,7 +167,7 @@ ul, ol { padding: 0; list-style: none; }
 
 .link-lg {
   display: flex; align-items: baseline; justify-content: space-between;
-  font-family: var(--font-display); font-size: var(--display-md); line-height: 1;
+  font-family: var(--font-display); font-weight: 500; font-variation-settings: 'wdth' var(--display-wdth); font-size: var(--display-md); line-height: 1;
   letter-spacing: var(--tracking-display);
   padding-block: var(--s-6);
   border-top: 1px solid var(--rule);

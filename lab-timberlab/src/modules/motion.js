@@ -108,7 +108,7 @@ export function heroIntro(hero) {
   const tl = gsap.timeline({ delay: 0.15 });
   tl.add(() => spans.forEach((s, i) => setTimeout(() => s.classList.add('is-in'), i * 110)), 0);
   tl.to(fades, { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: 'power3.out' }, 0.5);
-  if (frame) { frame.classList.add('frame--reveal'); tl.add(() => frame.classList.add('is-in'), 0.25); }
+  if (frame) { if (!frame.classList.contains('hero__bg')) frame.classList.add('frame--reveal'); tl.add(() => frame.classList.add('is-in'), 0.1); }
 }
 
 export { gsap, ScrollTrigger };

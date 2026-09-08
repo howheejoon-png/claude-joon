@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
 <defs>
-  <radialGradient id="g1" cx="30%" cy="20%" r="90%"><stop offset="0" stop-color="#7b7268"/><stop offset="1" stop-color="#4b453f"/></radialGradient>
-  <radialGradient id="g2" cx="85%" cy="90%" r="70%"><stop offset="0" stop-color="#f4f2ed" stop-opacity=".18"/><stop offset="1" stop-color="#f4f2ed" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g1" cx="30%" cy="20%" r="90%"><stop offset="0" stop-color="#77756f"/><stop offset="1" stop-color="#4a4845"/></radialGradient>
+  <radialGradient id="g2" cx="85%" cy="90%" r="70%"><stop offset="0" stop-color="#f3f3f1" stop-opacity=".18"/><stop offset="1" stop-color="#f4f2ed" stop-opacity="0"/></radialGradient>
   <filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .12 0"/></filter>
 </defs>
 <rect width="1600" height="1200" fill="url(#g1)"/>

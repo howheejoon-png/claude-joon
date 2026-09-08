@@ -16,7 +16,7 @@ const projCard = (p, shape, idx, opts = {}) => `
 function renderHero() {
   const p = projects[0];
   document.querySelector('[data-hero-img]').innerHTML = `<img src="${p.cover}" alt="${p.title} — ${p.homeType}, ${p.location}" fetchpriority="high" decoding="async" data-ph="0">`;
-  document.querySelector('[data-hero-cap]').innerHTML = `<div><div class="label" style="opacity:.8;margin-bottom:.4rem">${p.number} — ${p.propertyType} · ${p.location}</div><div class="name">${p.title}</div></div><a class="link" href="project.html?p=${p.slug}">View project <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a>`;
+  document.querySelector('[data-hero-cap]').innerHTML = `<div class="label">${p.number} — ${p.propertyType} · ${p.homeType} · ${p.location}</div><div class="name">${p.title}</div><a class="link" href="project.html?p=${p.slug}">View project <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a>`;
 }
 
 function renderWork() {
