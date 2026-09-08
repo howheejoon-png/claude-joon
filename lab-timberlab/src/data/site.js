@@ -17,7 +17,10 @@ export const site = {
   homeTypes: ['HDB', 'BTO', 'Condominium', 'Landed'],
   // Homepage hero: a looping ambient video over the featured project's photo (the photo is the poster/fallback).
   // Files are produced by tools/process-video.sh from the source clip. Leave `video` null to use the photo only.
-  hero: { video: 'video/hero.mp4', videoMobile: 'video/hero-mobile.mp4' },
+  hero: {
+    video: [{ src: 'video/hero.webm', type: 'video/webm' }, { src: 'video/hero.mp4', type: 'video/mp4' }],
+    videoMobile: [{ src: 'video/hero-mobile.webm', type: 'video/webm' }, { src: 'video/hero-mobile.mp4', type: 'video/mp4' }],
+  },
   contact: {
     // PLACEHOLDER — replace with confirmed studio details
     address: ['Studio address to be confirmed', 'Singapore'],

@@ -25,12 +25,18 @@ function renderHero() {
     const v = document.createElement('video');
     v.className = 'hero__video'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.preload = 'metadata';
     v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true'); v.tabIndex = -1;
-    if (site.hero.videoMobile) { const sm = document.createElement('source'); sm.src = site.hero.videoMobile; sm.type = 'video/mp4'; sm.media = '(max-width: 899px)'; v.appendChild(sm); }
-    const s = document.createElement('source'); s.src = site.hero.video; s.type = 'video/mp4'; v.appendChild(s);
+    const addSources = (list, media) => (Array.isArray(list) ? list : [{ src: list, type: 'video/mp4' }]).forEach(({ src, type }) => {
+      const s = document.createElement('source'); s.src = src; s.type = type; if (media) s.media = media; v.appendChild(s);
+    });
+    if (site.hero.videoMobile) addSources(site.hero.videoMobile, '(max-width: 899px)');
+    addSources(site.hero.video);
     const fail = () => v.remove();
-    s.addEventListener('error', fail); v.addEventListener('error', fail);
+    v.addEventListener('error', fail);
+    v.lastElementChild.addEventListener('error', fail); // only when the last candidate source fails
     v.addEventListener('canplay', () => { v.classList.add('is-ready'); v.play().catch(fail); }, { once: true });
     bg.appendChild(v);
+    // The caption describes what is on screen: with stock footage playing, don't credit it as a project
+    v.addEventListener('canplay', () => { const cap = document.querySelector('[data-hero-cap]'); if (cap) cap.innerHTML = `<div class="label">Ambient film — stock footage, placeholder</div><div class="name">To be replaced with L.A.B footage</div><a class="link" href="#work">See the projects <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a>`; }, { once: true });
     // Save battery: only play while the hero is on screen
     new IntersectionObserver((es) => es.forEach((e) => { if (!v.isConnected) return; e.isIntersecting ? v.play().catch(() => {}) : v.pause(); }), { threshold: 0.05 }).observe(bg);
   }
