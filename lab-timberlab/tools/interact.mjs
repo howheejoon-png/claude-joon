@@ -14,7 +14,7 @@ await d.evaluate(() => { const s = document.querySelector('#services'); window.s
 await d.waitForTimeout(900);
 await d.hover('.svc[data-i="3"]'); await d.waitForTimeout(1200);
 await d.screenshot({ path: 'shots/int-services.png' });
-await d.goto('http://localhost:5173/project.html?p=tampines-greenverge-stone', { waitUntil: 'networkidle' }); await d.waitForTimeout(400);
-await d.evaluate(() => { const s = document.querySelector('.pd-details'); window.scrollTo(0, s.getBoundingClientRect().top + window.scrollY); }); await d.waitForTimeout(900);
+await d.goto('http://localhost:5173/project.html?p=novena-terrace-house', { waitUntil: 'networkidle' }); await d.waitForTimeout(400);
+await d.evaluate(() => { const s = document.querySelector('.ba'); window.scrollTo(0, s.getBoundingClientRect().top + window.scrollY); }); await d.waitForTimeout(900);
 await d.screenshot({ path: 'shots/int-ba.png' });
 await browser.close(); console.log('done');

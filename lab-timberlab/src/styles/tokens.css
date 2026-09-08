@@ -4,25 +4,22 @@
    ------------------------------------------------------------------ */
 :root {
   /* Colour — paper, ink, and one "markup" signal (the red pen on a drawing) */
-  /* Colour — cold graphite surfaces, cool off-white type, one blueprint-blue signal.
-     Naming: --paper is always the surface, --ink always the type, whatever their value. */
-  --paper:      #15181C;   /* base surface */
-  --paper-2:    #1B1F25;   /* elevated surface */
-  --paper-3:    #232830;   /* image frames, highest surface */
-  --deep:       #0B0D10;   /* deepest sections: process, footer, menu */
-  --deep-2:     #111418;
-  --ink:        #E9ECEF;   /* primary type */
-  --ink-2:      #D6DBE0;
-  --ink-3:      #B7BEC6;   /* body copy on surfaces */
-  --stone:      #8A939D;   /* muted */
-  --stone-2:    #5F6873;   /* more muted */
-  --signal:     #4A6BFF;
-  --signal-soft: rgba(74, 107, 255, 0.14);
+  /* Colour — neutral gallery white, near-black, one blueprint-blue signal */
+  --paper:      #F3F3F1;
+  --paper-2:    #EAEAE7;
+  --paper-3:    #DDDDD9;
+  --ink:        #0F0F0F;
+  --ink-2:      #191919;
+  --ink-3:      #262626;
+  --stone:      #737378;
+  --stone-2:    #A7A7AA;
+  --signal:     #2743D9;
+  --signal-soft: rgba(39, 67, 217, 0.12);
 
-  --line:       rgba(233, 236, 239, 0.12);
-  --line-strong: rgba(233, 236, 239, 0.45);
-  --line-paper: rgba(233, 236, 239, 0.14);
-  --line-paper-strong: rgba(233, 236, 239, 0.5);
+  --line:       rgba(15, 15, 15, 0.14);
+  --line-strong: rgba(15, 15, 15, 0.6);
+  --line-paper: rgba(243, 243, 241, 0.16);
+  --line-paper-strong: rgba(243, 243, 241, 0.55);
 
   /* Semantic (light surface defaults) */
   --bg: var(--paper);
@@ -80,11 +77,11 @@
 
   /* Elevation — tinted, layered, low opacity (never flat) */
   --shadow-float:
-    0 1px 2px rgba(0, 0, 0, 0.25),
-    0 8px 24px rgba(0, 0, 0, 0.3),
-    0 24px 64px rgba(0, 0, 0, 0.35);
+    0 1px 2px rgba(15, 15, 15, 0.06),
+    0 8px 24px rgba(15, 15, 15, 0.08),
+    0 24px 64px rgba(15, 15, 15, 0.10);
   --shadow-image:
-    0 20px 60px -20px rgba(0, 0, 0, 0.6);
+    0 20px 60px -20px rgba(15, 15, 15, 0.35);
 
   /* Motion */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -95,12 +92,12 @@
   --dur-slow: 900ms;
 }
 
-/* Deepest surface: sections with .is-dark sit one step below the base (process, footer, menu) */
+/* Dark surface: any section with .is-dark flips the semantic layer */
 .is-dark {
-  --bg: var(--deep);
-  --bg-elevated: var(--deep-2);
-  --fg: var(--ink);
-  --fg-muted: var(--stone);
+  --bg: var(--ink);
+  --bg-elevated: var(--ink-2);
+  --fg: var(--paper);
+  --fg-muted: var(--stone-2);
   --rule: var(--line-paper);
   --rule-strong: var(--line-paper-strong);
   background: var(--bg);

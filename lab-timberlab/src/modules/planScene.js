@@ -12,8 +12,8 @@
  */
 import * as THREE from 'three';
 
-const PAPER = 0xe9ecef;
-const SIGNAL = 0x4a6bff;
+const PAPER = 0xf3f3f1;
+const SIGNAL = 0x2743d9;
 
 // ---- Plan data (units ≈ metres). Easily swapped for another layout. ----
 const W = 10, D = 7, H = 2.6, T = 0.12;
@@ -92,10 +92,10 @@ export function createPlanScene(container, { onReady, onFail } = {}) {
   modelShift();
 
   // Fog fades far edges into the section background
-  scene.fog = new THREE.Fog(0x0b0d10, 22, 70);
+  scene.fog = new THREE.Fog(0x0f0f0f, 22, 70);
 
   // ---- Floor + drawing grid ----
-  const floorMat = new THREE.MeshStandardMaterial({ color: 0x171b20, roughness: 0.95, metalness: 0 });
+  const floorMat = new THREE.MeshStandardMaterial({ color: 0x1c1c1c, roughness: 0.95, metalness: 0 });
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), floorMat);
   floor.rotation.x = -Math.PI / 2; floor.position.y = -0.005;
   root.add(floor);
@@ -119,7 +119,7 @@ export function createPlanScene(container, { onReady, onFail } = {}) {
   });
 
   // ---- Walls (phase 2) ----
-  const wallMat = new THREE.MeshStandardMaterial({ color: 0x454c56, roughness: 0.92, metalness: 0, clippingPlanes: [cutPlane] });
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0x46464a, roughness: 0.92, metalness: 0, clippingPlanes: [cutPlane] });
   const edgeMat = new THREE.LineBasicMaterial({ color: PAPER, transparent: true, opacity: 0.55, clippingPlanes: [cutPlane] });
   const walls = WALLS.map(([x1, z1, x2, z2]) => {
     const len = Math.hypot(x2 - x1, z2 - z1);
@@ -137,7 +137,7 @@ export function createPlanScene(container, { onReady, onFail } = {}) {
   });
 
   // ---- Furniture (phase 3) ----
-  const furnMat = new THREE.MeshStandardMaterial({ color: 0x89929c, roughness: 0.85, metalness: 0, clippingPlanes: [cutPlane] });
+  const furnMat = new THREE.MeshStandardMaterial({ color: 0x8c8c90, roughness: 0.85, metalness: 0, clippingPlanes: [cutPlane] });
   const furnEdge = new THREE.LineBasicMaterial({ color: PAPER, transparent: true, opacity: 0.35, clippingPlanes: [cutPlane] });
   const furniture = FURNITURE.map(([x, z, w, d, h]) => {
     const geo = new THREE.BoxGeometry(w, h, d); geo.translate(0, h / 2, 0);
