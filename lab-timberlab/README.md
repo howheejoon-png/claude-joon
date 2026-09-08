@@ -18,7 +18,7 @@ Pages: `index.html` (home) · `projects.html` (index + home-type filter) · `pro
 
 **Positioning.** L.A.B is treated as a contemporary design-and-build practice, not a "timber" brand. The site's voice is calm, precise and specific: *"Your home, thought through."*
 
-**Visual language: the working drawing.** Neutral gallery white (`#F3F3F1`), near-black (`#0F0F0F`) and one *blueprint blue* (`#2743D9`) used the way a pen is used on an architect's drawing: numbers, annotations, active states, the cursor. Nothing is beige-on-wood; photography carries the warmth.
+**Visual language: the working drawing.** Cold graphite surfaces (`#15181C` base, `#0B0D10` for the deepest sections), cool off-white type (`#E9ECEF`) and one *blueprint blue* (`#4A6BFF`) used the way a pen is used on an architect's drawing: numbers, annotations, active states, the cursor. Nothing is beige-on-wood; photography carries the warmth.
 
 **Typography.** Archivo (variable, one family) set wide for display (`wdth` 112, weight 500, tight tracking) and at normal width for body, with DM Mono for labels, numbers and captions. Emphasis is weight and tone, not italics. All open-source, self-hosted via npm (no paid dependencies, no CDN calls).
 
