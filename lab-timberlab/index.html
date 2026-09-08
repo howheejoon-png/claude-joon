@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L.A.B by Timberlab — Interior design &amp; build studio, Singapore</title>
+  <meta name="description" content="L.A.B by Timberlab is a design-and-build studio for Singapore homes. HDB, BTO, condominium and landed renovations, designed and built by one team.">
+  <link rel="icon" href="logo/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#F4F2ED">
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main>
+    <!-- HERO — brand + the first project, immediately -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <div class="hero__eyebrow label" data-hero-fade><span class="tick"></span><span>Design &amp; build studio — Singapore</span></div>
+          <h1 class="display hero__title" data-hero-title>Your home, <em>thought through.</em></h1>
+          <p class="hero__lead body-md" data-hero-fade>L.A.B is the interior design and design-and-build practice of Timberlab. We take HDB, BTO, condominium and landed homes from the first conversation to the final handover, with one team responsible for both the drawing and the build.</p>
+          <div class="hero__actions" data-hero-fade>
+            <a class="btn" href="contact.html"><span class="btn__dot"></span>Start a project</a>
+            <a class="link" href="#work">See the work <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a>
+          </div>
+        </div>
+        <div class="hero__media">
+          <div class="frame frame--shade hero__frame" data-hero-frame data-hero-img data-parallax="6"></div>
+          <div class="hero__caption" data-hero-cap></div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="hero__foot label" data-hero-fade>
+          <ul class="hero__types"><li>HDB</li><li>BTO</li><li>Condominium</li><li>Landed</li></ul>
+          <span class="scroll-hint hide-mobile"><span class="line"></span>Scroll</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTRO — who L.A.B is, in one breath -->
+    <section class="intro" id="about">
+      <div class="container intro__grid">
+        <div class="intro__label label muted" data-reveal="fade">The studio</div>
+        <p class="intro__text" data-reveal="lines">We <em>draw</em> the home, then we <em>build</em> it. One studio, one contract and one point of contact from the first site visit to the last screw, so what you approve on paper is what you get on site.</p>
+        <div class="intro__side" data-reveal="fade">
+          <p>We are a Singapore design-and-build practice working across public and private housing. Every project starts with a plan, and every plan is costed before anything is built.</p>
+          <a class="link" href="studio.html">About the studio <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORK — editorial project sequence -->
+    <section class="work" id="work">
+      <div class="container">
+        <div class="sec-head">
+          <div class="sec-head__label label muted" data-reveal="fade"><span>Selected projects</span></div>
+          <h2 class="sec-head__title display display-lg" data-reveal="lines">Homes we have drawn <em>and built.</em></h2>
+          <p class="sec-head__aside muted" data-reveal="fade">Each project is shown as it was lived in after handover. Photography and project details are placeholders until the client's own work is supplied.</p>
+        </div>
+        <div data-work></div>
+        <div class="work__all" data-reveal="fade">
+          <a class="link-lg" href="projects.html"><span>All projects</span><svg class="arrow-lg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 40L40 8M14 8h26v26"/></svg></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES — what we can do for your home -->
+    <section class="services" id="services">
+      <div class="container">
+        <div class="sec-head">
+          <div class="sec-head__label label muted" data-reveal="fade"><span>What we do</span></div>
+          <h2 class="sec-head__title display display-lg" data-reveal="lines">Design, build and everything <em>in between.</em></h2>
+          <p class="sec-head__aside muted" data-reveal="fade">A full-service studio: we design the home, then build it. Service names below are proposed wording for review. <a class="link" href="services.html" style="margin-top:.75rem">All services <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a></p>
+        </div>
+        <div class="services__grid">
+          <div class="services__list"><div class="svc-list" data-services data-reveal="fade"></div></div>
+          <div class="services__side"><div class="svc-media" data-services-media data-reveal="fade"></div></div>
+        </div>
+      </div>
+      <div class="container types">
+        <div class="sec-head" style="margin-bottom:var(--s-6)">
+          <div class="sec-head__label label muted" data-reveal="fade"><span>Every kind of Singapore home</span></div>
+        </div>
+        <div class="types__grid" data-types data-stagger></div>
+      </div>
+    </section>
+
+    <!-- PROCESS — Three.js: from plan to place -->
+    <section class="process is-dark" id="process" data-header="dark">
+      <div class="process__sticky">
+        <div class="process__canvas" aria-hidden="true"></div>
+        <div class="process__fallback" aria-hidden="true"><img src="img/plan-fallback.svg" alt=""></div>
+        <div class="container process__steps" data-steps aria-live="polite"></div>
+        <div class="container process__head">
+          <div>
+            <div class="label label--signal" style="margin-bottom:.75rem">How it works</div>
+            <h2 class="display">From plan <em>to place.</em></h2>
+          </div>
+          <div class="process__progress label muted"><span data-step-label>01</span><div class="bar"><i></i></div><span>04</span></div>
+        </div>
+      </div>
+      <div class="process__track" aria-hidden="true"></div>
+    </section>
+
+    <!-- CREDIBILITY — built on method (no invented facts) -->
+    <section class="cred" id="why">
+      <div class="container">
+        <div class="sec-head">
+          <div class="sec-head__label label muted" data-reveal="fade"><span>Why L.A.B</span></div>
+          <h2 class="sec-head__title display display-lg" data-reveal="lines">Built on <em>method,</em> not promises.</h2>
+          <p class="sec-head__aside muted" data-reveal="fade">Credibility should be shown, not claimed. This section is designed to carry the studio's real testimonials, figures and accreditations once supplied.</p>
+        </div>
+        <div class="cred__grid">
+          <div class="principles" data-stagger>
+            <div class="principle"><div class="principle__num">01</div><div><h3>One team, start to finish</h3><p>The people who draw your home are the people who build it. Nothing is lost between a designer's intent and a contractor's interpretation.</p></div></div>
+            <div class="principle"><div class="principle__num">02</div><div><h3>Decisions made visible</h3><p>Layouts, materials and costs are put in front of you before work begins. You approve drawings, not descriptions.</p></div></div>
+            <div class="principle"><div class="principle__num">03</div><div><h3>Details you can inspect</h3><p>Carpentry, finishes and services are checked at each stage, and the handover walk-through is done against the drawings you signed.</p></div></div>
+          </div>
+          <figure class="quote" data-reveal="fade">
+            <div class="quote__mark" aria-hidden="true">“</div>
+            <blockquote>Client testimonial to be supplied. This module is designed for a short, specific quote about the experience of working with L.A.B.</blockquote>
+            <figcaption>Homeowner · Home type · Estate</figcaption>
+          </figure>
+          <div class="figures" data-stagger>
+            <div class="figure"><div class="figure__val">—</div><div class="figure__key">Years in practice</div></div>
+            <div class="figure"><div class="figure__val">—</div><div class="figure__key">Homes completed</div></div>
+            <div class="figure"><div class="figure__val">—</div><div class="figure__key">In-house team</div></div>
+          </div>
+          <div class="recognition" data-reveal="fade">
+            <div class="label muted">Accreditations &amp; recognition</div>
+            <div class="recognition__row">
+              <div class="recognition__slot">Accreditation</div>
+              <div class="recognition__slot">Media feature</div>
+              <div class="recognition__slot">Partner brand</div>
+              <div class="recognition__slot">Award</div>
+            </div>
+            <span class="placeholder-note">Logos supplied by L.A.B</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ENQUIRY -->
+    <section class="enquiry" id="enquire" style="background:var(--paper-2)">
+      <div class="container enquiry__grid">
+        <div class="enquiry__copy">
+          <div class="label label--signal" data-reveal="fade">Start a project</div>
+          <h2 class="display display-lg" data-reveal="lines">Tell us about <em>your space.</em></h2>
+          <p class="muted measure-narrow" data-reveal="fade">A few details are enough to begin. We'll come back with a time to talk, and if it makes sense, a visit to your home.</p>
+          <ul class="enquiry__alt" data-reveal="fade">
+            <li><span>Email</span><a href="mailto:hello@labbytimberlab.sg">hello@labbytimberlab.sg</a></li>
+            <li><span>WhatsApp</span><a href="#">+65 0000 0000</a></li>
+            <li><span>Studio</span>Address to be confirmed, Singapore</li>
+          </ul>
+        </div>
+        <div class="enquiry__form" data-enquiry data-reveal="fade"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+  <script type="module" src="/src/pages/home.js"></script>
+</body>
+</html>

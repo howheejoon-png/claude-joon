@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+<defs>
+  <radialGradient id="g1" cx="30%" cy="20%" r="90%"><stop offset="0" stop-color="#a39a8d"/><stop offset="1" stop-color="#6f665c"/></radialGradient>
+  <radialGradient id="g2" cx="85%" cy="90%" r="70%"><stop offset="0" stop-color="#f4f2ed" stop-opacity=".18"/><stop offset="1" stop-color="#f4f2ed" stop-opacity="0"/></radialGradient>
+  <filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .12 0"/></filter>
+</defs>
+<rect width="1600" height="1200" fill="url(#g1)"/>
+<rect width="1600" height="1200" fill="url(#g2)"/>
+<g stroke="#f4f2ed" stroke-opacity=".22" fill="none" stroke-width="1.5">
+  <rect x="260" y="200" width="820" height="640"/>
+  <path d="M260 540H1080"/>
+  <path d="M680 200V840"/>
+</g>
+<rect width="1600" height="1200" filter="url(#n)"/>
+<text x="64" y="1140" font-family="DM Mono, monospace" font-size="20" letter-spacing="3" fill="#f4f2ed" fill-opacity=".55">PROJECT PHOTOGRAPHY — PLACEHOLDER 03</text>
+</svg>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" href="logo/favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#F4F2ED"><title>Project — L.A.B by Timberlab</title><meta name="description" content="A completed home by L.A.B by Timberlab."></head>
+<body>
+  <header id="site-header"></header>
+  <main data-project>
+    <section class="pd-hero">
+      <div class="container">
+        <div class="page-hero__crumb label muted"><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a><span>/</span><span data-crumb></span></div>
+        <h1 class="display pd-hero__title" data-hero-title data-title></h1>
+        <dl class="pd-hero__meta" data-meta data-hero-fade></dl>
+      </div>
+      <div class="container pd-cover"><div class="frame frame--shade" data-parallax="8" data-hero-frame data-cover></div></div>
+    </section>
+    <section class="pd-story">
+      <div class="container pd-story__grid">
+        <p class="pd-story__summary" data-reveal="lines" data-summary></p>
+        <div class="pd-story__col" data-reveal="fade"><h3>The brief</h3><p data-brief></p></div>
+        <div class="pd-story__col" data-reveal="fade"><h3>The response</h3><p data-response></p></div>
+      </div>
+    </section>
+    <section><div class="container pd-gallery" data-gallery></div></section>
+    <section class="pd-details">
+      <div class="container pd-details__grid">
+        <div class="pd-details__copy">
+          <div class="label label--signal" data-reveal="fade">Design details</div>
+          <h2 class="display display-md" data-reveal="lines">Materials and <em>making.</em></h2>
+          <p class="muted" data-reveal="fade">The specific joinery, surfaces and lighting that give the home its character. Sample content, to be replaced per project.</p>
+        </div>
+        <ul class="pd-details__list" data-details data-stagger></ul>
+      </div>
+    </section>
+    <section class="ba">
+      <div class="container">
+        <div class="sec-head">
+          <div class="sec-head__label label muted" data-reveal="fade"><span>Before / after</span></div>
+          <h2 class="sec-head__title display display-lg" data-reveal="lines">Before, <em>and after.</em></h2>
+          <p class="sec-head__aside muted" data-reveal="fade">Drag to compare. Optional module, shown where the studio has before photography.</p>
+        </div>
+        <div class="ba__wrap" data-ba data-reveal="fade">
+          <img class="ba__before" data-ba-before alt="Before renovation">
+          <img class="ba__after" data-ba-after alt="After renovation">
+          <div class="ba__handle" data-ba-handle></div>
+          <span class="ba__label ba__label--before">Before</span><span class="ba__label ba__label--after">After</span>
+          <input class="ba__range" type="range" min="0" max="100" value="50" aria-label="Compare before and after">
+        </div>
+      </div>
+    </section>
+    <a class="next" data-next data-cursor="Next project"></a>
+  </main>
+  <footer id="site-footer"></footer>
+  <script type="module" src="/src/pages/project.js"></script>
+</body>
+</html>

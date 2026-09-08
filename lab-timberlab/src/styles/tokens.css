@@ -1,0 +1,103 @@
+/* ------------------------------------------------------------------
+   L.A.B by Timberlab — Design tokens
+   Single source of truth. Maps 1:1 to a WordPress theme.json later.
+   ------------------------------------------------------------------ */
+:root {
+  /* Colour — paper, ink, and one "markup" signal (the red pen on a drawing) */
+  --paper:      #F4F2ED;
+  --paper-2:    #ECE9E2;
+  --paper-3:    #E2DED5;
+  --ink:        #161614;
+  --ink-2:      #22221F;
+  --ink-3:      #2E2E2A;
+  --stone:      #86847C;
+  --stone-2:    #B3B0A7;
+  --signal:     #C4432B;
+  --signal-soft: rgba(196, 67, 43, 0.12);
+
+  --line:       rgba(22, 22, 20, 0.14);
+  --line-strong: rgba(22, 22, 20, 0.6);
+  --line-paper: rgba(244, 242, 237, 0.16);
+  --line-paper-strong: rgba(244, 242, 237, 0.55);
+
+  /* Semantic (light surface defaults) */
+  --bg: var(--paper);
+  --bg-elevated: var(--paper-2);
+  --fg: var(--ink);
+  --fg-muted: var(--stone);
+  --rule: var(--line);
+  --rule-strong: var(--line-strong);
+
+  /* Typography */
+  --font-display: 'Instrument Serif', 'Times New Roman', Georgia, serif;
+  --font-sans: 'Instrument Sans Variable', 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --text-xs: 0.6875rem;   /* 11 */
+  --text-sm: 0.8125rem;   /* 13 */
+  --text-base: 1.0625rem; /* 17 */
+  --text-md: clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem);
+  --text-lg: clamp(1.375rem, 1.1rem + 1vw, 2rem);
+  --display-sm: clamp(1.75rem, 1.3rem + 1.8vw, 2.75rem);
+  --display-md: clamp(2.25rem, 1.5rem + 3vw, 4rem);
+  --display-lg: clamp(2.75rem, 1.6rem + 5.2vw, 6.25rem);
+  --display-xl: clamp(3.25rem, 1.4rem + 8.4vw, 9.5rem);
+
+  --leading-tight: 0.96;
+  --leading-snug: 1.15;
+  --leading-body: 1.65;
+  --tracking-display: -0.025em;
+  --tracking-label: 0.14em;
+
+  /* Spacing scale (8-based, with fluid section rhythm) */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 6rem;
+  --s-10: 8rem;
+  --section: clamp(5rem, 4rem + 6vw, 11rem);
+  --section-sm: clamp(3.5rem, 2.5rem + 4vw, 7rem);
+  --gutter: clamp(1.25rem, 0.5rem + 3.4vw, 4.5rem);
+  --gap: clamp(1rem, 0.6rem + 1.4vw, 2rem);
+
+  /* Layout */
+  --max-w: 1680px;
+  --header-h: 4.5rem;
+
+  /* Radii — architectural, nearly none */
+  --radius-sm: 2px;
+  --radius-pill: 999px;
+
+  /* Elevation — tinted, layered, low opacity (never flat) */
+  --shadow-float:
+    0 1px 2px rgba(22, 22, 20, 0.06),
+    0 8px 24px rgba(22, 22, 20, 0.08),
+    0 24px 64px rgba(22, 22, 20, 0.10);
+  --shadow-image:
+    0 20px 60px -20px rgba(22, 22, 20, 0.35);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.3, 0.64, 1);
+  --dur-fast: 220ms;
+  --dur: 480ms;
+  --dur-slow: 900ms;
+}
+
+/* Dark surface: any section with .is-dark flips the semantic layer */
+.is-dark {
+  --bg: var(--ink);
+  --bg-elevated: var(--ink-2);
+  --fg: var(--paper);
+  --fg-muted: var(--stone-2);
+  --rule: var(--line-paper);
+  --rule-strong: var(--line-paper-strong);
+  background: var(--bg);
+  color: var(--fg);
+}

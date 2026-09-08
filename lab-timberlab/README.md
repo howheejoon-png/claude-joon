@@ -1,0 +1,76 @@
+# L.A.B by Timberlab — Website Concept v0.1
+
+First interactive frontend concept for **L.A.B by Timberlab Pte Ltd**, a Singapore interior design and design-and-build studio.
+This is a *direction* prototype for client review, not the final WordPress build.
+
+## Run it
+
+```bash
+npm install
+npm run dev        # http://localhost:5173
+npm run build      # static build in dist/
+npm run preview
+```
+
+Pages: `index.html` (home) · `projects.html` (index + home-type filter) · `project.html?p=<slug>` (project template) · `services.html` · `studio.html` · `contact.html`
+
+## The idea
+
+**Positioning.** L.A.B is treated as a contemporary design-and-build practice, not a "timber" brand. The site's voice is calm, precise and specific: *"Your home, thought through."*
+
+**Visual language: the working drawing.** Warm paper (`#F4F2ED`), ink (`#161614`) and one *markup red* (`#C4432B`) used the way a red pen is used on an architect's drawing: numbers, annotations, active states, the cursor. Nothing is beige-on-wood; photography carries the warmth.
+
+**Typography.** Instrument Serif (display, with italics for emphasis) + Instrument Sans (body/UI) + DM Mono (labels, numbers, captions). All open-source, self-hosted via npm (no paid dependencies, no CDN calls).
+
+**Homepage sequence.** Brand + first project immediately → one-sentence studio statement → editorial project sequence (large, asymmetric, numbered) → services list with sticky imagery → home types → **"From plan to place"** (the Three.js process section) → credibility (designed to be populated, nothing invented) → enquiry → footer.
+
+**Three.js concept: "From plan to place".** A floor plan draws itself as the section scrolls in; walls rise during *Design*; furniture volumes appear and the camera drops toward eye level during *Build*; at *Handover* the walls are cut away to a model and the lights come on. It visualises what a design-and-build studio does: turning a drawing into a home. HTML holds all the information; WebGL is only atmosphere.
+
+**Motion.** GSAP + ScrollTrigger for masked line reveals, clip reveals, parallax and the scrubbed 3D scene; Lenis for smooth scrolling; a small custom cursor on desktop. Everything respects `prefers-reduced-motion`.
+
+**Mobile.** A deliberate layout, not a shrunk desktop: full-screen serif menu, stacked project sequence, the 3D scene reframed for portrait (camera pulled back, step text as a card at the bottom of the sticky frame), no cursor, no pointer parallax, lower device pixel ratio.
+
+## Performance choices
+
+- Three.js is code-split and only loaded when the process section approaches the viewport.
+- Renders only while the section is on screen and only when scroll progress or pointer changed (no idle render loop).
+- `devicePixelRatio` capped at 1.5 (1 on mobile); resources disposed on `pagehide`.
+- If WebGL is unavailable, a static SVG plan is shown; the page never depends on it.
+- Images lazy-load; remote photography that fails to load is swapped for a designed local placeholder (`public/img/ph/`).
+
+## Structure (built to become WordPress)
+
+```
+index.html, projects.html, project.html, services.html, studio.html, contact.html   ← page templates
+src/styles/tokens.css        ← design tokens (→ theme.json)
+src/styles/base.css          ← reset, type, buttons, primitives
+src/styles/components.css    ← header, menu, footer, cursor, form
+src/styles/sections.css      ← homepage sections
+src/styles/pages.css         ← inner-page layouts
+src/data/site.js             ← site options: nav, CTA, contact (→ Theme Options)
+src/data/projects.js         ← projects (→ CPT "project" with these fields)
+src/data/services.js         ← services + home types (→ CPT "service" / repeater)
+src/data/process.js          ← process steps (→ repeater; also drives the 3D scene text)
+src/components/*.js          ← header, footer, enquiry form, cursor (→ template parts)
+src/modules/planScene.js     ← Three.js experience (developer-owned)
+src/modules/motion.js        ← GSAP reveal system (developer-owned)
+src/pages/*.js               ← per-template rendering (→ PHP templates)
+```
+
+Content and presentation are separated: the client will edit copy, project fields, galleries, services, contact details and navigation; the developer owns the design system, motion and the 3D scene.
+
+## Placeholder register (must be confirmed or supplied before launch)
+
+- **Logo** — the client's existing logo is not in this repository; a typographic wordmark stands in.
+- **Photography** — temporary Unsplash interiors, referenced in `src/data/projects.js` and `src/data/services.js`. Replace the `src` values.
+- **Projects** — six sample projects with invented names, locations and stories to demonstrate the template.
+- **Service names and descriptions** — proposed wording, flagged on the page.
+- **Studio story, founding year, team** — placeholders only.
+- **Testimonials, figures, accreditations, awards, media, partner logos** — empty designed slots; nothing has been invented.
+- **Contact details, address, map, social links** — placeholders.
+- **Enquiry form** — proposed fields; submission is a demo (nothing is sent).
+- **Copy** — all headings and paragraphs are draft copy in the proposed voice.
+
+## Tools
+
+`node tools/screenshot.mjs <url> <label> [w] [h] [scrollTo|#selector+offset]` captures review screenshots into `shots/` (needs Chromium; used for the self-review of this concept).

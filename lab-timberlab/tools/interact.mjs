@@ -1,0 +1,20 @@
+// Interaction checks: mobile menu, project filter, services hover
+import { chromium } from 'playwright-core';
+const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', args: ['--no-sandbox', '--use-gl=swiftshader', '--enable-unsafe-swiftshader'] });
+const m = await (await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })).newPage();
+await m.goto('http://localhost:5173/', { waitUntil: 'networkidle' }); await m.waitForTimeout(600);
+await m.click('.menu-btn'); await m.waitForTimeout(1000);
+await m.screenshot({ path: 'shots/int-menu.png' });
+const d = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
+await d.goto('http://localhost:5173/projects.html', { waitUntil: 'networkidle' }); await d.waitForTimeout(600);
+await d.click('.pill[data-type="HDB"]'); await d.mouse.move(700, 600); await d.waitForTimeout(1200);
+await d.screenshot({ path: 'shots/int-filter.png' });
+await d.goto('http://localhost:5173/', { waitUntil: 'networkidle' }); await d.waitForTimeout(400);
+await d.evaluate(() => { const s = document.querySelector('#services'); window.scrollTo(0, s.getBoundingClientRect().top + window.scrollY + 380); });
+await d.waitForTimeout(900);
+await d.hover('.svc[data-i="3"]'); await d.waitForTimeout(1200);
+await d.screenshot({ path: 'shots/int-services.png' });
+await d.goto('http://localhost:5173/project.html?p=novena-terrace-house', { waitUntil: 'networkidle' }); await d.waitForTimeout(400);
+await d.evaluate(() => { const s = document.querySelector('.ba'); window.scrollTo(0, s.getBoundingClientRect().top + window.scrollY); }); await d.waitForTimeout(900);
+await d.screenshot({ path: 'shots/int-ba.png' });
+await browser.close(); console.log('done');
