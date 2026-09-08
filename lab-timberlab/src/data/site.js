@@ -15,6 +15,9 @@ export const site = {
   ],
   cta: { label: 'Start a project', href: 'contact.html' },
   homeTypes: ['HDB', 'BTO', 'Condominium', 'Landed'],
+  // Homepage hero: a looping ambient video over the featured project's photo (the photo is the poster/fallback).
+  // Files are produced by tools/process-video.sh from the source clip. Leave `video` null to use the photo only.
+  hero: { video: 'video/hero.mp4', videoMobile: 'video/hero-mobile.mp4' },
   contact: {
     // PLACEHOLDER — replace with confirmed studio details
     address: ['Studio address to be confirmed', 'Singapore'],

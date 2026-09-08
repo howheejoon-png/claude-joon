@@ -3,6 +3,7 @@ import { projects, bySlug } from '../data/projects.js';
 import { services, homeTypes } from '../data/services.js';
 import { steps } from '../data/process.js';
 import { renderEnquiry } from '../components/enquiry.js';
+import { site } from '../data/site.js';
 import { heroIntro, gsap, ScrollTrigger } from '../modules/motion.js';
 
 const known = (v) => v && !/to be confirmed|^—$/i.test(v);
@@ -16,7 +17,23 @@ const projCard = (p, shape, idx, opts = {}) => `
 
 function renderHero() {
   const p = projects[0];
-  document.querySelector('[data-hero-img]').innerHTML = `<img src="${p.hero || p.cover}" alt="${p.title} — ${p.homeType}, ${p.location}" fetchpriority="high" decoding="async" data-ph="0">`;
+  const bg = document.querySelector('[data-hero-img]');
+  bg.innerHTML = `<img src="${p.hero || p.cover}" alt="${p.title} — ${p.homeType}, ${p.location}" fetchpriority="high" decoding="async" data-ph="0">`;
+  // Ambient hero video: muted loop over the poster photo. Skipped for reduced-motion users; the photo stays if the file is missing or fails.
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (site.hero?.video && !reduced) {
+    const v = document.createElement('video');
+    v.className = 'hero__video'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.preload = 'metadata';
+    v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true'); v.tabIndex = -1;
+    if (site.hero.videoMobile) { const sm = document.createElement('source'); sm.src = site.hero.videoMobile; sm.type = 'video/mp4'; sm.media = '(max-width: 899px)'; v.appendChild(sm); }
+    const s = document.createElement('source'); s.src = site.hero.video; s.type = 'video/mp4'; v.appendChild(s);
+    const fail = () => v.remove();
+    s.addEventListener('error', fail); v.addEventListener('error', fail);
+    v.addEventListener('canplay', () => { v.classList.add('is-ready'); v.play().catch(fail); }, { once: true });
+    bg.appendChild(v);
+    // Save battery: only play while the hero is on screen
+    new IntersectionObserver((es) => es.forEach((e) => { if (!v.isConnected) return; e.isIntersecting ? v.play().catch(() => {}) : v.pause(); }), { threshold: 0.05 }).observe(bg);
+  }
   document.querySelector('[data-hero-cap]').innerHTML = `<div class="label">${p.number} — ${[p.propertyType, p.homeType, p.location].filter(known).join(' · ')}</div><div class="name">${p.title}</div><a class="link" href="project.html?p=${p.slug}">View project <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a>`;
 }
 
