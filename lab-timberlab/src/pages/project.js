@@ -24,13 +24,17 @@ document.querySelector('[data-details]').innerHTML = p.details.map((d, i) => `<l
 
 // Before / after
 const ba = document.querySelector('[data-ba]');
-ba.querySelector('[data-ba-before]').src = p.before; ba.querySelector('[data-ba-before]').dataset.ph = 5;
-const after = ba.querySelector('[data-ba-after]'); after.src = p.after; after.dataset.ph = 0;
-const handle = ba.querySelector('[data-ba-handle]');
-const range = ba.querySelector('input');
-const set = (v) => { after.style.clipPath = `inset(0 0 0 ${v}%)`; handle.style.left = `${v}%`; };
-range.addEventListener('input', () => set(range.value));
-set(50);
+if (p.before && p.after) {
+  ba.querySelector('[data-ba-before]').src = p.before;
+  const after = ba.querySelector('[data-ba-after]'); after.src = p.after;
+  const handle = ba.querySelector('[data-ba-handle]');
+  const range = ba.querySelector('input');
+  const set = (v) => { after.style.clipPath = `inset(0 0 0 ${v}%)`; handle.style.left = `${v}%`; };
+  range.addEventListener('input', () => set(range.value));
+  set(50);
+} else {
+  ba.closest('section').remove(); // no "before" photography for this project
+}
 
 // Next project
 const next = document.querySelector('[data-next]');

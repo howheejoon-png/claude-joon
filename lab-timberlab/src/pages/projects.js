@@ -1,13 +1,12 @@
 import { boot } from '../main.js';
 import { projects } from '../data/projects.js';
-import { site } from '../data/site.js';
 import { heroIntro, gsap, ScrollTrigger } from '../modules/motion.js';
 
 boot('projects.html');
 const grid = document.querySelector('[data-grid]');
 const filter = document.querySelector('[data-filter]');
 const count = document.querySelector('[data-count]');
-const types = ['All', ...site.homeTypes];
+const types = ['All', ...new Set(projects.map((p) => p.propertyType))];
 const params = new URLSearchParams(location.search);
 let active = types.includes(params.get('type')) ? params.get('type') : 'All';
 
@@ -15,7 +14,7 @@ grid.innerHTML = projects.map((p, i) => `
   <a class="proj" href="project.html?p=${p.slug}" data-type="${p.propertyType}" data-cursor="View project">
     <div class="frame frame--shade" data-reveal="clip" data-parallax="6"><img src="${p.cover}" alt="${p.title} — ${p.homeType}, ${p.location}" loading="${i < 2 ? 'eager' : 'lazy'}" decoding="async" data-ph="${i}"></div>
     <div class="proj__meta"><h3 class="proj__title"><span class="num" style="color:var(--signal);margin-right:.6em">${p.number}</span>${p.title}</h3>
-    <ul class="proj__tags"><li>${p.propertyType}</li><li>${p.homeType}</li><li>${p.location}</li><li>${p.direction}</li></ul></div>
+    <ul class="proj__tags">${[p.propertyType, p.homeType, p.location, p.direction].filter((v) => v && !/to be confirmed|^—$/i.test(v)).map((t) => `<li>${t}</li>`).join('')}</ul></div>
   </a>`).join('');
 filter.innerHTML = types.map((t) => `<button class="pill" role="tab" type="button" data-type="${t}" aria-selected="${t === active}">${t}</button>`).join('');
 

@@ -1,11 +1,12 @@
 import { boot } from '../main.js';
-import { projects } from '../data/projects.js';
+import { projects, bySlug } from '../data/projects.js';
 import { services, homeTypes } from '../data/services.js';
 import { steps } from '../data/process.js';
 import { renderEnquiry } from '../components/enquiry.js';
 import { heroIntro, gsap, ScrollTrigger } from '../modules/motion.js';
 
-const tags = (p) => `<ul class="proj__tags"><li>${p.propertyType}</li><li>${p.homeType}</li><li>${p.location}</li><li>${p.direction}</li></ul>`;
+const known = (v) => v && !/to be confirmed|^—$/i.test(v);
+const tags = (p) => `<ul class="proj__tags">${[p.propertyType, p.homeType, p.location, p.direction].filter(known).map((t) => `<li>${t}</li>`).join('')}</ul>`;
 const projCard = (p, shape, idx, opts = {}) => `
   <a class="proj proj--${shape}" href="project.html?p=${p.slug}" data-cursor="View project" aria-label="${p.title}">
     ${opts.num ? `<div class="proj__num">${p.number}<sup>${p.propertyType}</sup></div>` : ''}
@@ -15,12 +16,14 @@ const projCard = (p, shape, idx, opts = {}) => `
 
 function renderHero() {
   const p = projects[0];
-  document.querySelector('[data-hero-img]').innerHTML = `<img src="${p.cover}" alt="${p.title} — ${p.homeType}, ${p.location}" fetchpriority="high" decoding="async" data-ph="0">`;
-  document.querySelector('[data-hero-cap]').innerHTML = `<div class="label">${p.number} — ${p.propertyType} · ${p.homeType} · ${p.location}</div><div class="name">${p.title}</div><a class="link" href="project.html?p=${p.slug}">View project <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a>`;
+  document.querySelector('[data-hero-img]').innerHTML = `<img src="${p.hero || p.cover}" alt="${p.title} — ${p.homeType}, ${p.location}" fetchpriority="high" decoding="async" data-ph="0">`;
+  document.querySelector('[data-hero-cap]').innerHTML = `<div class="label">${p.number} — ${[p.propertyType, p.homeType, p.location].filter(known).join(' · ')}</div><div class="name">${p.title}</div><a class="link" href="project.html?p=${p.slug}">View project <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a>`;
 }
 
 function renderWork() {
-  const [a, b, c, d, e] = projects;
+  // Six projects on the homepage, matched to the slot shapes (landscape covers → wide, portrait covers → tall)
+  const a = bySlug('tampines-greenverge-fluted'), b = bySlug('sembawang-country-kitchen'), c = bySlug('varsity-park');
+  const d = bySlug('tampines-greenverge-stone'), e = bySlug('tanglin-regency'), f = bySlug('tampines-greenglen-limewash');
   document.querySelector('[data-work]').innerHTML = `
     <div class="work__item work__item--a">${projCard(a, 'wide', 1, { num: true, parallax: 10 })}</div>
     <div class="work__item work__item--b">${projCard(b, 'tall', 2, { num: true })}${projCard(c, 'square', 3)}</div>
@@ -33,7 +36,7 @@ function renderWork() {
       </div>
       ${projCard(d, 'land', 4)}
     </div>
-    <div class="work__item work__item--d">${projCard(e, 'square', 5)}${projCard(projects[5], 'tall', 6, { num: true })}</div>`;
+    <div class="work__item work__item--d">${projCard(e, 'square', 5)}${projCard(f, 'tall', 6, { num: true })}</div>`;
 }
 
 function renderServices() {
