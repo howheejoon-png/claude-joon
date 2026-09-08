@@ -49,17 +49,17 @@ function renderWork() {
   const d = bySlug('tampines-greenverge-stone'), e = bySlug('tanglin-regency'), f = bySlug('tampines-greenglen-limewash');
   document.querySelector('[data-work]').innerHTML = `
     <div class="work__item work__item--a">${projCard(a, 'wide', 1, { num: true, parallax: 10 })}</div>
-    <div class="work__item work__item--b">${projCard(b, 'tall', 2, { num: true })}${projCard(c, 'square', 3)}</div>
+    <div class="work__item work__item--b">${projCard(b, 'tall', 2, { num: true })}${projCard(c, 'square', 3, { num: true })}</div>
     <div class="work__item work__item--c">
       <div class="work__text" data-reveal="fade">
-        <div class="label label--signal">${d.number} — ${d.propertyType}</div>
+        <div class="label label--signal">${d.propertyType} · ${d.location}</div>
         <h3 class="display display-md">${d.title}</h3>
         <p>${d.summary}</p>
         <a class="link" href="project.html?p=${d.slug}">View project <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a>
       </div>
-      ${projCard(d, 'land', 4)}
+      ${projCard(d, 'land', 4, { num: true })}
     </div>
-    <div class="work__item work__item--d">${projCard(e, 'square', 5)}${projCard(f, 'tall', 6, { num: true })}</div>`;
+    <div class="work__item work__item--d">${projCard(e, 'square', 5, { num: true })}${projCard(f, 'tall', 6, { num: true })}</div>`;
 }
 
 function renderServices() {

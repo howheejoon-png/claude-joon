@@ -58,7 +58,7 @@
 .proj:hover img { transform: scale(1.035); }
 .proj[data-parallax] img, .proj .frame[data-parallax] img { transform: none; }
 .proj__num { position: absolute; top: 0; left: 0; transform: translate(-0.04em, -0.22em); font-family: var(--font-display); font-weight: 500; font-variation-settings: 'wdth' var(--display-wdth); font-size: var(--display-lg); line-height: 1; letter-spacing: -0.04em; color: var(--ink); z-index: 3; pointer-events: none; }
-.proj__num sup { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em; color: var(--signal); vertical-align: top; margin-left: 0.3em; font-style: normal; }
+.proj__num sup { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--signal); vertical-align: top; margin-left: 0.3em; font-style: normal; }
 .proj__meta { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--s-2) var(--s-5); padding-top: var(--s-4); }
 .proj__title { font-family: var(--font-display); font-size: var(--display-sm); line-height: 1.05; letter-spacing: -0.015em; }
 .proj__tags { display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; }
