@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "node scripts/build-css.mjs"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +13,8 @@
   "type": "commonjs",
   "dependencies": {
     "puppeteer": "^24.39.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
   }
 }
