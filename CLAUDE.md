@@ -26,9 +26,31 @@
 
 ## Output Defaults
 - Single `index.html` file, all styles inline, unless user says otherwise
-- Tailwind CSS via CDN: `<script src="https://cdn.tailwindcss.com"></script>`
+- Tailwind CSS via CDN for **prototypes only**: `<script src="https://cdn.tailwindcss.com"></script>`
+- **Never ship the Play CDN.** It downloads a CSS compiler and generates the
+  stylesheet in the browser on every page load, render-blocking, for every
+  visitor — Tailwind's own docs say development only. Anything deployed gets a
+  stylesheet compiled at build time instead (see below).
 - Placeholder images: `https://placehold.co/WIDTHxHEIGHT`
 - Mobile-first responsive
+
+## Stylesheet (this project)
+
+`index.html` carries its Tailwind compiled and inlined, between the
+`<!-- tailwind:start -->` / `<!-- tailwind:end -->` markers. Don't edit inside
+them by hand.
+
+After changing any class in `index.html`:
+
+```bash
+npm run build:css
+```
+
+That recompiles and re-inlines. Skip it and new utility classes silently do
+nothing, because there's no longer a runtime compiler to pick them up.
+
+The block sits *after* the page's own `<style>` because that's where the Play
+CDN used to inject it — keeping the cascade order identical.
 
 ## Brand Assets
 - Always check the `brand_assets/` folder before designing. It may contain logos, color guides, style guides, or images.
