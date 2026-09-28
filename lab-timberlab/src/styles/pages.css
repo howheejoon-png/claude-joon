@@ -141,4 +141,24 @@
 /* ---------- Contact page ---------- */
 .contact-page { padding-top: calc(var(--header-h) + var(--section-sm)); padding-bottom: var(--section); }
 .contact-page .enquiry__grid { row-gap: var(--s-8); }
-.contact-map { margin-top: var(--section); aspect-ratio: 16 / 7; background: var(--paper-2); border: 1px dashed var(--rule-strong); display: grid; place-items: center; font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--stone); }
+
+/* Studio location card on the contact page */
+.contact-map {
+  margin-top: var(--section);
+  display: grid; gap: var(--s-4); align-content: center; justify-items: start;
+  aspect-ratio: auto; min-height: 16rem;
+  padding: var(--s-6);
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  transition: background var(--dur-fast) ease;
+}
+.contact-map:hover { background: var(--paper-3); }
+.contact-map__label { color: var(--fg-muted); }
+.contact-map__addr {
+  font-family: var(--font-display); font-weight: 500; font-variation-settings: 'wdth' var(--display-wdth);
+  font-size: var(--display-sm); line-height: 1.15; letter-spacing: var(--tracking-display);
+}
+.enquiry__alt .hours { display: grid; gap: 0.2rem; }
+.enquiry__alt .hours span { display: flex; gap: 0.75rem; justify-content: space-between; max-width: 18rem; }
+.enquiry__alt .hours i { font-style: normal; color: var(--fg-muted); }
+.enquiry__alt .hours b { font-weight: 500; }

@@ -2,7 +2,7 @@ import { boot } from '../main.js';
 import { projects, bySlug } from '../data/projects.js';
 import { services } from '../data/services.js';
 import { steps } from '../data/process.js';
-import { renderEnquiry } from '../components/enquiry.js';
+import { renderEnquiry, renderContactAlt } from '../components/enquiry.js';
 import { site } from '../data/site.js';
 import { heroIntro, gsap, ScrollTrigger } from '../modules/motion.js';
 
@@ -129,4 +129,5 @@ renderWork();
 renderServices();
 renderProcess();
 renderEnquiry(document.querySelector('[data-enquiry]'));
+renderContactAlt(document.querySelector('[data-contact]'));
 if (document.fonts?.ready) document.fonts.ready.then(() => heroIntro(document.querySelector('.hero'))); else heroIntro(document.querySelector('.hero'));

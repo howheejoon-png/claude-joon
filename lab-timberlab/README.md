@@ -70,7 +70,7 @@ Content and presentation are separated: the client will edit copy, project field
 - **Service names and descriptions** — proposed wording, flagged on the page.
 - **Studio story, founding year, team** — placeholders only.
 - **Testimonials, figures, accreditations, awards, media, partner logos** — empty designed slots; nothing has been invented.
-- **Contact details, address, map, social links** — placeholders.
+- **Contact details** — address, phone and opening hours are CONFIRMED (47 Jln Pemimpin, #04-05, Halcyon 2, Singapore 577200 · +65 8993 8778 · Mon–Fri 9am–6pm, Sat 9am–12pm, Sun closed). Still outstanding: the studio email address (a placeholder is shown and flagged on the page), whether WhatsApp is active on the studio number, and the social media links.
 - **Enquiry form** — proposed fields; submission is a demo (nothing is sent).
 - **Copy** — all headings and paragraphs are draft copy in the proposed voice.
 

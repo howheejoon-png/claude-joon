@@ -1,5 +1,16 @@
 import { site } from '../data/site.js';
 
+/** Contact details beside the enquiry form. Rendered from site.js so there is one source of truth. */
+export function renderContactAlt(host, { hours = false } = {}) {
+  if (!host) return;
+  const c = site.contact;
+  host.innerHTML = `
+    <li><span>Studio</span><a href="${c.mapUrl}" target="_blank" rel="noopener">${c.address.join('<br>')}</a></li>
+    <li><span>Phone</span><a href="${c.phoneHref}">${c.phone}</a></li>
+    <li><span>Email</span><a href="mailto:${c.email}">${c.email}</a>${c.emailConfirmed ? '' : '<br><span class="placeholder-note" style="margin-top:.4rem">Email address to be confirmed</span>'}</li>
+    ${hours ? `<li><span>Opening hours</span><span class="hours">${c.hours.map((h) => `<span><i>${h.days}</i><b>${h.time}</b></span>`).join('')}</span></li>` : ''}`;
+}
+
 /**
  * Enquiry form. Fields are proposed, not final.
  * In WordPress this would become a Gravity Forms / WPForms / Contact Form 7 form styled with the same classes.

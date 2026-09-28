@@ -18,9 +18,8 @@ export function renderFooter() {
         <div class="foot-col">
           <h4>Studio</h4>
           <ul>
-            <li>${site.contact.address.join('<br>')}</li>
-            <li class="muted" style="margin-top:.5rem">${site.contact.hours}</li>
-            <li style="margin-top:.75rem"><span class="placeholder-note">Address to be confirmed</span></li>
+            <li><a href="${site.contact.mapUrl}" target="_blank" rel="noopener">${site.contact.address.join('<br>')}</a></li>
+            <li class="muted" style="margin-top:.75rem">${site.contact.hours.map((h) => `${h.days} · ${h.time}`).join('<br>')}</li>
           </ul>
         </div>
         <div class="foot-col">
@@ -35,7 +34,7 @@ export function renderFooter() {
           <h4>Contact</h4>
           <ul>
             <li><a href="mailto:${site.contact.email}">${site.contact.email}</a></li>
-            <li><a href="tel:${site.contact.phone.replace(/\s/g,'')}">${site.contact.phone}</a></li>
+            <li><a href="${site.contact.phoneHref}">${site.contact.phone}</a></li>
             <li><a href="${site.contact.whatsapp}" target="_blank" rel="noopener">WhatsApp</a></li>
             <li style="margin-top:.75rem">${site.contact.socials.map(s => `<a href="${s.href}">${s.label}</a>`).join(' &nbsp;/&nbsp; ')}</li>
           </ul>
