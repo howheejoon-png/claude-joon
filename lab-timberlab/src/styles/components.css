@@ -87,33 +87,6 @@
   .foot-grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
 }
 
-/* ---------- Cursor ---------- */
-.cursor { position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none; display: none; }
-@media (hover: hover) and (pointer: fine) { .cursor { display: block; } }
-.cursor__dot {
-  position: absolute; top: 0; left: 0;
-  width: 10px; height: 10px; margin: -5px 0 0 -5px;
-  border-radius: 50%; background: var(--ink);
-  mix-blend-mode: difference;
-  background: #fff;
-  transition: transform var(--dur) var(--ease-spring), opacity var(--dur-fast) ease;
-}
-.cursor__ring {
-  position: absolute; top: 0; left: 0;
-  width: 84px; height: 84px; margin: -42px 0 0 -42px;
-  border-radius: 50%; background: var(--paper); color: var(--ink);
-  display: grid; place-items: center;
-  font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase;
-  transform: scale(0); opacity: 0;
-  transition: transform var(--dur) var(--ease-spring), opacity var(--dur-fast) ease;
-  box-shadow: var(--shadow-float);
-}
-.cursor.is-view .cursor__ring { transform: scale(1); opacity: 1; }
-.cursor.is-view .cursor__dot { opacity: 0; }
-.cursor.is-link .cursor__dot { transform: scale(2.4); }
-body.has-cursor a, body.has-cursor button { cursor: none; }
-body.has-cursor { cursor: none; }
-
 /* ---------- Enquiry form ---------- */
 .form { display: grid; gap: var(--s-6); }
 .form__row { display: grid; gap: var(--s-6); }

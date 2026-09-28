@@ -13,8 +13,8 @@
   --ink-3:      #262626;
   --stone:      #737378;
   --stone-2:    #A7A7AA;
-  --signal:     #2743D9;
-  --signal-soft: rgba(39, 67, 217, 0.12);
+  --signal:     #4A63C8;   /* softened at client request; 4.8:1 on paper, still legible at label sizes */
+  --signal-soft: rgba(74, 99, 200, 0.12);
 
   --line:       rgba(15, 15, 15, 0.14);
   --line-strong: rgba(15, 15, 15, 0.6);

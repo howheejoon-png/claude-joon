@@ -21,6 +21,16 @@ export const site = {
     video: [{ src: 'video/hero.webm', type: 'video/webm' }, { src: 'video/hero.mp4', type: 'video/mp4' }],
     videoMobile: [{ src: 'video/hero-mobile.webm', type: 'video/webm' }, { src: 'video/hero-mobile.mp4', type: 'video/mp4' }],
   },
+  /**
+   * PLACEHOLDER figures. These are SAMPLE values so the counting animation can be
+   * reviewed — they are NOT L.A.B's real numbers. Replace each `value` with the
+   * confirmed figure, or set it to null to show an em-dash until it is supplied.
+   */
+  figures: [
+    { value: 12, suffix: '+', label: 'Years in practice' },
+    { value: 260, suffix: '+', label: 'Homes completed' },
+    { value: 18, suffix: '', label: 'In-house team' },
+  ],
   contact: {
     // PLACEHOLDER — replace with confirmed studio details
     address: ['Studio address to be confirmed', 'Singapore'],

@@ -16,24 +16,14 @@
     <section class="hero is-dark" data-header="dark">
       <div class="hero__bg frame" data-hero-img data-hero-frame></div>
       <div class="container hero__inner">
-        <div class="hero__top label" data-hero-fade>
-          <span class="hero__eyebrow"><span class="tick"></span>Design &amp; build studio — Singapore</span>
-          <div class="hide-mobile"><ul class="hero__types"><li>HDB</li><li>BTO</li><li>Condominium</li><li>Landed</li></ul></div>
-        </div>
         <div class="hero__bottom">
           <h1 class="display hero__title" data-hero-title>Your home,<br>thought through.</h1>
-          <div class="hero__row">
-            <div class="hero__caption" data-hero-cap data-hero-fade></div>
-            <div class="hero__side" data-hero-fade>
-              <p class="hero__lead">Interior design and design-and-build for HDB, BTO, condominium and landed homes. One team from the first conversation to the final handover.</p>
-              <div class="hero__actions">
-                <a class="btn" href="contact.html"><span class="btn__dot"></span>Start a project</a>
-                <a class="link" href="#work">See the work <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a>
-              </div>
-            </div>
+          <div class="hero__actions" data-hero-fade>
+            <a class="btn" href="contact.html"><span class="btn__dot"></span>Start a project</a>
           </div>
         </div>
       </div>
+      <div class="hero__scroll label" data-hero-fade aria-hidden="true"><span>Scroll</span><span class="rule"></span></div>
     </section>
 
     <!-- INTRO — who L.A.B is, in one breath -->
@@ -76,11 +66,13 @@
           <div class="services__side"><div class="svc-media" data-services-media data-reveal="fade"></div></div>
         </div>
       </div>
-      <div class="container types">
-        <div class="sec-head" style="margin-bottom:var(--s-6)">
-          <div class="sec-head__label label muted" data-reveal="fade"><span>Every kind of Singapore home</span></div>
-        </div>
-        <div class="types__grid" data-types data-stagger></div>
+      <div class="container">
+        <a class="svc-more-link" href="projects.html" data-reveal="fade">
+          <span class="label muted">HDB · BTO · Condominium · Landed</span>
+          <span class="svc-more-link__cta">View our works
+            <svg class="arrow-lg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 40L40 8M14 8h26v26"/></svg>
+          </span>
+        </a>
       </div>
     </section>
 
@@ -120,11 +112,6 @@
             <blockquote>Client testimonial to be supplied. This module is designed for a short, specific quote about the experience of working with L.A.B.</blockquote>
             <figcaption>Homeowner · Home type · Estate</figcaption>
           </figure>
-          <div class="figures" data-stagger>
-            <div class="figure"><div class="figure__val">—</div><div class="figure__key">Years in practice</div></div>
-            <div class="figure"><div class="figure__val">—</div><div class="figure__key">Homes completed</div></div>
-            <div class="figure"><div class="figure__val">—</div><div class="figure__key">In-house team</div></div>
-          </div>
           <div class="recognition" data-reveal="fade">
             <div class="label muted">Accreditations &amp; recognition</div>
             <div class="recognition__row">

@@ -1,6 +1,6 @@
 import { boot } from '../main.js';
 import { projects, bySlug } from '../data/projects.js';
-import { services, homeTypes } from '../data/services.js';
+import { services } from '../data/services.js';
 import { steps } from '../data/process.js';
 import { renderEnquiry } from '../components/enquiry.js';
 import { site } from '../data/site.js';
@@ -9,7 +9,7 @@ import { heroIntro, gsap, ScrollTrigger } from '../modules/motion.js';
 const known = (v) => v && !/to be confirmed|^—$/i.test(v);
 const tags = (p) => `<ul class="proj__tags">${[p.propertyType, p.homeType, p.location, p.direction].filter(known).map((t) => `<li>${t}</li>`).join('')}</ul>`;
 const projCard = (p, shape, idx, opts = {}) => `
-  <a class="proj proj--${shape}" href="project.html?p=${p.slug}" data-cursor="View project" aria-label="${p.title}">
+  <a class="proj proj--${shape}" href="project.html?p=${p.slug}" aria-label="${p.title}">
     ${opts.num ? `<div class="proj__num">${p.number}<sup>${p.propertyType}</sup></div>` : ''}
     <div class="frame frame--shade" data-reveal="clip" data-parallax="${opts.parallax ?? 8}"><img src="${p.cover}" alt="${p.title} — ${p.homeType}, ${p.location}" loading="${idx === 0 ? 'eager' : 'lazy'}" decoding="async" data-ph="${idx}"></div>
     <div class="proj__meta"><h3 class="proj__title">${p.title}</h3>${tags(p)}</div>
@@ -35,12 +35,9 @@ function renderHero() {
     v.lastElementChild.addEventListener('error', fail); // only when the last candidate source fails
     v.addEventListener('canplay', () => { v.classList.add('is-ready'); v.play().catch(fail); }, { once: true });
     bg.appendChild(v);
-    // The caption describes what is on screen: with stock footage playing, don't credit it as a project
-    v.addEventListener('canplay', () => { const cap = document.querySelector('[data-hero-cap]'); if (cap) cap.innerHTML = `<div class="label">Ambient film — stock footage, placeholder</div><div class="name">To be replaced with L.A.B footage</div><a class="link" href="#work">See the projects <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a>`; }, { once: true });
     // Save battery: only play while the hero is on screen
     new IntersectionObserver((es) => es.forEach((e) => { if (!v.isConnected) return; e.isIntersecting ? v.play().catch(() => {}) : v.pause(); }), { threshold: 0.05 }).observe(bg);
   }
-  document.querySelector('[data-hero-cap]').innerHTML = `<div class="label">${p.number} — ${[p.propertyType, p.homeType, p.location].filter(known).join(' · ')}</div><div class="name">${p.title}</div><a class="link" href="project.html?p=${p.slug}">View project <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a>`;
 }
 
 function renderWork() {
@@ -50,15 +47,7 @@ function renderWork() {
   document.querySelector('[data-work]').innerHTML = `
     <div class="work__item work__item--a">${projCard(a, 'wide', 1, { num: true, parallax: 10 })}</div>
     <div class="work__item work__item--b">${projCard(b, 'tall', 2, { num: true })}${projCard(c, 'square', 3, { num: true })}</div>
-    <div class="work__item work__item--c">
-      <div class="work__text" data-reveal="fade">
-        <div class="label label--signal">${d.propertyType} · ${d.location}</div>
-        <h3 class="display display-md">${d.title}</h3>
-        <p>${d.summary}</p>
-        <a class="link" href="project.html?p=${d.slug}">View project <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a>
-      </div>
-      ${projCard(d, 'land', 4, { num: true })}
-    </div>
+    <div class="work__item work__item--c">${projCard(d, 'land', 4, { num: true, parallax: 10 })}</div>
     <div class="work__item work__item--d">${projCard(e, 'square', 5, { num: true })}${projCard(f, 'tall', 6, { num: true })}</div>`;
 }
 
@@ -84,8 +73,6 @@ function renderServices() {
     el.addEventListener('mouseenter', () => { if (window.matchMedia('(hover:hover)').matches) activate(Number(el.dataset.i)); });
     el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(Number(el.dataset.i)); } });
   });
-  document.querySelector('[data-types]').innerHTML = homeTypes.map((t) => `
-    <div class="type"><h3 class="type__name"><small>${t.sub}</small>${t.label}</h3><p>${t.desc}</p><a class="link" href="projects.html?type=${t.key}">See ${t.label} projects <svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg></a></div>`).join('');
 }
 
 function renderProcess() {

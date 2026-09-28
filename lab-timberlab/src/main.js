@@ -10,7 +10,6 @@ import './styles/pages.css';
 
 import { renderHeader, watchDarkSections } from './components/header.js';
 import { renderFooter } from './components/footer.js';
-import { initCursor } from './components/cursor.js';
 import { initImageFallbacks } from './modules/images.js';
 import { initSmoothScroll } from './modules/smooth.js';
 import { initReveals, ScrollTrigger } from './modules/motion.js';
@@ -20,7 +19,6 @@ export function boot(current) {
   renderHeader(current);
   renderFooter();
   initSmoothScroll();
-  initCursor();
   const grain = document.createElement('div'); grain.className = 'grain'; grain.setAttribute('aria-hidden', 'true'); document.body.appendChild(grain);
   // Reveals run after fonts settle so line-splitting measures the right font
   const run = () => { initReveals(); watchDarkSections(); ScrollTrigger.refresh(); };
