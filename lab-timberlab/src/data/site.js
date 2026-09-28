@@ -37,9 +37,8 @@ export const site = {
     mapUrl: 'https://www.google.com/maps/search/?api=1&query=47+Jln+Pemimpin+%2304-05+Halcyon+2+Singapore+577200',
     phone: '+65 8993 8778',
     phoneHref: 'tel:+6589938778',
-    // PLACEHOLDER — email address not yet supplied by L.A.B
-    email: 'hello@labbytimberlab.sg',
-    emailConfirmed: false,
+    email: 'sales@timberlab.sg',
+    emailConfirmed: true,
     // Derived from the studio mobile number; confirm WhatsApp is active on it
     whatsapp: 'https://wa.me/6589938778',
     whatsappConfirmed: false,
