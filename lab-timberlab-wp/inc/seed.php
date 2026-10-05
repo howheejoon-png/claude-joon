@@ -257,13 +257,13 @@ function lab_run_seed(): array {
 
 	/* Pages and the front page ----------------------------------------- */
 	$pages = [
-		'home'     => [ 'Home', '', '', '', '' ],
-		'services' => [ 'Services', 'page-services.php', 'A full-service design-and-build studio. Engage us for the whole home, or for the part that matters most.', 'What we', 'do.' ],
-		'studio'   => [ 'Studio', 'page-studio.php', 'L.A.B is the interior design and design-and-build practice of Timberlab Pte Ltd.', 'Drawn here.', 'Built here.' ],
-		'contact'  => [ 'Contact', 'page-contact.php', '', '', '' ],
+		'home'     => [ 'Home', '', '', '', '', '' ],
+		'services' => [ 'Services', 'page-services.php', 'A full-service design-and-build studio. Engage us for the whole home, or for the part that matters most.', 'What we', 'do.', '' ],
+		'studio'   => [ 'Studio', 'page-studio.php', 'L.A.B is the interior design and design-and-build practice of Timberlab Pte Ltd.', 'Drawn here.', 'Built here.', 'tampines-greenglen-limewash/02.jpg' ],
+		'contact'  => [ 'Contact', 'page-contact.php', '', '', '', '' ],
 	];
 	$ids = [];
-	foreach ( $pages as $slug => [ $title, $template, $excerpt, $heading, $heading_em ] ) {
+	foreach ( $pages as $slug => [ $title, $template, $excerpt, $heading, $heading_em, $image ] ) {
 		$page = get_page_by_path( $slug );
 		if ( $page ) {
 			$ids[ $slug ] = $page->ID;
@@ -272,6 +272,13 @@ function lab_run_seed(): array {
 				update_post_meta( $page->ID, 'lab_heading', $heading );
 				update_post_meta( $page->ID, 'lab_heading_em', $heading_em );
 				$log[] = 'Page heading set: ' . $title;
+			}
+			if ( $image && ! has_post_thumbnail( $page->ID ) ) {
+				$att = lab_seed_attachment( $image, $title );
+				if ( $att ) {
+					set_post_thumbnail( $page->ID, $att );
+					$log[] = 'Page image set: ' . $title;
+				}
 			}
 			continue;
 		}
@@ -292,6 +299,12 @@ function lab_run_seed(): array {
 			if ( $heading ) {
 				update_post_meta( $id, 'lab_heading', $heading );
 				update_post_meta( $id, 'lab_heading_em', $heading_em );
+			}
+			if ( $image ) {
+				$att = lab_seed_attachment( $image, $title );
+				if ( $att ) {
+					set_post_thumbnail( $id, $att );
+				}
 			}
 			$ids[ $slug ] = (int) $id;
 			$log[]        = 'Page: ' . $title;

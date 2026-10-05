@@ -22,3 +22,8 @@ body.admin-bar .menu { top: 32px; }
 
 /* The projects filter hides cards client-side */
 .pgrid .proj.is-hidden { display: none; }
+
+/* Studio intro with no photograph: let the text use the full measure. */
+@media (min-width: 900px) {
+  .studio-intro__grid--text-only .studio-intro__text { grid-column: 1 / span 8; }
+}

@@ -30,7 +30,7 @@ $team    = get_posts( [ 'post_type' => 'lab_person', 'posts_per_page' => -1, 'or
 </section>
 
 <section class="studio-intro">
-	<div class="container studio-intro__grid">
+	<div class="container studio-intro__grid<?php echo has_post_thumbnail() ? '' : ' studio-intro__grid--text-only'; ?>">
 		<div class="studio-intro__text" data-reveal="fade">
 			<?php
 			while ( have_posts() ) {
