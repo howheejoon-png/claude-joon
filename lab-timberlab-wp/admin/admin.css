@@ -1,0 +1,26 @@
+/* Admin controls for the theme's custom fields. */
+.lab-f { margin-bottom: 1.25rem; }
+.lab-f__label { display: block; font-weight: 600; margin-bottom: .25rem; }
+.lab-f__help { margin: .15rem 0 .5rem; color: #646970; font-size: 12px; }
+.lab-f__input { width: 100%; max-width: 46rem; }
+textarea.lab-f__input { font-family: inherit; }
+
+.lab-media__preview { margin: .5rem 0; }
+.lab-media__preview img { max-width: 220px; height: auto; border: 1px solid #dcdcde; border-radius: 2px; display: block; }
+
+.lab-rep__rows { display: grid; gap: .4rem; margin-bottom: .5rem; }
+.lab-rep__row { display: flex; align-items: center; gap: .5rem; }
+.lab-rep__row input[type="text"] { flex: 1; min-width: 8rem; }
+.lab-rep__row--cols input { flex: 1 1 10rem; }
+
+.lab-gal__handle { cursor: grab; color: #a7aaad; user-select: none; }
+.lab-gal__items { display: grid; gap: .5rem; margin-bottom: .5rem; }
+.lab-gal__item { display: flex; align-items: center; gap: .75rem; padding: .5rem; border: 1px solid #dcdcde; background: #fff; border-radius: 2px; }
+.lab-gal__thumb { width: 64px; height: 64px; flex: none; background: #f0f0f1; display: grid; place-items: center; overflow: hidden; }
+.lab-gal__thumb img { width: 100%; height: 100%; object-fit: cover; }
+.lab-gal__meta { display: flex; gap: .5rem; flex: 1; flex-wrap: wrap; }
+.lab-gal__meta input[type="text"] { flex: 1; min-width: 12rem; }
+.lab-gal__remove { color: #b32d2e; }
+
+.lab-settings__grid { max-width: 48rem; }
+.lab-settings h2 { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #dcdcde; }

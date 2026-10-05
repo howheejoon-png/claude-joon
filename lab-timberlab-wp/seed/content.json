@@ -1,0 +1,559 @@
+{
+  "propertyTypes": [
+    {
+      "name": "HDB",
+      "desc": "Re-planning older flats around how you live today, within HDB renovation guidelines."
+    },
+    {
+      "name": "BTO",
+      "desc": "Getting a bare unit right the first time, with a plan that will still make sense in ten years."
+    },
+    {
+      "name": "Condominium",
+      "desc": "Working with the building's rules and structure to make an apartment feel like it was designed for you."
+    },
+    {
+      "name": "Landed",
+      "desc": "Larger interventions across levels, courtyards and gardens, coordinated as one project."
+    },
+    {
+      "name": "Commercial",
+      "desc": "Shops and workspaces designed and fitted out by the same team."
+    }
+  ],
+  "projects": [
+    {
+      "title": "The Fluted Wall",
+      "slug": "tampines-greenverge-fluted",
+      "propertyType": "HDB",
+      "homeType": "To be confirmed",
+      "location": "Tampines GreenVerge",
+      "direction": "Warm contemporary",
+      "year": "—",
+      "summary": "A family flat built around one long wall of fluted walnut, with a navy kitchen and a bar counter where the day starts and ends.",
+      "brief": "A home that felt warm rather than showroom-cold, with a proper media wall for the living room, a hard-working kitchen and a nursery that could grow with the family.",
+      "response": "Fluted walnut panels run from the entrance through the living room and wrap the kitchen island, tying the rooms together. Navy cabinetry and a marble-look backsplash keep the kitchen crisp, while backlit display niches and a tufted headboard soften the bedrooms.",
+      "details": [
+        "Fluted walnut feature panels",
+        "Navy kitchen with marble-look backsplash",
+        "Backlit display niches",
+        "Tufted upholstered headboard"
+      ],
+      "cover": "tampines-greenverge-fluted/00.jpg",
+      "hero": "tampines-greenverge-fluted/hero.jpg",
+      "gallery": [
+        {
+          "file": "tampines-greenverge-fluted/01.jpg",
+          "alt": "Living room with fluted walnut media wall",
+          "shape": "wide"
+        },
+        {
+          "file": "tampines-greenverge-fluted/03.jpg",
+          "alt": "Kitchen run in navy with marble-look surfaces",
+          "shape": "tall"
+        },
+        {
+          "file": "tampines-greenverge-fluted/04.jpg",
+          "alt": "Backlit display shelving beside the television",
+          "shape": "tall"
+        },
+        {
+          "file": "tampines-greenverge-fluted/02.jpg",
+          "alt": "Kitchen island with bar seating",
+          "shape": "wide"
+        },
+        {
+          "file": "tampines-greenverge-fluted/06.jpg",
+          "alt": "Bathroom vanity",
+          "shape": "tall"
+        },
+        {
+          "file": "tampines-greenverge-fluted/05.jpg",
+          "alt": "Bathroom with floating vanity and fluted panel",
+          "shape": "wide"
+        },
+        {
+          "file": "tampines-greenverge-fluted/08.jpg",
+          "alt": "Children's room with house-frame bed",
+          "shape": "wide"
+        },
+        {
+          "file": "tampines-greenverge-fluted/09.jpg",
+          "alt": "Study with glass-fronted wardrobe",
+          "shape": "wide"
+        }
+      ]
+    },
+    {
+      "title": "The Country Kitchen",
+      "slug": "sembawang-country-kitchen",
+      "propertyType": "HDB",
+      "homeType": "To be confirmed",
+      "location": "Sembawang",
+      "direction": "Modern farmhouse",
+      "year": "—",
+      "summary": "A shaker kitchen with handmade tiles, brass pendants and an oxblood glazed door, in a flat that feels like a cottage twelve storeys up.",
+      "brief": "A couple with a clear picture: a kitchen they would actually cook in, a soft green bedroom, and none of the glossy surfaces that come with most new flats.",
+      "response": "The kitchen is the heart of the plan, with cream shaker cabinetry, a farmhouse sink and open shelves under a run of warm lighting. Handmade-look subway tiles and brass fittings carry the character; the sage bedroom and a compact service yard follow the same restraint.",
+      "details": [
+        "Cream shaker cabinetry",
+        "Handmade-look subway tiles",
+        "Brass pendant lighting",
+        "Oxblood glazed service door"
+      ],
+      "cover": "sembawang-country-kitchen/00.jpg",
+      "hero": "",
+      "gallery": [
+        {
+          "file": "sembawang-country-kitchen/01.jpg",
+          "alt": "Living room",
+          "shape": "wide"
+        },
+        {
+          "file": "sembawang-country-kitchen/03.jpg",
+          "alt": "Farmhouse sink beneath the kitchen window",
+          "shape": "tall"
+        },
+        {
+          "file": "sembawang-country-kitchen/02.jpg",
+          "alt": "Handmade-look tiles and timber worktop",
+          "shape": "tall"
+        },
+        {
+          "file": "sembawang-country-kitchen/06.jpg",
+          "alt": "Open shelving with under-shelf lighting",
+          "shape": "tall"
+        },
+        {
+          "file": "sembawang-country-kitchen/04.jpg",
+          "alt": "Sage green bedroom",
+          "shape": "tall"
+        },
+        {
+          "file": "sembawang-country-kitchen/05.jpg",
+          "alt": "Bathroom with green tiles",
+          "shape": "tall"
+        },
+        {
+          "file": "sembawang-country-kitchen/07.jpg",
+          "alt": "Service yard",
+          "shape": "tall"
+        }
+      ]
+    },
+    {
+      "title": "The Garden Room",
+      "slug": "varsity-park",
+      "propertyType": "Condominium",
+      "homeType": "Ground-floor unit",
+      "location": "Varsity Park",
+      "direction": "Relaxed classic",
+      "year": "—",
+      "summary": "A ground-floor condominium apartment that opens onto a bamboo-screened patio, with a white shaker kitchen and walnut throughout.",
+      "brief": "Make the most of the private outdoor space and give the family a kitchen big enough to cook together in.",
+      "response": "The kitchen was reworked with white shaker cabinetry, a stone splashback and a hanging rack for pans. Outside, a bamboo screen and timber loungers turn the patio into an extra room, and cove lighting along the ceiling ties the interior together after dark.",
+      "details": [
+        "White shaker kitchen",
+        "Bamboo-screened patio",
+        "Walnut dining table and stools",
+        "Continuous cove lighting"
+      ],
+      "cover": "varsity-park/00.jpg",
+      "hero": "",
+      "gallery": [
+        {
+          "file": "varsity-park/01.jpg",
+          "alt": "Dining room",
+          "shape": "wide"
+        },
+        {
+          "file": "varsity-park/02.jpg",
+          "alt": "Patio with bamboo screen and loungers",
+          "shape": "tall"
+        },
+        {
+          "file": "varsity-park/03.jpg",
+          "alt": "Living room opening to the garden",
+          "shape": "tall"
+        },
+        {
+          "file": "varsity-park/05.jpg",
+          "alt": "Outdoor bar counter",
+          "shape": "tall"
+        },
+        {
+          "file": "varsity-park/04.jpg",
+          "alt": "Pantry shelving",
+          "shape": "tall"
+        },
+        {
+          "file": "varsity-park/06.jpg",
+          "alt": "Kitchen island",
+          "shape": "tall"
+        }
+      ]
+    },
+    {
+      "title": "Stone and Brass",
+      "slug": "tampines-greenverge-stone",
+      "propertyType": "HDB",
+      "homeType": "To be confirmed",
+      "location": "Tampines GreenVerge",
+      "direction": "Quiet luxury",
+      "year": "—",
+      "summary": "Grey stone-textured joinery, brass detailing and a cluster of pendants over the dining table give this flat the calm of a hotel suite.",
+      "brief": "An owner who wanted a darker, more grown-up palette than the usual white flat, with generous storage that would not read as cupboards.",
+      "response": "Full-height stone-effect panels conceal wardrobes and services so the walls read as one surface. Brass inlays, a backlit display cabinet and a pendant cluster over the table add the warmth; a walk-in wardrobe behind smoked glass keeps the bedroom uncluttered.",
+      "details": [
+        "Stone-textured full-height panelling",
+        "Brass inlay trims",
+        "Backlit display cabinet",
+        "Smoked-glass walk-in wardrobe"
+      ],
+      "cover": "tampines-greenverge-stone/00.jpg",
+      "hero": "",
+      "gallery": [
+        {
+          "file": "tampines-greenverge-stone/01.jpg",
+          "alt": "Dining table beneath a pendant cluster",
+          "shape": "wide"
+        },
+        {
+          "file": "tampines-greenverge-stone/03.jpg",
+          "alt": "Backlit display cabinet",
+          "shape": "tall"
+        },
+        {
+          "file": "tampines-greenverge-stone/04.jpg",
+          "alt": "Kitchen with bar shelf",
+          "shape": "tall"
+        },
+        {
+          "file": "tampines-greenverge-stone/02.jpg",
+          "alt": "Kitchen and dining as one room",
+          "shape": "wide"
+        },
+        {
+          "file": "tampines-greenverge-stone/05.jpg",
+          "alt": "Bedside pendant against textured panelling",
+          "shape": "tall"
+        },
+        {
+          "file": "tampines-greenverge-stone/07.jpg",
+          "alt": "Bathroom vanity",
+          "shape": "tall"
+        },
+        {
+          "file": "tampines-greenverge-stone/06.jpg",
+          "alt": "Stone-textured feature wall with concealed storage",
+          "shape": "wide"
+        },
+        {
+          "file": "tampines-greenverge-stone/09.jpg",
+          "alt": "Kitchen with under-shelf lighting",
+          "shape": "wide"
+        }
+      ]
+    },
+    {
+      "title": "Tanglin Regency",
+      "slug": "tanglin-regency",
+      "propertyType": "Condominium",
+      "homeType": "To be confirmed",
+      "location": "Tanglin",
+      "direction": "Dark contemporary",
+      "year": "—",
+      "summary": "Dark timber panelling, a mirrored dining wall and a backlit headboard give this apartment a hushed, evening feel.",
+      "brief": "A polished, hotel-like apartment for entertaining, with a bedroom that felt like a retreat.",
+      "response": "Walnut panelling and a mirrored wall stretch the living and dining space; concealed lighting in the ceiling and behind the headboard does most of the work after dark. A compact coffee pantry sits behind glass by the entrance.",
+      "details": [
+        "Walnut wall panelling",
+        "Mirrored dining wall",
+        "Backlit fluted headboard",
+        "Glass-enclosed coffee pantry"
+      ],
+      "cover": "tanglin-regency/00.jpg",
+      "hero": "",
+      "gallery": [
+        {
+          "file": "tanglin-regency/01.jpg",
+          "alt": "Bedroom with backlit headboard",
+          "shape": "tall"
+        },
+        {
+          "file": "tanglin-regency/02.jpg",
+          "alt": "Coffee pantry",
+          "shape": "tall"
+        },
+        {
+          "file": "tanglin-regency/03.jpg",
+          "alt": "Bedside detail",
+          "shape": "tall"
+        }
+      ]
+    },
+    {
+      "title": "Limewash and Walnut",
+      "slug": "tampines-greenglen-limewash",
+      "propertyType": "HDB",
+      "homeType": "To be confirmed",
+      "location": "Tampines GreenGlen",
+      "direction": "Wabi contemporary",
+      "year": "—",
+      "summary": "Limewashed walls, walnut furniture and a black steel-framed glass partition turn a standard flat into something closer to a loft.",
+      "brief": "Owners who collect objects and plants, and wanted a textured, lived-in backdrop that would let those things be the decoration.",
+      "response": "Every wall is finished in a mottled limewash so the flat reads as one continuous material. A black steel and glass partition separates the bedroom without closing it off, and a thin line of light replaces the usual ceiling fittings.",
+      "details": [
+        "Limewash wall finish throughout",
+        "Steel-framed glass bedroom partition",
+        "Linear track and pendant lighting",
+        "Pedestal basin bathroom"
+      ],
+      "cover": "tampines-greenglen-limewash/00.jpg",
+      "hero": "",
+      "gallery": [
+        {
+          "file": "tampines-greenglen-limewash/01.jpg",
+          "alt": "Dining table against limewashed wall",
+          "shape": "wide"
+        },
+        {
+          "file": "tampines-greenglen-limewash/02.jpg",
+          "alt": "Television wall with walnut console",
+          "shape": "tall"
+        },
+        {
+          "file": "tampines-greenglen-limewash/03.jpg",
+          "alt": "Living room with arched mirror and plants",
+          "shape": "tall"
+        },
+        {
+          "file": "tampines-greenglen-limewash/05.jpg",
+          "alt": "Steel-framed glass partition to the bedroom",
+          "shape": "tall"
+        },
+        {
+          "file": "tampines-greenglen-limewash/06.jpg",
+          "alt": "Bedroom",
+          "shape": "tall"
+        },
+        {
+          "file": "tampines-greenglen-limewash/07.jpg",
+          "alt": "Bathroom with pedestal basin",
+          "shape": "tall"
+        },
+        {
+          "file": "tampines-greenglen-limewash/08.jpg",
+          "alt": "Kitchen hob",
+          "shape": "tall"
+        }
+      ]
+    },
+    {
+      "title": "Soft Curves",
+      "slug": "rivervale-shores",
+      "propertyType": "HDB",
+      "homeType": "To be confirmed",
+      "location": "Rivervale Shores, Sengkang",
+      "direction": "Soft minimal",
+      "year": "—",
+      "summary": "A curved, cove-lit wall wraps the dining area of this flat, with terrazzo underfoot and a calm, tonal bedroom.",
+      "brief": "A quiet, uncluttered flat with as few hard edges as possible.",
+      "response": "A curved plaster wall with a concealed light cove softens the dining space. The bedroom is finished in a single tone with a floating headboard ledge, and the bathroom pairs terrazzo with a walnut vanity.",
+      "details": [
+        "Curved cove-lit feature wall",
+        "Terrazzo flooring",
+        "Floating headboard ledge",
+        "Walnut bathroom vanity"
+      ],
+      "cover": "rivervale-shores/00.jpg",
+      "hero": "",
+      "gallery": [
+        {
+          "file": "rivervale-shores/01.jpg",
+          "alt": "Bedroom",
+          "shape": "tall"
+        },
+        {
+          "file": "rivervale-shores/02.jpg",
+          "alt": "Bathroom with terrazzo and walnut vanity",
+          "shape": "tall"
+        },
+        {
+          "file": "rivervale-shores/03.jpg",
+          "alt": "Bedside ledge with cove lighting",
+          "shape": "wide"
+        }
+      ]
+    },
+    {
+      "title": "Tengah Drive",
+      "slug": "tengah-drive",
+      "propertyType": "HDB",
+      "homeType": "To be confirmed",
+      "location": "Tengah",
+      "direction": "Monochrome",
+      "year": "—",
+      "summary": "A grey monochrome flat with a black kitchen, cove lighting and a dedicated gaming room.",
+      "brief": "A clean, contemporary flat in greys, with a proper room for gaming and work.",
+      "response": "Charcoal kitchen cabinetry, a sculptural pendant over the dining table and cove lighting around the ceiling set the tone. Grey full-height storage keeps the living room clear.",
+      "details": [
+        "Charcoal kitchen cabinetry",
+        "Sculptural dining pendant",
+        "Ceiling cove lighting",
+        "Full-height grey storage wall"
+      ],
+      "cover": "tengah-drive/00.jpg",
+      "hero": "",
+      "gallery": [
+        {
+          "file": "tengah-drive/01.jpg",
+          "alt": "Television wall",
+          "shape": "square"
+        },
+        {
+          "file": "tengah-drive/02.jpg",
+          "alt": "Living room",
+          "shape": "square"
+        },
+        {
+          "file": "tengah-drive/03.jpg",
+          "alt": "Gaming room",
+          "shape": "square"
+        }
+      ]
+    },
+    {
+      "title": "Koun Patisserie",
+      "slug": "koun-patisserie",
+      "propertyType": "Commercial",
+      "homeType": "Retail fit-out",
+      "location": "To be confirmed",
+      "direction": "Navy and oak",
+      "year": "—",
+      "summary": "A patisserie fit-out in navy and oak, with an arched fluted backdrop and long runs of lit display shelving.",
+      "brief": "A bright, orderly shopfront with display that shows the bakes at their best.",
+      "response": "Oak-fronted display cases with integrated lighting run the length of the shop, against a navy counter and an arched fluted feature behind the till.",
+      "details": [
+        "Oak display cabinetry with lighting",
+        "Navy counter",
+        "Arched fluted feature wall"
+      ],
+      "cover": "koun-patisserie/00.jpg",
+      "hero": "",
+      "gallery": [
+        {
+          "file": "koun-patisserie/01.jpg",
+          "alt": "Display shelving",
+          "shape": "square"
+        },
+        {
+          "file": "koun-patisserie/02.jpg",
+          "alt": "Counter",
+          "shape": "square"
+        },
+        {
+          "file": "koun-patisserie/03.jpg",
+          "alt": "Display cabinets",
+          "shape": "square"
+        }
+      ]
+    }
+  ],
+  "services": [
+    {
+      "title": "Interior design",
+      "desc": "Concept, spatial planning and detailed design for the whole home, from the first sketch to the last drawer pull.",
+      "points": [
+        "Concept and mood direction",
+        "Layout and spatial planning",
+        "Material and colour palettes",
+        "Detailed drawings"
+      ],
+      "image": "tampines-greenglen-limewash/03.jpg"
+    },
+    {
+      "title": "Design & build",
+      "desc": "One team carries the design through construction, so decisions on paper and decisions on site never disagree.",
+      "points": [
+        "Single point of responsibility",
+        "Transparent costing",
+        "Coordinated trades",
+        "Quality checks at each stage"
+      ],
+      "image": "tampines-greenverge-stone/04.jpg"
+    },
+    {
+      "title": "Renovation",
+      "desc": "Full and partial renovations for HDB, BTO, condominium and landed homes, handled within the relevant guidelines.",
+      "points": [
+        "Hacking and re-planning",
+        "Wet works and flooring",
+        "Electrical and plumbing",
+        "Painting and finishing"
+      ],
+      "image": "sembawang-country-kitchen/00.jpg"
+    },
+    {
+      "title": "Custom carpentry",
+      "desc": "Joinery designed for the specific room and the specific person, made to measure rather than off the shelf.",
+      "points": [
+        "Full-height wardrobes",
+        "Kitchen systems",
+        "Feature walls and panelling",
+        "Built-in furniture"
+      ],
+      "image": "tampines-greenverge-fluted/04.jpg"
+    },
+    {
+      "title": "Project management",
+      "desc": "Schedules, site supervision and communication, so you know what is happening and when, without chasing.",
+      "points": [
+        "Programme and milestones",
+        "Site supervision",
+        "Progress updates",
+        "Handover and defects"
+      ],
+      "image": "tampines-greenverge-fluted/03.jpg"
+    }
+  ],
+  "steps": [
+    {
+      "title": "Conversation",
+      "text": "We start with your home, your routines and your budget. Site visit, measurements, and an honest discussion about what is possible.",
+      "tags": [
+        "Site visit",
+        "Brief",
+        "Budget range"
+      ]
+    },
+    {
+      "title": "Design",
+      "text": "Plans first, then materials, then detail. You see the whole home drawn before anything is built, and the cost alongside it.",
+      "tags": [
+        "Layout options",
+        "3D views",
+        "Material samples",
+        "Costed proposal"
+      ]
+    },
+    {
+      "title": "Build",
+      "text": "Our own team takes the drawings to site. One point of contact, a clear programme, and checks at every stage.",
+      "tags": [
+        "Programme",
+        "Site supervision",
+        "Progress updates"
+      ]
+    },
+    {
+      "title": "Handover",
+      "text": "A walk-through together, a defects check, and the keys to a home that matches the drawings you approved.",
+      "tags": [
+        "Walk-through",
+        "Defects check",
+        "Aftercare"
+      ]
+    }
+  ]
+}

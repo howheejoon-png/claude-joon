@@ -1,0 +1,24 @@
+/* WordPress-specific additions: admin bar offset, honeypot, editor prose. */
+.lab-hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
+
+body.admin-bar .site-header { top: 32px; }
+@media (max-width: 782px) { body.admin-bar .site-header { top: 46px; } }
+body.admin-bar .menu { top: 32px; }
+@media (max-width: 782px) { body.admin-bar .menu { top: 46px; } }
+
+/* Content written in the WordPress editor */
+.prose > * + * { margin-top: var(--s-4); }
+.prose h2 { font-family: var(--font-display); font-weight: 500; font-variation-settings: 'wdth' var(--display-wdth); font-size: var(--display-sm); line-height: 1.1; letter-spacing: var(--tracking-display); margin-top: var(--s-7); }
+.prose h3 { font-size: var(--text-lg); font-weight: 600; margin-top: var(--s-6); }
+.prose ul, .prose ol { padding-left: 1.2em; }
+.prose ul li { list-style: disc; margin-bottom: 0.4rem; }
+.prose ol li { list-style: decimal; margin-bottom: 0.4rem; }
+.prose a { text-decoration: underline; text-underline-offset: 3px; }
+.prose img { margin-block: var(--s-5); }
+
+.studio-intro__text > * + * { margin-top: var(--s-4); }
+.studio-intro__text h2 { font-family: var(--font-display); font-weight: 500; font-variation-settings: 'wdth' var(--display-wdth); font-size: var(--display-md); line-height: 1.02; letter-spacing: var(--tracking-display); }
+.studio-intro__text p { color: var(--ink-3); max-width: 34em; }
+
+/* The projects filter hides cards client-side */
+.pgrid .proj.is-hidden { display: none; }
