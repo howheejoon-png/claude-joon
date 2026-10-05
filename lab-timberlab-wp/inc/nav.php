@@ -26,6 +26,7 @@ function lab_nav_items( string $location = 'primary' ): array {
 	$fallback = [
 		[ 'label' => __( 'Projects', 'lab' ), 'url' => get_post_type_archive_link( 'lab_project' ) ],
 		[ 'label' => __( 'Services', 'lab' ), 'url' => lab_page_url( 'services' ) ],
+		[ 'label' => __( 'Process', 'lab' ), 'url' => home_url( '/#process' ) ],
 		[ 'label' => __( 'Studio', 'lab' ), 'url' => lab_page_url( 'studio' ) ],
 		[ 'label' => __( 'Contact', 'lab' ), 'url' => lab_page_url( 'contact' ) ],
 	];

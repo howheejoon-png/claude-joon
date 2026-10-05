@@ -6,6 +6,12 @@ defined( 'ABSPATH' ) || exit;
 get_header();
 
 $figures = array_values( array_filter( (array) lab_opt( 'figures', [] ), static fn( $f ) => ! empty( $f['label'] ) ) );
+$values  = get_posts( [
+	'post_type'      => 'lab_principle',
+	'posts_per_page' => -1,
+	'orderby'        => [ 'menu_order' => 'ASC', 'date' => 'ASC' ],
+	'meta_query'     => [ [ 'key' => 'lab_where', 'value' => 'studio' ] ],
+] );
 $team    = get_posts( [ 'post_type' => 'lab_person', 'posts_per_page' => -1, 'orderby' => [ 'menu_order' => 'ASC', 'date' => 'ASC' ] ] );
 ?>
 <section class="page-hero">
@@ -14,7 +20,8 @@ $team    = get_posts( [ 'post_type' => 'lab_person', 'posts_per_page' => -1, 'or
 			<div class="page-hero__crumb label muted">
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'lab' ); ?></a><span>/</span><span><?php the_title(); ?></span>
 			</div>
-			<h1 class="display display-xl" data-hero-title><?php the_title(); ?></h1>
+			<?php $head = lab_page_heading( (int) get_the_ID() ); ?>
+			<h1 class="display display-xl" data-hero-title><?php echo esc_html( $head['text'] ); ?><?php if ( lab_known( $head['em'] ) ) : ?> <em><?php echo esc_html( $head['em'] ); ?></em><?php endif; ?></h1>
 		</div>
 		<?php if ( has_excerpt() ) : ?>
 			<p class="page-hero__aside" data-hero-fade><?php echo esc_html( get_the_excerpt() ); ?></p>
@@ -62,6 +69,27 @@ $team    = get_posts( [ 'post_type' => 'lab_person', 'posts_per_page' => -1, 'or
 		<?php if ( lab_known( (string) lab_opt( 'figures_note' ) ) ) : ?>
 			<p style="margin-top:var(--s-5)"><span class="placeholder-note"><?php echo esc_html( lab_opt( 'figures_note' ) ); ?></span></p>
 		<?php endif; ?>
+	</div>
+</section>
+<?php endif; ?>
+
+<?php if ( $values ) : ?>
+<section class="values">
+	<div class="container">
+		<?php lab_sec_head( __( 'How we think', 'lab' ), __( 'Four things we', 'lab' ), __( 'hold to.', 'lab' ) ); ?>
+		<div class="values__grid" data-stagger>
+			<?php foreach ( $values as $i => $value ) : ?>
+				<div class="value">
+					<div class="value__num"><?php echo esc_html( lab_number( $i ) ); ?></div>
+					<div>
+						<h3><?php echo esc_html( get_the_title( $value ) ); ?></h3>
+						<?php if ( lab_known( (string) lab_get( $value->ID, 'lab_summary' ) ) ) : ?>
+							<p><?php echo esc_html( lab_get( $value->ID, 'lab_summary' ) ); ?></p>
+						<?php endif; ?>
+					</div>
+				</div>
+			<?php endforeach; ?>
+		</div>
 	</div>
 </section>
 <?php endif; ?>

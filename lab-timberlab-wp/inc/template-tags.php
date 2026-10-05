@@ -3,6 +3,20 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/** The large page heading: a custom one if set, otherwise the page title. */
+function lab_page_heading( int $post_id ): array {
+	$heading = (string) lab_get( $post_id, 'lab_heading' );
+	return [
+		'text' => lab_known( $heading ) ? $heading : get_the_title( $post_id ),
+		'em'   => (string) lab_get( $post_id, 'lab_heading_em' ),
+	];
+}
+
+/** True when the first section behind the header is a dark one. */
+function lab_header_starts_dark(): bool {
+	return is_front_page();
+}
+
 /** Placeholder values should never reach the page as if they were facts. */
 function lab_known( ?string $value ): bool {
 	$value = trim( (string) $value );

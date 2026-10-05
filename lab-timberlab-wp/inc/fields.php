@@ -46,6 +46,16 @@ function lab_field_textarea( string $name, string $value, string $label, string 
 	echo '</div>';
 }
 
+function lab_field_select( string $name, string $value, array $choices, string $label, string $help = '' ): void {
+	echo '<div class="lab-f">';
+	lab_label( $name, $label, $help );
+	printf( '<select class="lab-f__input" id="%s" name="%s">', esc_attr( $name ), esc_attr( $name ) );
+	foreach ( $choices as $key => $text ) {
+		printf( '<option value="%s"%s>%s</option>', esc_attr( $key ), selected( $value, $key, false ), esc_html( $text ) );
+	}
+	echo '</select></div>';
+}
+
 /** Single image chooser backed by the media library. */
 function lab_field_media( string $name, int $value, string $label, string $help = '' ): void {
 	$src = $value ? wp_get_attachment_image_url( $value, 'medium' ) : '';

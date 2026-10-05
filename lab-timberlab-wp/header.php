@@ -14,7 +14,7 @@
 
 <?php $nav = lab_nav_items(); ?>
 
-<header id="site-header" class="site-header">
+<header id="site-header" class="site-header<?php echo lab_header_starts_dark() ? ' on-dark' : ''; ?>">
 	<div class="container">
 		<a class="brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="<?php esc_attr_e( 'L.A.B by Timberlab — home', 'lab' ); ?>">
 			<span class="brand__mark">L<span class="dot">.</span>A<span class="dot">.</span>B</span>

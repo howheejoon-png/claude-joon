@@ -124,10 +124,27 @@ function lab_run_seed(): array {
 	/* Property types -------------------------------------------------- */
 	foreach ( (array) ( $data['propertyTypes'] ?? [] ) as $type ) {
 		$name = (string) ( $type['name'] ?? '' );
-		if ( ! $name || term_exists( $name, 'lab_property_type' ) ) {
+		if ( ! $name ) {
 			continue;
 		}
-		wp_insert_term( $name, 'lab_property_type', [ 'description' => (string) ( $type['desc'] ?? '' ) ] );
+		$found = term_exists( $name, 'lab_property_type' );
+		if ( $found ) {
+			// Backfill the sub-label on terms created before it existed.
+			$term_id = (int) ( is_array( $found ) ? $found['term_id'] : $found );
+			if ( ! empty( $type['sub'] ) && ! get_term_meta( $term_id, 'lab_sub', true ) ) {
+				update_term_meta( $term_id, 'lab_sub', (string) $type['sub'] );
+				$log[] = "Sub-label set: {$name}";
+			}
+			if ( '' === (string) get_term_meta( $term_id, 'lab_is_home', true ) ) {
+				update_term_meta( $term_id, 'lab_is_home', empty( $type['isHome'] ) ? '0' : '1' );
+			}
+			continue;
+		}
+		$created = wp_insert_term( $name, 'lab_property_type', [ 'description' => (string) ( $type['desc'] ?? '' ) ] );
+		if ( ! is_wp_error( $created ) ) {
+			update_term_meta( (int) $created['term_id'], 'lab_sub', (string) ( $type['sub'] ?? '' ) );
+			update_term_meta( (int) $created['term_id'], 'lab_is_home', empty( $type['isHome'] ) ? '0' : '1' );
+		}
 		$log[] = "Property type: {$name}";
 	}
 
@@ -201,30 +218,61 @@ function lab_run_seed(): array {
 	}
 
 	$principles = [
-		[ 'One team, start to finish', 'The people who draw your home are the people who build it. Nothing is lost between a designer\'s intent and a contractor\'s interpretation.' ],
-		[ 'Decisions made visible', 'Layouts, materials and costs are put in front of you before work begins. You approve drawings, not descriptions.' ],
-		[ 'Details you can inspect', 'Carpentry, finishes and services are checked at each stage, and the handover walk-through is done against the drawings you signed.' ],
+		[ 'One team, start to finish', 'The people who draw your home are the people who build it. Nothing is lost between a designer\'s intent and a contractor\'s interpretation.', 'home' ],
+		[ 'Decisions made visible', 'Layouts, materials and costs are put in front of you before work begins. You approve drawings, not descriptions.', 'home' ],
+		[ 'Details you can inspect', 'Carpentry, finishes and services are checked at each stage, and the handover walk-through is done against the drawings you signed.', 'home' ],
+		[ 'Plan before palette', 'Layout decides how a home feels far more than finishes do. We resolve the plan first, then dress it.', 'studio' ],
+		[ 'Draw everything', 'If it will be built, it will be drawn. Drawings are how we agree, cost and check the work.', 'studio' ],
+		[ 'Honest costs', 'A costed proposal sits next to every design. No surprises at the end, because there are none in the middle.', 'studio' ],
+		[ 'Build to be inspected', 'Good joinery looks right from the inside of the drawer. We build as if every detail will be checked, because it will.', 'studio' ],
 	];
-	foreach ( $principles as $i => [ $title, $text ] ) {
+	foreach ( $principles as $i => [ $title, $text, $where ] ) {
 		[ $id, $created ] = lab_seed_post( 'lab_principle', $title, $i );
 		if ( $id && $created ) {
 			update_post_meta( $id, 'lab_summary', $text );
+			update_post_meta( $id, 'lab_where', $where );
 			$log[] = 'Principle: ' . $title;
+		}
+	}
+
+	// Team placeholders, matching the approved concept. Replace these with real
+	// people and portraits, or delete them to hide the section entirely.
+	$team = [
+		[ 'Name', 'Founder / Design lead' ],
+		[ 'Name', 'Interior designer' ],
+		[ 'Name', 'Project manager' ],
+		[ 'Name', 'Carpentry lead' ],
+	];
+	foreach ( $team as $i => [ $person, $role ] ) {
+		$existing = get_posts( [ 'post_type' => 'lab_person', 'posts_per_page' => 1, 'post_status' => 'any', 'offset' => $i ] );
+		if ( $existing ) {
+			continue;
+		}
+		$id = wp_insert_post( [ 'post_type' => 'lab_person', 'post_title' => $person, 'post_status' => 'publish', 'menu_order' => $i ] );
+		if ( ! is_wp_error( $id ) ) {
+			update_post_meta( $id, 'lab_role', $role );
+			$log[] = 'Team placeholder: ' . $role;
 		}
 	}
 
 	/* Pages and the front page ----------------------------------------- */
 	$pages = [
-		'home'     => [ 'Home', '', '' ],
-		'services' => [ 'Services', 'page-services.php', 'A full-service design-and-build studio. Engage us for the whole home, or for the part that matters most.' ],
-		'studio'   => [ 'Studio', 'page-studio.php', 'L.A.B is the interior design and design-and-build practice of Timberlab Pte Ltd.' ],
-		'contact'  => [ 'Contact', 'page-contact.php', '' ],
+		'home'     => [ 'Home', '', '', '', '' ],
+		'services' => [ 'Services', 'page-services.php', 'A full-service design-and-build studio. Engage us for the whole home, or for the part that matters most.', 'What we', 'do.' ],
+		'studio'   => [ 'Studio', 'page-studio.php', 'L.A.B is the interior design and design-and-build practice of Timberlab Pte Ltd.', 'Drawn here.', 'Built here.' ],
+		'contact'  => [ 'Contact', 'page-contact.php', '', '', '' ],
 	];
 	$ids = [];
-	foreach ( $pages as $slug => [ $title, $template, $excerpt ] ) {
+	foreach ( $pages as $slug => [ $title, $template, $excerpt, $heading, $heading_em ] ) {
 		$page = get_page_by_path( $slug );
 		if ( $page ) {
 			$ids[ $slug ] = $page->ID;
+			// Fill in the display heading on pages created before this existed.
+			if ( $heading && ! lab_get( $page->ID, 'lab_heading' ) ) {
+				update_post_meta( $page->ID, 'lab_heading', $heading );
+				update_post_meta( $page->ID, 'lab_heading_em', $heading_em );
+				$log[] = 'Page heading set: ' . $title;
+			}
 			continue;
 		}
 		$id = wp_insert_post( [
@@ -241,6 +289,10 @@ function lab_run_seed(): array {
 			if ( $template ) {
 				update_post_meta( $id, '_wp_page_template', $template );
 			}
+			if ( $heading ) {
+				update_post_meta( $id, 'lab_heading', $heading );
+				update_post_meta( $id, 'lab_heading_em', $heading_em );
+			}
 			$ids[ $slug ] = (int) $id;
 			$log[]        = 'Page: ' . $title;
 		}
@@ -251,7 +303,28 @@ function lab_run_seed(): array {
 	}
 
 	/* Navigation menu --------------------------------------------------- */
-	if ( ! wp_get_nav_menu_object( 'Primary' ) ) {
+	$menu = wp_get_nav_menu_object( 'Primary' );
+	if ( $menu ) {
+		// Repair menus created before Process was part of the navigation.
+		$titles = wp_list_pluck( (array) wp_get_nav_menu_items( $menu->term_id ), 'title' );
+		if ( ! in_array( 'Process', (array) $titles, true ) ) {
+			wp_update_nav_menu_item( $menu->term_id, 0, [
+				'menu-item-title'    => __( 'Process', 'lab' ),
+				'menu-item-url'      => home_url( '/#process' ),
+				'menu-item-type'     => 'custom',
+				'menu-item-status'   => 'publish',
+				'menu-item-position' => 3,
+			] );
+			$log[] = 'Added the missing Process link to the navigation.';
+		}
+		// Keep the designed order regardless of when each item was added.
+		$order = [ 'Projects' => 1, 'Services' => 2, 'Process' => 3, 'Studio' => 4, 'Contact' => 5 ];
+		foreach ( (array) wp_get_nav_menu_items( $menu->term_id ) as $item ) {
+			if ( isset( $order[ $item->title ] ) && (int) $item->menu_order !== $order[ $item->title ] ) {
+				wp_update_post( [ 'ID' => $item->ID, 'menu_order' => $order[ $item->title ] ] );
+			}
+		}
+	} else {
 		$menu_id = wp_create_nav_menu( 'Primary' );
 		if ( ! is_wp_error( $menu_id ) ) {
 			wp_update_nav_menu_item( $menu_id, 0, [
@@ -262,7 +335,17 @@ function lab_run_seed(): array {
 				'menu-item-position'  => 1,
 			] );
 			$pos = 2;
-			foreach ( [ 'services', 'studio', 'contact' ] as $slug ) {
+			foreach ( [ 'services', 'process', 'studio', 'contact' ] as $slug ) {
+				if ( 'process' === $slug ) {
+					wp_update_nav_menu_item( $menu_id, 0, [
+						'menu-item-title'    => __( 'Process', 'lab' ),
+						'menu-item-url'      => home_url( '/#process' ),
+						'menu-item-type'     => 'custom',
+						'menu-item-status'   => 'publish',
+						'menu-item-position' => $pos++,
+					] );
+					continue;
+				}
 				if ( empty( $ids[ $slug ] ) ) {
 					continue;
 				}

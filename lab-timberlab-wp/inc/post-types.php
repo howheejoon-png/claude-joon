@@ -95,6 +95,43 @@ function lab_register_content(): void {
 	] );
 }
 
+/** Property types carry a small sub-label above the name ("Resale flats", "New flats"). */
+foreach ( [ 'lab_property_type_add_form_fields', 'lab_property_type_edit_form_fields' ] as $hook ) {
+	add_action( $hook, function ( $term ) use ( $hook ): void {
+		$value = ( $term instanceof WP_Term ) ? (string) get_term_meta( $term->term_id, 'lab_sub', true ) : '';
+		$edit  = str_contains( $hook, 'edit_form' );
+		echo $edit ? '<tr class="form-field"><th scope="row">' : '<div class="form-field">';
+		printf( '<label for="lab_sub">%s</label>', esc_html__( 'Sub-label', 'lab' ) );
+		echo $edit ? '</th><td>' : '';
+		printf( '<input type="text" name="lab_sub" id="lab_sub" value="%s">', esc_attr( $value ) );
+		printf( '<p class="description">%s</p>', esc_html__( 'Shown in small type above the name, for example "Resale flats".', 'lab' ) );
+		echo $edit ? '</td></tr>' : '</div>';
+
+		$is_home = ( $term instanceof WP_Term ) ? get_term_meta( $term->term_id, 'lab_is_home', true ) : '1';
+		$is_home = ( '' === $is_home ) ? '1' : $is_home;
+		echo $edit ? '<tr class="form-field"><th scope="row">' : '<div class="form-field">';
+		printf( '<label for="lab_is_home">%s</label>', esc_html__( 'Kind of home', 'lab' ) );
+		echo $edit ? '</th><td>' : '';
+		printf(
+			'<label><input type="checkbox" name="lab_is_home" id="lab_is_home" value="1"%s> %s</label>',
+			checked( $is_home, '1', false ),
+			esc_html__( 'Include in the "Every kind of Singapore home" section', 'lab' )
+		);
+		printf( '<p class="description">%s</p>', esc_html__( 'Untick for types that are not homes, such as Commercial.', 'lab' ) );
+		echo $edit ? '</td></tr>' : '</div>';
+	} );
+}
+
+foreach ( [ 'created_lab_property_type', 'edited_lab_property_type' ] as $hook ) {
+	add_action( $hook, function ( int $term_id ): void {
+		if ( ! isset( $_POST['lab_sub'] ) || ! current_user_can( 'manage_categories' ) ) {
+			return;
+		}
+		update_term_meta( $term_id, 'lab_sub', sanitize_text_field( wp_unslash( $_POST['lab_sub'] ) ) );
+		update_term_meta( $term_id, 'lab_is_home', isset( $_POST['lab_is_home'] ) ? '1' : '0' );
+	} );
+}
+
 /** Order every CPT listing by the drag-and-drop menu order. */
 add_action( 'pre_get_posts', function ( WP_Query $q ): void {
 	if ( is_admin() || ! $q->is_main_query() ) {

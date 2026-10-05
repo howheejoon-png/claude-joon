@@ -188,6 +188,11 @@ $principles = get_posts( [
 	'post_type'      => 'lab_principle',
 	'posts_per_page' => -1,
 	'orderby'        => [ 'menu_order' => 'ASC', 'date' => 'ASC' ],
+	'meta_query'     => [
+		'relation' => 'OR',
+		[ 'key' => 'lab_where', 'value' => 'home' ],
+		[ 'key' => 'lab_where', 'compare' => 'NOT EXISTS' ],
+	],
 ] );
 $quote = (string) lab_opt( 'quote_text' );
 ?>

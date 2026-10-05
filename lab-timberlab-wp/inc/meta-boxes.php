@@ -14,6 +14,7 @@ add_action( 'add_meta_boxes', function (): void {
 	add_meta_box( 'lab_step_box', __( 'Step details', 'lab' ), 'lab_box_step', 'lab_step', 'normal', 'high' );
 	add_meta_box( 'lab_person_box', __( 'Role', 'lab' ), 'lab_box_person', 'lab_person', 'normal', 'high' );
 	add_meta_box( 'lab_principle_box', __( 'Principle', 'lab' ), 'lab_box_principle', 'lab_principle', 'normal', 'high' );
+	add_meta_box( 'lab_page_box', __( 'Page heading', 'lab' ), 'lab_box_page', 'page', 'normal', 'high' );
 } );
 
 function lab_nonce_field(): void {
@@ -71,6 +72,12 @@ function lab_box_step( WP_Post $post ): void {
 	lab_field_list( 'lab_points', (array) lab_get( $post->ID, 'lab_points', [] ), __( 'Tags', 'lab' ), __( 'Short labels shown under the text, one per row.', 'lab' ), __( 'e.g. Site visit', 'lab' ) );
 }
 
+function lab_box_page( WP_Post $post ): void {
+	lab_nonce_field();
+	lab_field_text( 'lab_heading', (string) lab_get( $post->ID, 'lab_heading' ), __( 'Display heading', 'lab' ), __( 'The large heading at the top of the page. Leave blank to use the page title. This lets the menu say "Services" while the page says something more interesting.', 'lab' ) );
+	lab_field_text( 'lab_heading_em', (string) lab_get( $post->ID, 'lab_heading_em' ), __( 'Display heading — greyed half', 'lab' ), __( 'The second half of the heading, shown in grey.', 'lab' ) );
+}
+
 function lab_box_person( WP_Post $post ): void {
 	lab_nonce_field();
 	lab_field_text( 'lab_role', (string) lab_get( $post->ID, 'lab_role' ), __( 'Role', 'lab' ), __( 'For example: Founder / Design lead.', 'lab' ) );
@@ -80,6 +87,10 @@ function lab_box_person( WP_Post $post ): void {
 function lab_box_principle( WP_Post $post ): void {
 	lab_nonce_field();
 	lab_field_textarea( 'lab_summary', (string) lab_get( $post->ID, 'lab_summary' ), __( 'Description', 'lab' ), '', 3 );
+	lab_field_select( 'lab_where', (string) lab_get( $post->ID, 'lab_where', 'home' ), [
+		'home'   => __( 'Homepage — "Why L.A.B"', 'lab' ),
+		'studio' => __( 'Studio page — "Four things we hold to"', 'lab' ),
+	], __( 'Show this on', 'lab' ) );
 }
 
 /* ------------------------------------------------------------------ *
@@ -88,7 +99,7 @@ function lab_box_principle( WP_Post $post ): void {
 
 add_action( 'save_post', 'lab_save_meta', 10, 2 );
 function lab_save_meta( int $post_id, WP_Post $post ): void {
-	if ( ! in_array( $post->post_type, [ 'lab_project', 'lab_service', 'lab_step', 'lab_principle', 'lab_person' ], true ) ) {
+	if ( ! in_array( $post->post_type, [ 'lab_project', 'lab_service', 'lab_step', 'lab_principle', 'lab_person', 'page' ], true ) ) {
 		return;
 	}
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -102,7 +113,7 @@ function lab_save_meta( int $post_id, WP_Post $post ): void {
 		return;
 	}
 
-	foreach ( [ 'lab_home_type', 'lab_location', 'lab_direction', 'lab_year', 'lab_role' ] as $key ) {
+	foreach ( [ 'lab_home_type', 'lab_location', 'lab_direction', 'lab_year', 'lab_role', 'lab_heading', 'lab_heading_em', 'lab_where' ] as $key ) {
 		if ( isset( $_POST[ $key ] ) ) {
 			update_post_meta( $post_id, $key, sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) );
 		}

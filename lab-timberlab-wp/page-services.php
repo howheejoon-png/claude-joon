@@ -15,7 +15,8 @@ $types    = get_terms( [ 'taxonomy' => 'lab_property_type', 'hide_empty' => fals
 			<div class="page-hero__crumb label muted">
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'lab' ); ?></a><span>/</span><span><?php the_title(); ?></span>
 			</div>
-			<h1 class="display display-xl" data-hero-title><?php the_title(); ?></h1>
+			<?php $head = lab_page_heading( (int) get_the_ID() ); ?>
+			<h1 class="display display-xl" data-hero-title><?php echo esc_html( $head['text'] ); ?><?php if ( lab_known( $head['em'] ) ) : ?> <em><?php echo esc_html( $head['em'] ); ?></em><?php endif; ?></h1>
 		</div>
 		<?php if ( has_excerpt() ) : ?>
 			<p class="page-hero__aside" data-hero-fade><?php echo esc_html( get_the_excerpt() ); ?></p>
@@ -78,8 +79,15 @@ $types    = get_terms( [ 'taxonomy' => 'lab_property_type', 'hide_empty' => fals
 		</div>
 		<div class="types__grid" data-stagger>
 			<?php foreach ( $types as $term ) : ?>
+				<?php
+				// This section is about homes, so types flagged otherwise are skipped.
+				if ( '0' === (string) get_term_meta( $term->term_id, 'lab_is_home', true ) ) {
+					continue;
+				}
+				$sub = (string) get_term_meta( $term->term_id, 'lab_sub', true );
+				?>
 				<div class="type">
-					<h3 class="type__name"><?php echo esc_html( $term->name ); ?></h3>
+					<h3 class="type__name"><?php if ( lab_known( $sub ) ) : ?><small><?php echo esc_html( $sub ); ?></small><?php endif; ?><?php echo esc_html( $term->name ); ?></h3>
 					<?php if ( $term->description ) : ?>
 						<p><?php echo esc_html( $term->description ); ?></p>
 					<?php endif; ?>

@@ -21,23 +21,35 @@ export function initHeader() {
   menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
 
+  // Flip the header to light type whenever a dark section sits behind it.
+  // Measured against the header's own box, so the WordPress admin bar (which
+  // shifts the whole page down) doesn't throw the detection off.
+  const darks = [...document.querySelectorAll('[data-header="dark"]')];
+  const updateDark = () => {
+    if (!darks.length) return;
+    const box = header.getBoundingClientRect();
+    const mid = box.top + box.height / 2;
+    const over = darks.some((section) => {
+      const r = section.getBoundingClientRect();
+      return r.top <= mid && r.bottom >= mid;
+    });
+    header.classList.toggle('on-dark', over);
+  };
+
   let last = 0;
+  let ticking = false;
   const onScroll = () => {
     const y = window.scrollY;
     header.classList.toggle('is-solid', y > 24);
     header.classList.toggle('is-hidden', y > last && y > 240);
     last = y;
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(() => { updateDark(); ticking = false; });
+    }
   };
   window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', updateDark, { passive: true });
   onScroll();
-
-  // Flip the header to light type while a dark section sits behind it.
-  const darks = document.querySelectorAll('[data-header="dark"]');
-  if (darks.length && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { e.target.__in = e.isIntersecting; });
-      header.classList.toggle('on-dark', [...darks].some((d) => d.__in));
-    }, { rootMargin: '-1px 0px -99% 0px' });
-    darks.forEach((d) => io.observe(d));
-  }
+  updateDark();
 }
