@@ -4,22 +4,24 @@
 <body>
   <header id="site-header"></header>
   <main data-project>
-    <section class="pd-hero">
-      <div class="container">
-        <div class="page-hero__crumb label muted"><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a><span>/</span><span data-crumb></span></div>
+    <section class="pd-hero is-dark" data-header="dark">
+      <div class="pd-hero__media" data-hero-frame data-cover></div>
+      <div class="container pd-hero__inner">
+        <div class="page-hero__crumb label" data-hero-fade><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a></div>
+        <div class="pd-hero__label label" data-hero-fade data-strap></div>
         <h1 class="display pd-hero__title" data-hero-title data-title></h1>
-        <dl class="pd-hero__meta" data-meta data-hero-fade></dl>
-      </div>
-      <div class="container pd-cover"><div class="frame frame--shade" data-parallax="8" data-hero-frame data-cover></div></div>
-    </section>
-    <section class="pd-story">
-      <div class="container pd-story__grid">
-        <p class="pd-story__summary" data-reveal="lines" data-summary></p>
-        <div class="pd-story__col" data-reveal="fade"><h3>The brief</h3><p data-brief></p></div>
-        <div class="pd-story__col" data-reveal="fade"><h3>The response</h3><p data-response></p></div>
       </div>
     </section>
-    <section><div class="container pd-gallery" data-gallery></div></section>
+    <section class="pd-intro">
+      <div class="container pd-intro__grid">
+        <div class="pd-intro__copy">
+          <div class="label label--signal" data-reveal="fade">The project</div>
+          <p class="pd-intro__summary" data-reveal="lines" data-summary></p>
+        </div>
+        <dl class="pd-hero__meta" data-meta data-reveal="fade"></dl>
+      </div>
+    </section>
+    <section class="container pd-flow" data-flow></section>
     <section class="pd-details">
       <div class="container pd-details__grid">
         <div class="pd-details__copy">

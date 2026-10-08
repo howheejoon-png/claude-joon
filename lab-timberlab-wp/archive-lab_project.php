@@ -43,7 +43,12 @@ $active   = $term instanceof WP_Term ? $term->slug : 'all';
 				$slugs = wp_get_post_terms( $project->ID, 'lab_property_type', [ 'fields' => 'slugs' ] );
 				$slug  = is_array( $slugs ) && $slugs ? $slugs[0] : '';
 				ob_start();
-				lab_project_card( $project, [ 'shape' => 'wide', 'eager' => $i < 2 ] );
+				lab_project_card( $project, [
+					'shape'    => 'square',  // the registered lab-square crop
+					'tags'     => false,     // the catalogue shows the name alone
+					'parallax' => 0,         // no drift inside a fixed square
+					'eager'    => $i < 3,    // the first desktop row
+				] );
 				$card = ob_get_clean();
 				// Tag the card so the filter can show and hide it client-side.
 				echo str_replace( '<a class="proj ', '<a data-type="' . esc_attr( $slug ) . '" class="proj ', $card );

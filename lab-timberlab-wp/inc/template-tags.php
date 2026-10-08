@@ -14,7 +14,8 @@ function lab_page_heading( int $post_id ): array {
 
 /** True when the first section behind the header is a dark one. */
 function lab_header_starts_dark(): bool {
-	return is_front_page();
+	// The front page and a project both open on a dark full-bleed photograph.
+	return is_front_page() || is_singular( 'lab_project' );
 }
 
 /** Placeholder values should never reach the page as if they were facts. */
@@ -128,7 +129,7 @@ function lab_project_tags( int $post_id ): array {
 function lab_project_card( WP_Post $post, array $args = [] ): void {
 	$shape    = $args['shape'] ?? 'wide';
 	$number   = $args['number'] ?? '';
-	$parallax = $args['parallax'] ?? 6;
+	$parallax = (int) ( $args['parallax'] ?? 6 );
 	$type     = lab_property_type( $post->ID );
 	$title    = get_the_title( $post );
 	$alt      = trim( $title . ' — ' . implode( ', ', lab_project_tags( $post->ID ) ), ' —,' );
@@ -148,13 +149,16 @@ function lab_project_card( WP_Post $post, array $args = [] ): void {
 		echo '</div>';
 	}
 
-	printf( '<div class="frame frame--shade" data-reveal="clip" data-parallax="%d">', (int) $parallax );
+	printf(
+		'<div class="frame frame--shade" data-reveal="clip"%s>',
+		$parallax > 0 ? ' data-parallax="' . $parallax . '"' : ''
+	);
 	echo lab_image( (int) get_post_thumbnail_id( $post ), $shape, $alt, ! empty( $args['eager'] ) );
 	echo '</div>';
 
 	echo '<div class="proj__meta">';
 	printf( '<h3 class="proj__title">%s</h3>', esc_html( $title ) );
-	$tags = lab_project_tags( $post->ID );
+	$tags = ( $args['tags'] ?? true ) ? lab_project_tags( $post->ID ) : [];
 	if ( $tags ) {
 		echo '<ul class="proj__tags">';
 		foreach ( $tags as $tag ) {
@@ -163,6 +167,15 @@ function lab_project_card( WP_Post $post, array $args = [] ): void {
 		echo '</ul>';
 	}
 	echo '</div></a>';
+}
+
+/** One narrative beat set between the photographs on a project page. */
+function lab_pd_say( array $say ): void {
+	printf(
+		'<div class="pd-flow__say measure" data-reveal="fade"><h2>%s</h2><p>%s</p></div>',
+		esc_html( $say[0] ),
+		esc_html( $say[1] )
+	);
 }
 
 /** Fetch projects in their editor-defined order. */

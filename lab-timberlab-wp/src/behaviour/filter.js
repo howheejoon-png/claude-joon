@@ -16,10 +16,8 @@ export function initFilter() {
     const show = items.filter((el) => type === 'all' || el.dataset.type === type);
 
     const run = () => {
+      // The grid is uniform, so hiding a card is enough — nothing to re-order.
       items.forEach((el) => el.classList.toggle('is-hidden', !show.includes(el)));
-      // Re-append in order so the asymmetric nth-child rhythm ignores hidden cards.
-      show.forEach((el) => grid.appendChild(el));
-      items.filter((el) => !show.includes(el)).forEach((el) => grid.appendChild(el));
       if (count) {
         count.textContent = `${show.length} ${show.length === 1 ? 'project' : 'projects'}`;
       }

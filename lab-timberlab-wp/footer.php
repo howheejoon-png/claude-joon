@@ -2,7 +2,14 @@
 defined( 'ABSPATH' ) || exit;
 $c     = lab_contact();
 $nav   = lab_nav_items();
-$types = get_terms( [ 'taxonomy' => 'lab_property_type', 'hide_empty' => true ] );
+// This column is headed "Homes", so it lists only the kinds of home — the
+// "Kind of home" box on each property type decides. Commercial work is a
+// property type but not a kind of home, and the client asked for it out.
+$types = get_terms( [
+	'taxonomy'   => 'lab_property_type',
+	'hide_empty' => true,
+	'meta_query' => [ [ 'key' => 'lab_is_home', 'value' => '1' ] ],
+] );
 ?>
 </main>
 

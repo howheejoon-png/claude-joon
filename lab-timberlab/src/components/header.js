@@ -64,12 +64,21 @@ export function renderHeader(current = '') {
 }
 
 export function watchDarkSections(headerEl = document.getElementById('site-header')) {
-  // Flip header colour when a dark section sits behind it
-  const darks = document.querySelectorAll('[data-header="dark"]');
-  if (!darks.length || !('IntersectionObserver' in window)) return;
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => { e.target.__in = e.isIntersecting; });
-    headerEl.classList.toggle('on-dark', [...darks].some((d) => d.__in));
-  }, { rootMargin: '-1px 0px -99% 0px' });
-  darks.forEach((d) => io.observe(d));
+  // Flip the header to light type whenever a dark section sits behind it.
+  // Measured against the header's own box rather than a sliver at the top of
+  // the viewport, which broke once anything offset the page (the WordPress
+  // admin bar) and left dark type sitting on a dark photograph.
+  const darks = [...document.querySelectorAll('[data-header="dark"]')];
+  if (!darks.length) return;
+  const update = () => {
+    const box = headerEl.getBoundingClientRect();
+    const mid = box.top + box.height / 2;
+    headerEl.classList.toggle('on-dark', darks.some((section) => {
+      const r = section.getBoundingClientRect();
+      return r.top <= mid && r.bottom >= mid;
+    }));
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
 }

@@ -5,16 +5,17 @@ import { heroIntro, gsap, ScrollTrigger } from '../modules/motion.js';
 boot('projects.html');
 const grid = document.querySelector('[data-grid]');
 const filter = document.querySelector('[data-filter]');
-const count = document.querySelector('[data-count]');
+const count = document.querySelector('[data-filter-count]');
 const types = ['All', ...new Set(projects.map((p) => p.propertyType))];
 const params = new URLSearchParams(location.search);
 let active = types.includes(params.get('type')) ? params.get('type') : 'All';
 
+// The catalogue: one square crop, one quiet caption, repeated. No numbers and
+// no tags — the editorial sequence stays on the homepage.
 grid.innerHTML = projects.map((p, i) => `
-  <a class="proj" href="project.html?p=${p.slug}" data-type="${p.propertyType}">
-    <div class="frame frame--shade" data-reveal="clip" data-parallax="6"><img src="${p.cover}" alt="${p.title} — ${p.homeType}, ${p.location}" loading="${i < 2 ? 'eager' : 'lazy'}" decoding="async" data-ph="${i}"></div>
-    <div class="proj__meta"><h3 class="proj__title"><span class="num" style="color:var(--signal);margin-right:.6em">${p.number}</span>${p.title}</h3>
-    <ul class="proj__tags">${[p.propertyType, p.homeType, p.location, p.direction].filter((v) => v && !/to be confirmed|^—$/i.test(v)).map((t) => `<li>${t}</li>`).join('')}</ul></div>
+  <a class="proj" href="project.html?p=${p.slug}" data-type="${p.propertyType}" aria-label="${p.title}">
+    <div class="frame frame--shade" data-reveal="clip"><img src="${p.cover}" alt="${p.title} — ${p.homeType}, ${p.location}" loading="${i < 3 ? 'eager' : 'lazy'}" decoding="async" data-ph="${i}"></div>
+    <div class="proj__meta"><h3 class="proj__title">${p.title}</h3></div>
   </a>`).join('');
 filter.innerHTML = types.map((t) => `<button class="pill" role="tab" type="button" data-type="${t}" aria-selected="${t === active}">${t}</button>`).join('');
 
@@ -24,10 +25,8 @@ function apply(type, animate = true) {
   const items = [...grid.querySelectorAll('.proj')];
   const show = items.filter((el) => type === 'All' || el.dataset.type === type);
   const run = () => {
+    // The grid is uniform, so hiding a card is enough — nothing to re-order.
     items.forEach((el) => el.classList.toggle('is-hidden', !show.includes(el)));
-    // nth-child rhythm must ignore hidden items: re-append visible in order
-    show.forEach((el) => grid.appendChild(el));
-    items.filter((el) => !show.includes(el)).forEach((el) => grid.appendChild(el));
     count.textContent = `${show.length} ${show.length === 1 ? 'project' : 'projects'}`;
     ScrollTrigger.refresh();
     if (animate) gsap.fromTo(show, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.06, ease: 'power3.out' });
