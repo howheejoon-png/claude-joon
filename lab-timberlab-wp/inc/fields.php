@@ -56,19 +56,27 @@ function lab_field_select( string $name, string $value, array $choices, string $
 	echo '</select></div>';
 }
 
-/** Single image chooser backed by the media library. */
-function lab_field_media( string $name, int $value, string $label, string $help = '' ): void {
-	$src = $value ? wp_get_attachment_image_url( $value, 'medium' ) : '';
-	echo '<div class="lab-f lab-media" data-lab-media>';
+/**
+ * Single file chooser backed by the media library.
+ *
+ * $type is the library the picker shows — 'image' by default, 'video' for the
+ * hero film. Without it the video fields opened an image-only modal and could
+ * never be filled.
+ */
+function lab_field_media( string $name, int $value, string $label, string $help = '', string $type = 'image' ): void {
+	$is_image = 'image' === $type;
+	$src      = $value && $is_image ? wp_get_attachment_image_url( $value, 'medium' ) : '';
+	$file     = $value && ! $is_image ? wp_get_attachment_url( $value ) : '';
+	printf( '<div class="lab-f lab-media" data-lab-media data-lab-media-type="%s">', esc_attr( $type ) );
 	lab_label( $name, $label, $help );
 	printf( '<input type="hidden" name="%s" value="%d" data-lab-media-input>', esc_attr( $name ), $value );
 	printf(
 		'<div class="lab-media__preview" data-lab-media-preview>%s</div>',
-		$src ? '<img src="' . esc_url( $src ) . '" alt="">' : ''
+		$src ? '<img src="' . esc_url( $src ) . '" alt="">' : ( $file ? '<code>' . esc_html( wp_basename( $file ) ) . '</code>' : '' )
 	);
 	printf(
 		'<p><button type="button" class="button" data-lab-media-pick>%s</button> <button type="button" class="button-link" data-lab-media-clear>%s</button></p>',
-		esc_html__( 'Choose image', 'lab' ),
+		$is_image ? esc_html__( 'Choose image', 'lab' ) : esc_html__( 'Choose file', 'lab' ),
 		esc_html__( 'Remove', 'lab' )
 	);
 	echo '</div>';

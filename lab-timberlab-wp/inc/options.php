@@ -46,10 +46,10 @@ function lab_options_schema(): array {
 		'media' => [
 			'title'  => __( 'Hero video', 'lab' ),
 			'fields' => [
-				'video_desktop_webm' => [ 'type' => 'media', 'label' => __( 'Hero video — desktop (WebM)', 'lab' ), 'help' => __( 'Preferred format: smaller, and supported by more browsers. Muted and looping, roughly 8–12 seconds.', 'lab' ) ],
-				'video_desktop'      => [ 'type' => 'media', 'label' => __( 'Hero video — desktop (MP4)', 'lab' ), 'help' => __( 'Fallback for Safari and older browsers. Supply both formats where you can.', 'lab' ) ],
-				'video_mobile_webm'  => [ 'type' => 'media', 'label' => __( 'Hero video — mobile (WebM)', 'lab' ), 'help' => __( 'A smaller encode for phones.', 'lab' ) ],
-				'video_mobile'       => [ 'type' => 'media', 'label' => __( 'Hero video — mobile (MP4)', 'lab' ) ],
+				'video_desktop_webm' => [ 'type' => 'media', 'media' => 'video', 'label' => __( 'Hero video — desktop (WebM)', 'lab' ), 'help' => __( 'Preferred format: smaller, and supported by more browsers. Muted and looping, roughly 8–12 seconds.', 'lab' ) ],
+				'video_desktop'      => [ 'type' => 'media', 'media' => 'video', 'label' => __( 'Hero video — desktop (MP4)', 'lab' ), 'help' => __( 'Fallback for Safari and older browsers. Supply both formats where you can.', 'lab' ) ],
+				'video_mobile_webm'  => [ 'type' => 'media', 'media' => 'video', 'label' => __( 'Hero video — mobile (WebM)', 'lab' ), 'help' => __( 'A smaller encode for phones.', 'lab' ) ],
+				'video_mobile'       => [ 'type' => 'media', 'media' => 'video', 'label' => __( 'Hero video — mobile (MP4)', 'lab' ) ],
 			],
 		],
 		'studio' => [
@@ -232,7 +232,7 @@ function lab_settings_page(): void {
 					lab_field_textarea( $name, (string) $value, $field['label'], $help, $field['rows'] ?? 3 );
 					break;
 				case 'media':
-					lab_field_media( $name, (int) $value, $field['label'], $help );
+					lab_field_media( $name, (int) $value, $field['label'], $help, (string) ( $field['media'] ?? 'image' ) );
 					break;
 				case 'rows':
 					lab_field_rows( $name, (array) $value, $field['cols'], $field['label'], $help );

@@ -114,17 +114,23 @@ while ( have_posts() ) :
 			<?php if ( count( $block ) > 1 ) : ?>
 				<div class="pd-flow__pair">
 					<?php foreach ( $block as $one ) : ?>
-						<figure>
+						<?php $shape = (string) ( $one['shape'] ?? 'tall' ); ?>
+						<figure class="g-<?php echo esc_attr( $shape ); ?>">
 							<div class="frame" data-reveal="clip">
-								<?php echo lab_image( (int) $one['id'], 'tall', (string) ( $one['alt'] ?? '' ) ); ?>
+								<?php echo lab_image( (int) $one['id'], $shape, (string) ( $one['alt'] ?? '' ) ); ?>
 							</div>
 						</figure>
 					<?php endforeach; ?>
 				</div>
 			<?php else : ?>
+				<?php $shape = (string) ( $block[0]['shape'] ?? 'wide' ); ?>
 				<figure class="pd-flow__full">
 					<div class="frame" data-reveal="clip">
-						<?php echo lab_image( (int) $block[0]['id'], (string) ( $block[0]['shape'] ?? 'wide' ), (string) ( $block[0]['alt'] ?? '' ) ); ?>
+						<?php
+						// A full-width photograph shows at 16:9, so serve the 16:9 file.
+						// 'wide' maps to a 2:1 crop, which would then be cropped again.
+						echo lab_image( (int) $block[0]['id'], 'wide' === $shape ? 'hero' : $shape, (string) ( $block[0]['alt'] ?? '' ) );
+						?>
 					</div>
 				</figure>
 			<?php endif; ?>

@@ -49,7 +49,7 @@ const out = [];
 blocks.forEach((block, b) => {
   if (b % step === 0 && says.length) out.push(say(says.shift()));
   out.push(block.length > 1
-    ? `<div class="pd-flow__pair">${block.map((g) => `<figure>${shot(g)}</figure>`).join('')}</div>`
+    ? `<div class="pd-flow__pair">${block.map((g) => `<figure class="g-${g.size}">${shot(g)}</figure>`).join('')}</div>`
     : `<figure class="pd-flow__full">${shot(block[0])}</figure>`);
 });
 // Anything the run of photographs was too short to carry still gets said.

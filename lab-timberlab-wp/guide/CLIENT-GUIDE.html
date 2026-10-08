@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Adding a project — L.A.B by Timberlab</title>
+<style>
+  :root {
+    --paper: #FFFFFF;
+    --paper-2: #F3F3F1;
+    --ink: #0F0F0F;
+    --ink-3: #262626;
+    --stone: #737378;
+    --rule: #DDDDD9;
+    --signal: #4A63C8;
+  }
+
+  @page { size: A4; margin: 18mm 16mm 20mm; }
+
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    color: var(--ink-3);
+    background: var(--paper);
+  }
+
+  h1, h2, h3 { color: var(--ink); line-height: 1.15; letter-spacing: -0.02em; margin: 0; }
+  h1 { font-size: 30pt; letter-spacing: -0.035em; }
+  h2 { font-size: 17pt; margin-top: 0; }
+  h3 { font-size: 11.5pt; margin: 0 0 4pt; }
+  p { margin: 0 0 9pt; }
+  p:last-child { margin-bottom: 0; }
+
+  .label {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 7.5pt; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--stone);
+  }
+  .label--signal { color: var(--signal); }
+  strong { color: var(--ink); font-weight: 600; }
+  em { font-style: normal; color: var(--stone); }
+
+  /* A screen name the reader will see in WordPress. */
+  .ui {
+    font-weight: 600; color: var(--ink);
+    background: var(--paper-2); border-radius: 2px;
+    padding: 0.5pt 3pt; white-space: nowrap;
+  }
+
+  /* ---------- Cover ---------- */
+  .cover { height: 247mm; display: flex; flex-direction: column; justify-content: space-between; }
+  .cover__top { padding-top: 24mm; }
+  .cover h1 { max-width: 14ch; margin-bottom: 10pt; }
+  .cover__sub { font-size: 12.5pt; color: var(--stone); max-width: 38ch; }
+  .cover__meta { border-top: 1px solid var(--rule); padding-top: 8pt; display: flex; justify-content: space-between; }
+
+  /* ---------- Sections ---------- */
+  section { break-inside: avoid; margin-bottom: 16pt; }
+  .step { break-inside: avoid; margin-bottom: 15pt; }
+  .step__head { display: flex; gap: 8pt; align-items: baseline; margin-bottom: 5pt; }
+  .step__num {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 8pt; color: var(--signal); flex: none; padding-top: 1pt;
+  }
+
+  .rule { border: 0; border-top: 1px solid var(--rule); margin: 14pt 0 12pt; }
+  .page-break { break-before: page; }
+
+  ul, ol { margin: 0 0 9pt; padding-left: 14pt; }
+  li { margin-bottom: 3.5pt; }
+  li::marker { color: var(--stone); }
+
+  figure { margin: 9pt 0 12pt; break-inside: avoid; }
+  figure img { width: 100%; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+  figure.narrow { max-width: 62mm; }
+  figure.half { max-width: 96mm; }
+  figcaption { font-size: 8.5pt; color: var(--stone); margin-top: 4pt; }
+
+  .note {
+    background: var(--paper-2); border-left: 2px solid var(--signal);
+    padding: 9pt 11pt; margin: 10pt 0 12pt; break-inside: avoid;
+  }
+  .note h3 { margin-bottom: 3pt; }
+  .warn { border-left-color: #B4552D; }
+
+  table { width: 100%; border-collapse: collapse; margin: 8pt 0 12pt; font-size: 9.5pt; }
+  th, td { text-align: left; vertical-align: top; padding: 6pt 8pt 6pt 0; border-bottom: 1px solid var(--rule); }
+  th { color: var(--ink); font-weight: 600; border-bottom-color: var(--stone); }
+  td:first-child { width: 34%; color: var(--ink); font-weight: 600; }
+
+  .checklist { background: var(--paper-2); padding: 12pt 14pt; }
+  .checklist li { margin-bottom: 5pt; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="cover__top">
+    <p class="label label--signal">L.A.B by Timberlab</p>
+    <h1>Adding a project to your website</h1>
+    <p class="cover__sub">A step-by-step walkthrough of the WordPress screens, written so you
+      can keep it beside you the first few times.</p>
+  </div>
+  <div class="cover__meta">
+    <span class="label">Prepared for Henry</span>
+    <span class="label">Version 1</span>
+  </div>
+</div>
+
+<!-- ============================== 1 ============================== -->
+<div class="page-break"></div>
+
+<section>
+  <p class="label label--signal">Before you start</p>
+  <h2>The short answer: yes, projects are yours to add</h2>
+  <p>The site was deliberately built on standard WordPress fields rather than a paid
+    plugin, so there is no subscription to renew and nothing that stops working if a
+    plugin is abandoned. Everything about a project — the name, the photographs, the
+    story, where it sits on the page — is yours to change whenever you like.</p>
+  <p>What stays with us is the design itself: the typefaces, colours, spacing, the
+    scroll animations and the 3D floor-plan scene. Those are built in code so they
+    stay consistent no matter what you type.</p>
+</section>
+
+<hr class="rule">
+
+<section>
+  <p class="label label--signal">Step 1</p>
+  <h2>Get your material together first</h2>
+  <p>Adding a project takes about ten minutes if everything is to hand, and a lot
+    longer if it isn't. Before you open WordPress, have these ready:</p>
+  <ul>
+    <li><strong>A name for the project</strong> — something with character. "The Fluted
+      Wall" rather than "Tampines 4-room".</li>
+    <li><strong>The property type</strong> — HDB, BTO, Condominium, Landed or Commercial.</li>
+    <li><strong>Home type, location, design direction, year</strong> — for example
+      <em>4-Room Resale · Tampines GreenVerge · Warm contemporary · 2025</em>.</li>
+    <li><strong>Three short pieces of writing</strong>: a one or two sentence summary, what
+      the owners asked for, and what you did about it. Two or three sentences each is
+      plenty.</li>
+    <li><strong>A handful of material notes</strong> — "Fluted walnut feature panels",
+      "Navy kitchen with marble-look backsplash".</li>
+    <li><strong>The photographs</strong>, already cropped and sized. This matters more than
+      anything else, so it has a section of its own on the next page.</li>
+  </ul>
+  <div class="note">
+    <h3>Leave a field blank rather than filling it with a placeholder</h3>
+    <p>If you don't know the year yet, leave <span class="ui">Year completed</span> empty
+      and the site simply won't show it. Typing <em>TBC</em>, <em>To be confirmed</em> or a
+      dash does the same thing — the site hides it on purpose, so it will never publish a
+      placeholder as if it were a fact.</p>
+  </div>
+</section>
+
+<!-- ============================== 2 ============================== -->
+<div class="page-break"></div>
+
+<section>
+  <p class="label label--signal">Step 2</p>
+  <h2>Photographs — the part worth getting right</h2>
+  <p>The site crops every photograph to a fixed shape so the pages stay tidy no matter
+    what is uploaded. It crops <strong>from the centre outwards</strong>, and there is no way
+    to tell it which part of the picture to keep. So whatever you want kept needs to be
+    near the middle of the frame.</p>
+
+  <h3>Sizes to aim for</h3>
+  <table>
+    <tr><th>Where it is used</th><th>Upload at least</th></tr>
+    <tr><td>Cover photograph</td><td>2400 × 1350 pixels (landscape)</td></tr>
+    <tr><td>Gallery — <span class="ui">Wide</span></td><td>2400 × 1350 pixels (landscape)</td></tr>
+    <tr><td>Gallery — <span class="ui">Tall</span></td><td>1500 × 1875 pixels (upright)</td></tr>
+    <tr><td>Gallery — <span class="ui">Square</span></td><td>1400 × 1400 pixels</td></tr>
+  </table>
+  <p>If you only remember one number: <strong>2400 pixels on the long edge</strong>. Anything
+    from a decent camera or a recent phone is already bigger than that. WordPress will never
+    enlarge a small picture, so a photo that arrives at 900 pixels wide will look soft on a
+    laptop screen and there is nothing the site can do about it.</p>
+
+  <div class="note warn">
+    <h3>A photo that fails to attach does not look broken</h3>
+    <p>If a photograph is missing, the site shows a neutral designed panel instead of a
+      broken-image icon. That keeps the page looking intentional — but it also means a
+      missing photo is easy to walk past. Always view the project on the live site once
+      you have published it.</p>
+  </div>
+</section>
+
+<!-- ============================== 3 ============================== -->
+<div class="page-break"></div>
+
+<section>
+  <p class="label label--signal">Step 3</p>
+  <h2>Open the Projects screen</h2>
+  <p>Sign in at <strong>yoursite.com/wp-admin</strong>. In the black menu down the left you'll
+    see <span class="ui">Projects</span>. Click it for the full list, then
+    <span class="ui">Add new project</span> at the top.</p>
+  <figure>
+    <img src="01-projects-list.jpg" alt="The Projects list in the WordPress admin">
+    <figcaption>Every project you have, newest edits first. The <strong>Add new project</strong>
+      button sits at the top.</figcaption>
+  </figure>
+  <p>The edit screen that opens has a title box at the top, three boxes down the middle,
+    and a column of smaller boxes on the right. We'll take them in order.</p>
+  <figure>
+    <img src="02-edit-full.jpg" alt="The full project edit screen">
+    <figcaption>The whole screen. Nothing here is required — anything you leave empty is
+      simply left off the page.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================== 4 ============================== -->
+<div class="page-break"></div>
+
+<section>
+  <p class="label label--signal">Step 4</p>
+  <h2>The title, and the boxes down the middle</h2>
+
+  <div class="step">
+    <div class="step__head"><span class="step__num">01</span><h3>Title</h3></div>
+    <p>The big empty field at the very top. This is the project name shown under its
+      photograph on the Projects page, and it also becomes the web address, so type it
+      properly the first time.</p>
+  </div>
+
+  <div class="step">
+    <div class="step__head"><span class="step__num">02</span><h3>Project details</h3></div>
+    <p>Four short facts. Each one is optional and each one disappears if you leave it blank.</p>
+    <figure>
+      <img src="03-box-details.jpg" alt="The Project details box">
+    </figure>
+  </div>
+
+  <div class="step">
+    <div class="step__head"><span class="step__num">03</span><h3>Project story</h3></div>
+    <p>The writing. <span class="ui">Summary</span> is set large near the top of the project
+      page; <span class="ui">The brief</span> and <span class="ui">The response</span> are
+      placed between the photographs as the visitor scrolls.
+      <span class="ui">Design details</span> is a list — press
+      <span class="ui">Add row</span> for each material, and drag the <strong>⠿</strong> handle
+      on the left to reorder them.</p>
+    <figure>
+      <img src="04-box-story.jpg" alt="The Project story box">
+    </figure>
+  </div>
+</section>
+
+<!-- ============================== 5 ============================== -->
+<div class="page-break"></div>
+
+<section>
+  <p class="label label--signal">Step 5</p>
+  <h2>The gallery</h2>
+  <p>Press <span class="ui">Add photographs</span>. The usual WordPress media window opens —
+    drag files in to upload, or pick from what is already there. You can
+    <strong>select several at once</strong>, and they'll be added in the order you picked them.</p>
+  <figure>
+    <img src="11-media-modal.jpg" alt="The WordPress media library window">
+    <figcaption>Hold <strong>⌘</strong> (or <strong>Ctrl</strong>) to select more than one.</figcaption>
+  </figure>
+
+  <p>Each photograph becomes a row with three things you can change:</p>
+  <figure>
+    <img src="10-gallery-row.jpg" alt="One gallery row: drag handle, shape dropdown and description">
+  </figure>
+  <ol>
+    <li><strong>The ⠿ handle on the left</strong> — drag it up or down to reorder. You have to
+      grab the handle itself; dragging the picture won't work.</li>
+    <li><strong>The shape</strong> — this decides how the photo is cropped <em>and</em> where it
+      sits on the page. See the table overleaf.</li>
+    <li><strong>The description</strong> — a short line saying what the photo shows. It is read
+      aloud by screen readers and used by Google, so it is worth filling in. If the file
+      already had a description in your media library, it fills itself in.</li>
+  </ol>
+</section>
+
+<!-- ============================== 6 ============================== -->
+<div class="page-break"></div>
+
+<section>
+  <h2>What the three shapes do</h2>
+  <table>
+    <tr><th>Shape</th><th>How it is laid out</th></tr>
+    <tr>
+      <td>Wide (16:9)</td>
+      <td>Runs the <strong>full width</strong> of the page, on its own. Use it for the
+        photographs you want to land hardest — a whole living room, a long kitchen run.</td>
+    </tr>
+    <tr>
+      <td>Tall (4:5)</td>
+      <td>Pairs up <strong>side by side</strong> with the next upright photo. Use it for
+        details and upright compositions.</td>
+    </tr>
+    <tr>
+      <td>Square (1:1)</td>
+      <td>Also pairs side by side, but keeps a square crop. Useful when a photo would lose
+        too much top and bottom as a 4:5.</td>
+    </tr>
+  </table>
+  <p>The page builds itself from these: a <span class="ui">Wide</span> photo always takes a
+    full-width row alone, and any two upright photos next to each other become a two-up row.
+    So the rhythm of the page is in your hands — alternate a wide shot with a pair and it
+    reads well, set everything to wide and it becomes a long column.</p>
+
+  <div class="note">
+    <h3>Where your writing lands</h3>
+    <p>The site spreads <span class="ui">The brief</span> and <span class="ui">The response</span>
+      evenly through the photographs — one near the start, one around a third of the way down.
+      You don't have to position them.</p>
+  </div>
+
+  <h3>Before and after</h3>
+  <p>Underneath the gallery there are two optional fields. Set <strong>both</strong> and the
+    project page gains a slider the visitor can drag to compare. Set only one and nothing
+    appears — it needs the pair.</p>
+  <figure>
+    <img src="05-box-photos.jpg" alt="The Photography box, with the gallery, before and after">
+    <figcaption>The whole Photography box.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================== 7 ============================== -->
+<div class="page-break"></div>
+
+<section>
+  <p class="label label--signal">Step 6</p>
+  <h2>The column on the right</h2>
+  <p>Four small boxes, and they matter more than their size suggests.</p>
+
+  <div class="step">
+    <div class="step__head"><span class="step__num">01</span><h3>Property types</h3></div>
+    <p>Tick one. This is what the filter at the top of the Projects page uses, so a project
+      with nothing ticked can only be found under <span class="ui">All</span>.</p>
+    <figure class="narrow"><img src="07-sidebar-type.jpg" alt="The Property types box"></figure>
+  </div>
+
+  <div class="step">
+    <div class="step__head"><span class="step__num">02</span><h3>Cover photograph</h3></div>
+    <p>The single photo that represents the project on the Projects page and the homepage.
+      It is cropped to a square on the Projects page, so choose one that still reads well
+      square.</p>
+    <figure class="narrow"><img src="08-sidebar-cover.jpg" alt="The Cover photograph box"></figure>
+  </div>
+
+  <div class="step">
+    <div class="step__head"><span class="step__num">03</span><h3>Homepage</h3></div>
+    <p>Tick <span class="ui">Show in the homepage sequence</span> to put the project in the
+      run of featured work on the front page. The homepage shows the <strong>first six</strong>
+      ticked projects. Every project appears on the Projects page whether or not this is ticked.</p>
+    <figure class="narrow"><img src="06-box-homepage.jpg" alt="The Homepage box"></figure>
+  </div>
+
+  <div class="step">
+    <div class="step__head"><span class="step__num">04</span><h3>Order</h3></div>
+    <p>A number that decides where the project sits. <strong>Lower numbers come first.</strong>
+      This controls both the Projects page and the homepage sequence, so a new project you
+      want at the front should get a number lower than everything else — or renumber the
+      others.</p>
+    <figure class="narrow"><img src="09-sidebar-order.jpg" alt="The Order field"></figure>
+  </div>
+
+  <p>Then press <span class="ui">Publish</span>. Open the project on the live site and read
+    it through — it is the only reliable way to catch a photo that didn't attach or a crop
+    that cut something important.</p>
+</section>
+
+<!-- ============================== 8 ============================== -->
+<div class="page-break"></div>
+
+<section>
+  <p class="label label--signal">Worth knowing</p>
+  <h2>Three things to leave alone</h2>
+
+  <div class="step">
+    <div class="step__head"><span class="step__num">01</span><h3>Import content</h3></div>
+    <p>There is a button under <span class="ui">L.A.B settings</span> called
+      <span class="ui">Import content</span>. It was for setting the site up the first time.
+      <strong>Don't press it again.</strong> It won't damage your projects, but it does put the
+      main menu back the way it started, which you'd then have to undo.</p>
+  </div>
+
+  <div class="step">
+    <div class="step__head"><span class="step__num">02</span><h3>The four process steps</h3></div>
+    <p>You can reword them freely. Don't add a fifth or delete one — the 3D floor-plan
+      animation on the homepage is choreographed to exactly four, and the picture would drift
+      out of step with the words. WordPress will warn you if the count changes. If you want a
+      different number, tell us and we'll re-time the scene.</p>
+  </div>
+
+  <div class="step">
+    <div class="step__head"><span class="step__num">03</span><h3>The hero film</h3></div>
+    <p>The looping film behind the homepage headline can be swapped under
+      <span class="ui">L.A.B settings</span>, but it needs four files — two formats at two
+      sizes — so that it plays on every browser and doesn't burn through a visitor's mobile
+      data. Send us the footage and we'll prepare them.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <h2>Anything else you can change</h2>
+  <p>Beyond projects, these are all yours: <strong>Services</strong>,
+    <strong>Process steps</strong>, <strong>Principles</strong>, <strong>Team</strong>, the
+    headings on each page, and — under <span class="ui">L.A.B settings</span> — every piece of
+    wording on the homepage, the studio figures, your address, phone, email, opening hours,
+    social links and the footer. Enquiries from the contact form are saved in WordPress as
+    well as emailed, so nothing is lost if an email goes astray.</p>
+</section>
+
+<!-- ============================== 9 ============================== -->
+<div class="page-break"></div>
+
+<section>
+  <h2>The short version</h2>
+  <p>Once you've done it once, this is all you need.</p>
+  <div class="checklist">
+    <ol>
+      <li><strong>Projects → Add new project</strong></li>
+      <li>Type the project name in the title field</li>
+      <li><strong>Project details</strong> — home type, location, design direction, year
+        <em>(leave blank what you don't know)</em></li>
+      <li><strong>Project story</strong> — summary, the brief, the response, and the material
+        notes</li>
+      <li><strong>Photography</strong> → <strong>Add photographs</strong>, then set each one's
+        shape and description, and drag the <strong>⠿</strong> handles into the order you want</li>
+      <li>Optional: set <strong>both</strong> a before and an after photo for the slider</li>
+      <li>Right-hand column — tick the <strong>property type</strong>, set the
+        <strong>cover photograph</strong>, tick <strong>homepage</strong> if it should feature,
+        set the <strong>order</strong> number</li>
+      <li><strong>Publish</strong>, then open it on the live site and read it through</li>
+    </ol>
+  </div>
+
+  <hr class="rule">
+
+  <p class="label">If anything looks wrong</p>
+  <p>Send us a screenshot and the project name. Nothing you can do on these screens will
+    break the design — the worst case is a photo cropped somewhere you didn't want, and that
+    is a two-minute fix.</p>
+</section>
+
+</body>
+</html>

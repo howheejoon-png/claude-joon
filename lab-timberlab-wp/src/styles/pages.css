@@ -57,8 +57,10 @@
 .pd-flow__say { margin-inline: auto; text-align: center; color: var(--ink-3); }
 .pd-flow__say h2 { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--signal); font-weight: 400; margin-bottom: var(--s-4); }
 .pd-flow__full .frame { aspect-ratio: 3 / 2; }
-.pd-flow__pair { display: grid; grid-template-columns: 1fr; gap: var(--gap); }
+.pd-flow__pair { display: grid; grid-template-columns: 1fr; gap: var(--gap); align-items: start; }
 .pd-flow__pair .frame { aspect-ratio: 4 / 5; }
+/* A photograph marked Square is shown square, not forced upright like its neighbour. */
+.pd-flow__pair .g-square .frame { aspect-ratio: 1 / 1; }
 @media (min-width: 700px) { .pd-flow__pair { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 900px) { .pd-flow__full .frame { aspect-ratio: 16 / 9; } }
 

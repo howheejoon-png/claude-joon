@@ -16,13 +16,23 @@
 	$( document ).on( 'click', '[data-lab-media-pick]', function ( e ) {
 		e.preventDefault();
 		var $field = $( this ).closest( '[data-lab-media]' );
+		var type = $field.data( 'lab-media-type' ) || 'image';
+		var isImage = type === 'image';
 		openMedia(
-			{ title: 'Choose image', library: { type: 'image' }, multiple: false },
+			{
+				title: isImage ? 'Choose image' : 'Choose file',
+				library: { type: type },
+				multiple: false
+			},
 			function ( selection ) {
 				var item = selection.first().toJSON();
-				var thumb = ( item.sizes && item.sizes.medium ) ? item.sizes.medium.url : item.url;
 				$field.find( '[data-lab-media-input]' ).val( item.id );
-				$field.find( '[data-lab-media-preview]' ).html( '<img src="' + thumb + '" alt="">' );
+				if ( isImage ) {
+					var thumb = ( item.sizes && item.sizes.medium ) ? item.sizes.medium.url : item.url;
+					$field.find( '[data-lab-media-preview]' ).html( '<img src="' + thumb + '" alt="">' );
+				} else {
+					$field.find( '[data-lab-media-preview]' ).html( $( '<code>' ).text( item.filename || item.url ) );
+				}
 			}
 		);
 	} );
