@@ -232,9 +232,49 @@ Note: **the homepage cannot be regression-tested by comparing screenshots** —
 the hero video and the Three.js canvas make it non-deterministic. Compare the
 page height and prove instead that no changed selector appears on it.
 
+## The client guide (commit `bba8bf3`)
+
+Henry asked whether he can add his own projects. He can — that is what the
+native-meta-box decision bought. `lab-timberlab-wp/guide/` holds the source of
+the walkthrough written for him (`CLIENT-GUIDE.html` plus screenshots taken
+from a real WordPress running the theme); the PDF is rendered from it with
+Chromium's print-to-PDF. **`guide/` is excluded from the packaged zip** — it
+belongs in the repository, not on the client's server.
+
+Facts worth keeping, established while writing it:
+
+- **Administrator** is needed for L.A.B settings and the importer only.
+  **Editor** can manage every project and the property types but not settings —
+  the right role if the client should not touch site-wide wording.
+- **`lab_known()` is a trap as well as a guard.** Typing "TBC" or "to be
+  confirmed" into a field makes it vanish from the page rather than appear.
+- **Re-running Import content is mostly safe but not entirely**: existing
+  projects, services and steps are skipped untouched, but it re-orders the main
+  menu and restores page headings and property-type sub-labels that were
+  deliberately cleared. Tell the client not to run it again.
+- **Images are hard-cropped from the centre** with no focal-point control, and
+  WordPress never enlarges. The admin states no pixel sizes anywhere; the guide
+  gives them (2400×1350 cover/wide, 1500×1875 tall, 1400×1400 square).
+- **The seeded photography is 2000×1500**, below several crop targets, so WP
+  clamps: `lab-tall` comes out 1500×1500 rather than 4:5. Displayed ratios are
+  still correct because everything is `object-fit: cover`, but detail is being
+  thrown away. If the client re-supplies originals, reprocess above 2400px.
+
+### Fixed at the same time
+- **Square gallery shape did nothing** — the pairing code passed `'tall'` for
+  both photographs and the CSS forced 4:5. Each photograph now carries its own
+  shape, and `.pd-flow__pair .g-square .frame` is 1:1.
+- **Wide was cropped twice** — a full-width gallery photograph displays at 16:9
+  but was served the 2:1 `lab-wide` file. It now takes `lab-hero`.
+  `lab_size_for()` is unchanged, so homepage cards and the before/after slider
+  still use `lab-wide`.
+- **The hero-video fields could not accept a video** — the picker hardcoded an
+  image-only library. `lab_field_media()` now takes a `$type`, and the four
+  fields in `inc/options.php` declare `'media' => 'video'`.
+
 ## Outstanding — next tasks
 
-1. Repackage and resend the theme zip (full and lean) so the client uploads once.
+1. The client must re-upload the theme zip for the three fixes above.
 2. Still awaiting from the client: the logo, real studio figures (the current
    ones are flagged samples), team details, WhatsApp confirmation, social
    links, L.A.B hero footage, and confirmation of project names, flat types
