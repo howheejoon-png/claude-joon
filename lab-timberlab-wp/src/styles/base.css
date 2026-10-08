@@ -84,8 +84,12 @@ ul, ol { padding: 0; list-style: none; }
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
 /* Line-split reveal */
-.split-line { display: block; overflow: hidden; }
-.split-line > span { display: block; transform: translateY(110%); }
+/* The mask that hides each line before it animates in. It needs slack below the
+   baseline or it clips descenders (j g y p q) — "Projects" lost its j. The
+   negative margin cancels the slack so layout and line spacing are unchanged,
+   and the start offset clears the taller mask so no line peeks through. */
+.split-line { display: block; overflow: hidden; padding-bottom: 0.2em; margin-bottom: -0.2em; }
+.split-line > span { display: block; transform: translateY(130%); }
 .split-line > span.is-in { transform: translateY(0); transition: transform var(--dur-slow) var(--ease-out); }
 
 /* Image frame with reveal + parallax slot */
