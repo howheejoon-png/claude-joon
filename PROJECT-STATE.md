@@ -173,16 +173,69 @@ wrongly listed as a kind of home; the Studio photograph.
 
 ---
 
-## In progress — next tasks
+## The Projects tab (done — commit `468a501`)
 
-1. **Projects index + project detail redesign.** The client wants the Projects
-   tab to follow `https://www.eightytwo.asia/portfolio`, and the project detail
-   to follow `https://www.eightytwo.asia/parkview-square`.
-   **Both are proxy-blocked from the sandbox** — ask the user for screenshots or
-   a description of the layout before building.
-2. **Clipped descenders.** The "j" in "Projects" is cut off. Cause:
-   `.split-line { overflow: hidden }` in `base.css`, used to mask the line-reveal
-   animation, clips descenders (j g y p q). Fix by giving the mask room —
-   padding-bottom plus an equal negative margin — and then audit **every**
-   heading that uses `data-reveal="lines"` across both the prototype and the
-   theme.
+The client asked for `eightytwo.asia/portfolio` and `.../parkview-square`.
+**Both are proxy-blocked from the sandbox**; the work was driven from
+screenshots the user supplied, which are described in full in the commit
+message and in the plan.
+
+What was decided and built:
+- **Index:** a uniform grid of square tiles — 3 across on desktop, 2 at tablet,
+  1 on a phone — with nothing under each tile but the project name, centred,
+  grey (`--stone`, 17px), darkening to ink on hover. Measured against the
+  reference: 29.8px column gap, 72px row gap. Numbers and the type/location/
+  direction tags are gone from the cards.
+- **The filter bar stays.** The reference has none, but a homeowner needs to
+  reach their own kind of flat — that is the page's job for lead generation.
+- **The homepage did not change.** Its asymmetric numbered sequence was already
+  approved; the contrast between the two is deliberate.
+- **Project page:** a full-bleed darkened photograph to open, then summary and
+  facts, then the story told in short centred paragraphs set between the
+  photographs. Wide shots full width, upright shots paired. Figure captions and
+  their counters are gone (alt text stays).
+
+Still as before, deliberately: the "Materials and making" band on the project
+page keeps its `--paper-2` background and signal-blue numbers. It is the
+loudest thing left that the reference does not have — quietening it is a
+one-line change if the client wants it.
+
+### Fixed in passing
+- The footer listed **Commercial** under "Homes". It now lists only property
+  types flagged "kind of home" — the thing the client raised in Round 2, fixed
+  on the filter at the time but missed in the footer.
+- `lab_project_card()` emitted `data-parallax="0"`, and `.frame[data-parallax]
+  > img` sets `height: 120%` on **presence** of the attribute, so a square tile
+  would have had a 120%-tall offset image and no hover zoom. The attribute is
+  now omitted at zero.
+- The prototype's dark-section detection still used the viewport-sliver
+  `IntersectionObserver` that broke the live header; it now measures against
+  the header's own box like the theme does.
+
+## Verifying this work again
+
+A real WordPress rig is the only way to catch template-resolution and
+permalink bugs. Rebuild it with:
+
+```
+git clone --depth 1 --branch 6.7 https://github.com/WordPress/WordPress.git
+git clone --depth 1 --branch v2.1.13 \
+  https://github.com/WordPress/sqlite-database-integration.git
+```
+
+Copy `db.copy` to `wp-content/db.php` and substitute the two placeholders
+**without adding quotes** — they are already quoted in the file. Symlink the
+theme, `php -S` with a router that falls through to `index.php`, install, then
+`lab_run_seed()` from a CLI script with `wp_set_current_user(1)`.
+
+Note: **the homepage cannot be regression-tested by comparing screenshots** —
+the hero video and the Three.js canvas make it non-deterministic. Compare the
+page height and prove instead that no changed selector appears on it.
+
+## Outstanding — next tasks
+
+1. Repackage and resend the theme zip (full and lean) so the client uploads once.
+2. Still awaiting from the client: the logo, real studio figures (the current
+   ones are flagged samples), team details, WhatsApp confirmation, social
+   links, L.A.B hero footage, and confirmation of project names, flat types
+   and completion years.
