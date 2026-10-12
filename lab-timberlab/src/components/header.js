@@ -1,4 +1,5 @@
 import { site } from '../data/site.js';
+import { sprite, brand, lockup } from './logo.js';
 
 const arrow = `<svg class="arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L12 2M4 2h8v8"/></svg>`;
 
@@ -7,11 +8,14 @@ export function renderHeader(current = '') {
   if (!host) return;
   const links = site.nav.map((n) => `<a href="${n.href}" ${n.href === current ? 'aria-current="page"' : ''}>${n.label}</a>`).join('');
   host.className = 'site-header';
+  // The glyph outlines go in once per page; every instance <use>s them.
+  if (!document.querySelector('.logo-sprite')) {
+    document.body.insertAdjacentHTML('afterbegin', sprite);
+  }
   host.innerHTML = `
     <div class="container">
       <a class="brand" href="index.html" aria-label="L.A.B by Timberlab — home">
-        <span class="brand__mark">L<span class="dot">.</span>A<span class="dot">.</span>B</span>
-        <span class="brand__by">by Timberlab</span>
+        ${brand}
       </a>
       <nav class="nav" aria-label="Primary">${links}</nav>
       <div class="header-cta">
@@ -26,7 +30,7 @@ export function renderHeader(current = '') {
   menu.className = 'menu';
   menu.setAttribute('aria-hidden', 'true');
   menu.innerHTML = `
-    <div class="menu__brand"><span class="brand__mark">L<span class="dot" style="color:var(--signal)">.</span>A<span class="dot" style="color:var(--signal)">.</span>B</span></div>
+    <div class="menu__brand">${lockup}</div>
     <button class="menu__close" type="button"><span>Close</span><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.5"><path d="M1 1l12 12M13 1L1 13"/></svg></button>
     <ul class="menu__list">
       ${[{ label: 'Home', href: 'index.html' }, ...site.nav].map((n, i) => `<li><a href="${n.href}"><span><span class="idx">0${i + 1}</span>${n.label}</span></a></li>`).join('')}

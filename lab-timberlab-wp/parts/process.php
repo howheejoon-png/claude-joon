@@ -15,7 +15,7 @@ if ( ! $steps ) {
 	<div class="process__sticky">
 		<div class="process__canvas" aria-hidden="true"></div>
 		<div class="process__fallback" aria-hidden="true">
-			<img src="<?php echo esc_url( LAB_URI . '/assets/placeholders/plan-fallback.svg' ); ?>" alt="">
+			<img src="<?php echo esc_url( LAB_URI . '/img/placeholders/plan-fallback.svg' ); ?>" alt="">
 		</div>
 
 		<div class="container process__steps" data-steps aria-live="polite">

@@ -128,7 +128,6 @@ and completion years.
 
 ## Outstanding / awaiting the client
 
-- The L.A.B **logo** (a typographic wordmark stands in).
 - **Studio figures are SAMPLE values** (12+ / 260+ / 18) seeded purely so the
   count-up animation can be reviewed, labelled "Sample figures — to be confirmed".
   These must be replaced or removed before launch.
@@ -272,10 +271,59 @@ Facts worth keeping, established while writing it:
   image-only library. `lab_field_media()` now takes a `$type`, and the four
   fields in `inc/options.php` declare `'media' => 'video'`.
 
+## The logo (done)
+
+The client supplied `LAB_R1.pdf` — a stacked lockup, `L.A.B` in Bodoni MT
+Condensed over `By Timberlab`, with the two full stops in Californian FB Bold.
+**Pure black**: the only colour operators in the file are `0 0 0 1 k` and
+`0 0 0 0 k`, so there was no brand colour to adopt and the palette is unchanged.
+The blue dots the stand-in wordmark had are gone — the real stops are black.
+
+Converted with PyMuPDF `get_svg_image( text_as_path=True )`, so the glyphs are
+outlines and **no font file ships**. The outlines live once per page in a hidden
+sprite (`lab_logo_sprite()`); each instance is a few hundred bytes of `<use>`
+with `fill="currentColor"`, which means the mark inherits the header's colour
+and flips with it for free — ink on paper, paper over a dark hero, ink again on
+the frosted bar — riding the colour transition that was already there.
+
+Three variants, from `lab_logo()` / `src/components/logo.js`:
+
+| | | |
+|---|---|---|
+| `brand` | 3.86 : 1 | the header bar |
+| `lockup` | 1.64 : 1 | the full-screen menu — stacked, exactly as supplied |
+| `mark` | 2.11 : 1 | the tab icon |
+
+**Why `brand` is not the supplied lockup.** The artwork is stacked and nearly
+square; the header is a 72px bar. Scaled to fit, `By Timberlab` lands at about
+6px and Bodoni's hairlines fall below one pixel — it renders as "Bv Timberlah".
+So `brand` sets the same letterforms side by side on one baseline, which is what
+a horizontal lockup is for. **1.6rem is the floor**: below it the tagline's
+hairlines disappear again. Do not shrink it.
+
+The **footer watermark was deliberately left alone** — still the giant faint
+`L.A.B` set in Archivo. That was the user's call.
+
+### Icons
+`lab-timberlab-wp/img/` (new, and **not** gitignored, unlike `assets/`) holds
+`favicon.svg`, `favicon-32.png`, `favicon-48.png`, `apple-touch-icon.png` and
+`icon-512-maskable.png` — an ink square with the mark in paper, which reads on
+both light and dark browser chrome. Linked from `header.php`.
+
+### A shipping bug fixed at the same time
+`assets/placeholders/` never existed and shipped in neither zip, because
+`assets/` is gitignored. Three paths pointed at it: the designed photo
+placeholder, the WebGL fallback floor plan, and the same placeholders from JS.
+So on the live site a missing photo was a broken image, and a visitor without
+WebGL saw a broken image where the process animation should be. The art now
+lives in `img/placeholders/` and all three paths were repointed — including
+`window.LAB.assets` in `inc/assets.php`, which now points at `/img`.
+
 ## Outstanding — next tasks
 
-1. The client must re-upload the theme zip for the three fixes above.
-2. Still awaiting from the client: the logo, real studio figures (the current
+1. The client must re-upload the theme zip — it now carries the real logo, the
+   icons, and the placeholder art that never shipped.
+2. Still awaiting from the client: real studio figures (the current
    ones are flagged samples), team details, WhatsApp confirmation, social
    links, L.A.B hero footage, and confirmation of project names, flat types
    and completion years.

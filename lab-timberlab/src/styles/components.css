@@ -18,10 +18,15 @@
 .site-header.on-dark { color: var(--paper); }
 .site-header.on-dark.is-solid { color: var(--ink); }
 .site-header .container { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
-.brand { display: inline-flex; align-items: baseline; gap: 0.6rem; justify-self: start; }
-.brand__mark { font-family: var(--font-display); font-weight: 600; font-variation-settings: 'wdth' 125; font-size: 1.15rem; letter-spacing: 0.06em; line-height: 1; }
-.brand__mark .dot { color: var(--signal); }
-.brand__by { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; }
+/* The brand mark is the client's artwork, inlined as SVG. Every fill is
+   currentColor, so it inherits the header's colour and flips with it — the
+   supplied lockup is stacked, so the header sets the two halves side by side. */
+.logo-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+.logo { display: block; width: auto; }
+.brand { display: inline-flex; align-items: center; justify-self: start; }
+/* 1.6rem is where the tagline's hairlines survive — Bodoni thins to sub-pixel
+   below it and "By Timberlab" starts reading as "Bv Timberlah". */
+.brand .logo { height: 1.6rem; }
 .nav { display: none; gap: 2.25rem; justify-self: center; }
 .nav a { font-size: var(--text-sm); font-weight: 500; position: relative; padding-block: 0.25rem; }
 .nav a::after { content: ''; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform var(--dur) var(--ease-out); }
@@ -57,6 +62,7 @@
 .menu__close { position: absolute; top: 0; right: var(--gutter); height: var(--header-h); display: inline-flex; align-items: center; gap: 0.6rem; font-size: var(--text-sm); font-weight: 500; }
 .menu__close:hover { opacity: 0.7; }
 .menu__brand { position: absolute; top: 0; left: var(--gutter); height: var(--header-h); display: flex; align-items: center; }
+.menu__brand .logo { height: 2.6rem; }
 .menu__list { margin-top: auto; }
 .menu__list a { display: block; font-family: var(--font-display); font-weight: 500; font-variation-settings: 'wdth' var(--display-wdth); font-size: clamp(2.4rem, 9vw, 4.5rem); line-height: 1.05; letter-spacing: var(--tracking-display); padding-block: 0.15em; }
 .menu__list a span { display: inline-block; transform: translateY(40px); opacity: 0; transition: transform 0.8s var(--ease-out), opacity 0.6s ease; }

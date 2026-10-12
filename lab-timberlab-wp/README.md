@@ -112,7 +112,6 @@ seed/                      starter content and photography (deletable after impo
 
 ## Still outstanding
 
-- The L.A.B logo (a typographic wordmark stands in).
 - Real studio figures — the imported ones are clearly marked samples.
 - Confirmation that WhatsApp is active on the studio number.
 - Social media links.

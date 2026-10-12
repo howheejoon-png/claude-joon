@@ -56,7 +56,8 @@ function lab_enqueue(): void {
 	);
 
 	wp_localize_script( 'lab-main', 'LAB', [
-		'assets'  => trailingslashit( LAB_URI . '/assets' ),
+		// The designed placeholders live in /img, which ships; /assets does not.
+		'assets'  => trailingslashit( LAB_URI . '/img' ),
 		'ajax'    => admin_url( 'admin-ajax.php' ),
 		'nonce'   => wp_create_nonce( 'lab_enquiry' ),
 		'reduced' => false,

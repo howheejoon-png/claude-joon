@@ -5,10 +5,14 @@
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="theme-color" content="#F3F3F1">
+	<link rel="icon" href="<?php echo esc_url( LAB_URI . '/img/favicon.svg' ); ?>" type="image/svg+xml">
+	<link rel="icon" href="<?php echo esc_url( LAB_URI . '/img/favicon-32.png' ); ?>" sizes="32x32" type="image/png">
+	<link rel="apple-touch-icon" href="<?php echo esc_url( LAB_URI . '/img/apple-touch-icon.png' ); ?>">
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+<?php echo lab_logo_sprite(); ?>
 
 <a class="sr-only" href="#main"><?php esc_html_e( 'Skip to content', 'lab' ); ?></a>
 
@@ -17,8 +21,7 @@
 <header id="site-header" class="site-header<?php echo lab_header_starts_dark() ? ' on-dark' : ''; ?>">
 	<div class="container">
 		<a class="brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="<?php esc_attr_e( 'L.A.B by Timberlab — home', 'lab' ); ?>">
-			<span class="brand__mark">L<span class="dot">.</span>A<span class="dot">.</span>B</span>
-			<span class="brand__by"><?php esc_html_e( 'by Timberlab', 'lab' ); ?></span>
+			<?php echo lab_logo( 'brand' ); ?>
 		</a>
 		<nav class="nav" aria-label="<?php esc_attr_e( 'Primary', 'lab' ); ?>">
 			<?php foreach ( $nav as $item ) : ?>
@@ -35,7 +38,7 @@
 </header>
 
 <div id="site-menu" class="menu" aria-hidden="true">
-	<div class="menu__brand"><span class="brand__mark">L<span class="dot">.</span>A<span class="dot">.</span>B</span></div>
+	<div class="menu__brand"><?php echo lab_logo( 'lockup' ); ?></div>
 	<button class="menu__close" type="button">
 		<span><?php esc_html_e( 'Close', 'lab' ); ?></span>
 		<svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13"/></svg>

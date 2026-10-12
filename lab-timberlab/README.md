@@ -63,7 +63,6 @@ Content and presentation are separated: the client will edit copy, project field
 
 ## Placeholder register (must be confirmed or supplied before launch)
 
-- **Logo** — the client's existing logo is not in this repository; a typographic wordmark stands in.
 - **Photography** — supplied by the client (nine projects), processed to web size by `tools/process-photos.py` into `public/img/projects/<slug>/`. Raw originals are kept out of the repository (`source-photos/` is ignored).
 - **Projects** — nine real projects identified from the client's folder names. Titles, descriptions, "design direction" labels and material lists are DRAFT copy written from the photographs. Home type (3-room, 4-room, and so on), BTO or resale status, completion year and the Koun Patisserie location are unknown and marked "To be confirmed".
 - **Before / after** — no "before" photography was supplied, so the module is hidden until it exists for a project.
