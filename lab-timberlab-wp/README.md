@@ -96,6 +96,46 @@ assets/                    build output (generated)
 seed/                      starter content and photography (deletable after import)
 ```
 
+## Email delivery
+
+An enquiry is saved as a private `lab_enquiry` post **before** any email is
+attempted, so a delivery failure never loses a lead. The email is a second,
+independent path.
+
+Two things that silently lose enquiries are handled in `inc/mail.php`:
+
+- **The sender.** WordPress sends as `wordpress@<site-domain>` unless told
+  otherwise. Mail from a shared host, claiming a domain that has not authorised
+  that server, is routinely filed as spam. The sender is now set explicitly, and
+  can be routed through real SMTP credentials. If no address is configured the
+  theme derives `no-reply@<site-domain>` — but only when that is a valid address,
+  so a site on `localhost` or a bare IP keeps WordPress's own default rather
+  than handing PHPMailer something it will reject.
+- **Silent failure.** `wp_mail()` returns false and core tells nobody. Failures
+  are recorded, shown as a warning on every admin screen until the next send
+  succeeds, and marked per enquiry in an **Emailed** column so the studio can
+  see exactly which ones to chase.
+
+**L.A.B settings → Email delivery** holds the sender and the SMTP details, with
+a **Send a test email** button underneath. The password is never echoed back
+into the page and is kept when the box is left blank.
+
+**Credentials belong in `wp-config.php`, not the database.** Any of these wins
+over the matching setting:
+
+```php
+define( 'LAB_SMTP_HOST',   'smtp.hostinger.com' );
+define( 'LAB_SMTP_PORT',   587 );
+define( 'LAB_SMTP_SECURE', 'tls' );          // tls | ssl | none
+define( 'LAB_SMTP_USER',   'hello@example.sg' );
+define( 'LAB_SMTP_PASS',   '…' );            // app password for Google Workspace
+define( 'LAB_MAIL_FROM',   'no-reply@example.sg' );
+define( 'LAB_MAIL_FROM_NAME', 'L.A.B website' );
+```
+
+Leave the SMTP server blank and the site keeps using the host's own mail, so an
+unconfigured install behaves exactly as before.
+
 ## Notes
 
 - **Images.** The layouts crop to fixed ratios and the theme registers matching

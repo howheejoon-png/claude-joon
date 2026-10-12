@@ -20,5 +20,6 @@ require_once LAB_DIR . '/inc/meta-boxes.php';
 require_once LAB_DIR . '/inc/options.php';
 require_once LAB_DIR . '/inc/nav.php';
 require_once LAB_DIR . '/inc/template-tags.php';
+require_once LAB_DIR . '/inc/mail.php';
 require_once LAB_DIR . '/inc/enquiry.php';
 require_once LAB_DIR . '/inc/seed.php';

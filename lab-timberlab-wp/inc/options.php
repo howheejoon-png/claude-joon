@@ -68,6 +68,22 @@ function lab_options_schema(): array {
 				'figures_note' => [ 'type' => 'text', 'label' => __( 'Note under the figures', 'lab' ), 'help' => __( 'Leave blank once the real numbers are in place.', 'lab' ) ],
 			],
 		],
+		'mail' => [
+			'title'  => __( 'Email delivery', 'lab' ),
+			'fields' => [
+				'mail_from'      => [ 'type' => 'text', 'label' => __( 'Send enquiries from', 'lab' ), 'help' => __( 'An address on this website\'s own domain. Mail sent from another domain is often filed as spam. Leave blank to use no-reply@ your domain.', 'lab' ) ],
+				'mail_from_name' => [ 'type' => 'text', 'label' => __( 'Sender name', 'lab' ), 'help' => __( 'What the email appears to come from. For example: L.A.B website.', 'lab' ) ],
+				'smtp_host'      => [ 'type' => 'text', 'label' => __( 'SMTP server', 'lab' ), 'help' => __( 'Leave blank and the site uses the web host\'s own mail, which often lands in spam. Your mailbox provider supplies this — for example smtp.hostinger.com, or smtp.gmail.com for Google Workspace.', 'lab' ) ],
+				'smtp_port'      => [ 'type' => 'text', 'label' => __( 'Port', 'lab' ), 'help' => __( 'Usually 587 for TLS or 465 for SSL. Leave blank to choose automatically.', 'lab' ) ],
+				'smtp_secure'    => [
+					'type'    => 'select',
+					'label'   => __( 'Encryption', 'lab' ),
+					'choices' => [ 'tls' => __( 'TLS (usually port 587)', 'lab' ), 'ssl' => __( 'SSL (usually port 465)', 'lab' ), 'none' => __( 'None', 'lab' ) ],
+				],
+				'smtp_user'      => [ 'type' => 'text', 'label' => __( 'Mailbox username', 'lab' ), 'help' => __( 'Normally the full email address of the mailbox you are sending through.', 'lab' ) ],
+				'smtp_pass'      => [ 'type' => 'password', 'label' => __( 'Mailbox password', 'lab' ), 'help' => __( 'Leave blank to keep the saved password. For Google Workspace this is an app password, not the account password. Safer still: ask your developer to put it in wp-config.php instead of here.', 'lab' ) ],
+			],
+		],
 		'contact' => [
 			'title'  => __( 'Contact', 'lab' ),
 			'fields' => [
@@ -140,6 +156,8 @@ function lab_defaults(): array {
 		'phone'        => '+65 8993 8778',
 		'phone_raw'    => '+6589938778',
 		'email'        => 'sales@timberlab.sg',
+		'mail_from_name' => 'L.A.B website',
+		'smtp_secure'    => 'tls',
 		'whatsapp'     => 'https://wa.me/6589938778',
 		'hours'        => [
 			[ 'days' => 'Monday – Friday', 'time' => '9am – 6pm' ],
@@ -198,10 +216,17 @@ function lab_settings_page(): void {
 			foreach ( $schema as $section ) {
 				foreach ( $section['fields'] as $key => $field ) {
 					$value = $raw[ $key ] ?? '';
+					if ( 'password' === $field['type'] && '' === trim( (string) $value ) ) {
+						// An empty password box means "leave it alone", not "clear it".
+						$existing = (array) get_option( LAB_OPTION, [] );
+						$clean[ $key ] = (string) ( $existing[ $key ] ?? '' );
+						continue;
+					}
 					$clean[ $key ] = match ( $field['type'] ) {
 						'textarea' => sanitize_textarea_field( (string) $value ),
 						'media'    => (int) $value,
 						'rows'     => lab_clean_rows( $value, $field['cols'] ),
+						'select'   => isset( $field['choices'][ $value ] ) ? (string) $value : (string) array_key_first( $field['choices'] ),
 						default    => sanitize_text_field( (string) $value ),
 					};
 				}
@@ -216,6 +241,25 @@ function lab_settings_page(): void {
 	echo '<div class="wrap lab-settings"><h1>' . esc_html__( 'L.A.B settings', 'lab' ) . '</h1>';
 	if ( $saved ) {
 		echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Settings saved.', 'lab' ) . '</p></div>';
+	}
+
+	$test = isset( $_GET['lab_test'] ) ? sanitize_text_field( wp_unslash( $_GET['lab_test'] ) ) : '';
+	if ( 'sent' === $test ) {
+		printf(
+			'<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+			esc_html( sprintf(
+				/* translators: %s: the studio email address. */
+				__( 'Test email handed to the mail server for %s. Check the inbox — and the spam folder.', 'lab' ),
+				(string) lab_opt( 'email' )
+			) )
+		);
+	} elseif ( 'failed' === $test ) {
+		$err = lab_mail_last_error();
+		printf(
+			'<div class="notice notice-error"><p><strong>%s</strong> %s</p></div>',
+			esc_html__( 'The test email could not be sent.', 'lab' ),
+			esc_html( (string) ( $err['message'] ?? '' ) )
+		);
 	}
 	echo '<form method="post">';
 	wp_nonce_field( 'lab_settings', 'lab_settings_nonce' );
@@ -237,6 +281,13 @@ function lab_settings_page(): void {
 				case 'rows':
 					lab_field_rows( $name, (array) $value, $field['cols'], $field['label'], $help );
 					break;
+				case 'select':
+					lab_field_select( $name, (string) $value, $field['choices'], $field['label'], $help );
+					break;
+				case 'password':
+					// Never echo the stored secret back into the page.
+					lab_field_text( $name, '', $field['label'], '' !== (string) $value ? __( 'A password is saved.', 'lab' ) . ' ' . $help : $help, 'password' );
+					break;
 				default:
 					lab_field_text( $name, (string) $value, $field['label'], $help );
 			}
@@ -245,5 +296,20 @@ function lab_settings_page(): void {
 	}
 
 	submit_button( __( 'Save settings', 'lab' ) );
-	echo '</form></div>';
+	echo '</form>';
+
+	// Proving delivery is the only way to know the form will reach anyone.
+	printf(
+		'<hr><h2>%s</h2><p>%s</p><form method="post" action="%s">%s<input type="hidden" name="action" value="lab_test_mail">%s</form></div>',
+		esc_html__( 'Check delivery', 'lab' ),
+		esc_html( sprintf(
+			/* translators: 1: recipient, 2: sender address. */
+			__( 'Sends a test message to %1$s, from %2$s.', 'lab' ),
+			(string) lab_opt( 'email' ),
+			lab_mail_effective_from()
+		) ),
+		esc_url( admin_url( 'admin-post.php' ) ),
+		wp_nonce_field( 'lab_test_mail', '_wpnonce', true, false ),
+		get_submit_button( __( 'Send a test email', 'lab' ), 'secondary', 'submit', false )
+	);
 }

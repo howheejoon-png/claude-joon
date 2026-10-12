@@ -319,11 +319,49 @@ WebGL saw a broken image where the process animation should be. The art now
 lives in `img/placeholders/` and all three paths were repointed — including
 `window.LAB.assets` in `inc/assets.php`, which now points at `/img`.
 
+## Enquiry delivery (`inc/mail.php`, new)
+
+How a lead reaches the studio: the submission is written as a private
+`lab_enquiry` post **first**, then emailed to whatever is in L.A.B settings →
+Contact → Email. Reply-To is the visitor, so replying in Gmail goes to the
+homeowner. Because the record is saved first, a delivery failure never loses a
+lead.
+
+Two silent-loss paths were closed:
+
+- **Sender.** WordPress sends as `wordpress@<site-domain>`; from a shared host
+  to another domain that is a spam-folder case. Now set explicitly, with
+  optional SMTP. `lab_mail_from()` returns `''` when neither a configured
+  address nor a derived `no-reply@<domain>` is a valid email — on `localhost`
+  or a bare IP, so PHPMailer is never handed an address it rejects. **This was a
+  regression I introduced and then fixed; do not "simplify" it back.**
+- **Silent failure.** `wp_mail()` returns false and core tells nobody. Errors go
+  to the `lab_mail_last_error` option, surface as a warning on every admin
+  screen until the next send succeeds, and are stamped per enquiry
+  (`lab_emailed` = `'1'`/`'0'`, `lab_email_error`) with an **Emailed** column.
+
+Settings live under **L.A.B settings → Email delivery**, with a **Send a test
+email** button. The password is never rendered into the page and survives a save
+with the box left blank. Credentials are better placed in `wp-config.php` —
+`LAB_SMTP_HOST/PORT/SECURE/USER/PASS`, `LAB_MAIL_FROM`, `LAB_MAIL_FROM_NAME`
+override the stored settings. Blank SMTP server = unchanged behaviour.
+
+**Still to do before launch:** the client must supply mailbox credentials
+(Hostinger mailbox or Google Workspace app password), and then send one real
+enquiry and check the spam folder. No amount of code review substitutes for that.
+
+### Testing mail on the rig
+`localhost` is not a mailable domain — PHPMailer rejects both `wordpress@localhost`
+and `no-reply@localhost`, so sends fail there for reasons that have nothing to do
+with this code. To exercise the paths, short-circuit `pre_wp_mail` from an
+mu-plugin. **Watch out for opcache**: the PHP dev server caches mu-plugins, so a
+freshly written test hook may not take effect on the very next request.
+
 ## Outstanding — next tasks
 
 1. The client must re-upload the theme zip — it now carries the real logo, the
    icons, and the placeholder art that never shipped.
-2. Still awaiting from the client: real studio figures (the current
-   ones are flagged samples), team details, WhatsApp confirmation, social
-   links, L.A.B hero footage, and confirmation of project names, flat types
-   and completion years.
+2. Still awaiting from the client: mailbox credentials for enquiry email, real
+   studio figures (the current ones are flagged samples), team details,
+   WhatsApp confirmation, social links, L.A.B hero footage, and confirmation of
+   project names, flat types and completion years.

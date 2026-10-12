@@ -61,13 +61,27 @@ function lab_handle_enquiry(): void {
 			$lines[] = ucfirst( preg_replace( '/(?<!^)[A-Z]/', ' $0', $key ) ) . ': ' . $value;
 		}
 	}
+	$sent = false;
 	if ( $to && is_email( $to ) ) {
-		wp_mail(
+		lab_mail_clear_error();
+		$sent = wp_mail(
 			$to,
 			sprintf( '[Website enquiry] %s', $fields['name'] ),
 			implode( "\n", $lines ),
 			[ 'Reply-To: ' . $fields['email'] ]
 		);
+	}
+
+	// Record whether it got out. The enquiry is already saved either way, so the
+	// visitor is told it worked — but the studio can see which ones to chase.
+	if ( $post_id && ! is_wp_error( $post_id ) ) {
+		update_post_meta( $post_id, 'lab_emailed', $sent ? '1' : '0' );
+		if ( ! $sent ) {
+			$error = lab_mail_last_error();
+			if ( ! empty( $error['message'] ) ) {
+				update_post_meta( $post_id, 'lab_email_error', (string) $error['message'] );
+			}
+		}
 	}
 
 	wp_send_json_success( [ 'ok' => true ] );
@@ -78,7 +92,7 @@ add_action( 'add_meta_boxes', function (): void {
 	add_meta_box( 'lab_enquiry_data', __( 'Enquiry', 'lab' ), function ( WP_Post $post ): void {
 		echo '<table class="widefat striped"><tbody>';
 		foreach ( get_post_meta( $post->ID ) as $key => $value ) {
-			if ( ! str_starts_with( $key, 'lab_' ) ) {
+			if ( ! str_starts_with( $key, 'lab_' ) || in_array( $key, [ 'lab_emailed', 'lab_email_error' ], true ) ) {
 				continue;
 			}
 			printf(
@@ -90,3 +104,36 @@ add_action( 'add_meta_boxes', function (): void {
 		echo '</tbody></table>';
 	}, 'lab_enquiry', 'normal', 'high' );
 } );
+
+/** Show at a glance which enquiries actually reached the inbox. */
+add_filter( 'manage_lab_enquiry_posts_columns', function ( array $cols ): array {
+	$out = [];
+	foreach ( $cols as $key => $label ) {
+		$out[ $key ] = $label;
+		if ( 'title' === $key ) {
+			$out['lab_emailed'] = __( 'Emailed', 'lab' );
+		}
+	}
+	return $out;
+} );
+
+add_action( 'manage_lab_enquiry_posts_custom_column', function ( string $col, int $post_id ): void {
+	if ( 'lab_emailed' !== $col ) {
+		return;
+	}
+	$flag = get_post_meta( $post_id, 'lab_emailed', true );
+	if ( '' === $flag ) {
+		echo '—';                       // predates this column
+		return;
+	}
+	if ( '1' === $flag ) {
+		echo '<span style="color:#1a7f37">' . esc_html__( 'Sent', 'lab' ) . '</span>';
+		return;
+	}
+	$why = (string) get_post_meta( $post_id, 'lab_email_error', true );
+	printf(
+		'<span style="color:#b32d2e">%s</span>%s',
+		esc_html__( 'Not sent', 'lab' ),
+		'' !== $why ? '<br><small>' . esc_html( $why ) . '</small>' : ''
+	);
+}, 10, 2 );
