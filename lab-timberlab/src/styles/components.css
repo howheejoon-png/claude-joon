@@ -24,9 +24,10 @@
 .logo-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .logo { display: block; width: auto; }
 .brand { display: inline-flex; align-items: center; justify-self: start; }
-/* 1.6rem is where the tagline's hairlines survive — Bodoni thins to sub-pixel
-   below it and "By Timberlab" starts reading as "Bv Timberlah". */
-.brand .logo { height: 1.6rem; }
+/* Fluid, so the mark is proportional to the screen rather than one fixed size.
+   The 1.6rem floor is load-bearing: below it the tagline's hairlines fall under
+   a pixel and "By Timberlab" starts reading as "Bv Timberlah". */
+.brand .logo { height: clamp(1.6rem, 1.25rem + 0.8vw, 2.1rem); }
 .nav { display: none; gap: 2.25rem; justify-self: center; }
 .nav a { font-size: var(--text-sm); font-weight: 500; position: relative; padding-block: 0.25rem; }
 .nav a::after { content: ''; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform var(--dur) var(--ease-out); }
@@ -86,7 +87,15 @@
 .foot-col a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .foot-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-3); padding-top: var(--s-5); border-top: 1px solid var(--rule); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.06em; color: var(--fg-muted); }
 .site-footer { overflow: hidden; }
-.foot-wordmark { font-family: var(--font-display); font-weight: 600; font-variation-settings: 'wdth' 125; font-size: clamp(5rem, 19vw, 19rem); line-height: 0.74; margin-bottom: -0.06em; letter-spacing: -0.02em; color: var(--fg); opacity: 0.07; user-select: none; margin-top: var(--s-6); pointer-events: none; text-align: right; }
+/* The decorative wordmark bleeding off the bottom-right. It is the client's own
+   letterforms, so it is sized to keep the visible band the same height the
+   Archivo version had — matching on width instead would double it, Bodoni being
+   half as wide for its height. --wm-crop is how much bleeds past the edge, kept
+   small because the full stops sit on the baseline and a deeper crop cuts them
+   off, leaving the mark reading "L A B". .site-footer's overflow does the
+   cutting. Bodoni's hairlines vanish at the 7% Archivo could carry. */
+.foot-wordmark { --wm-w: clamp(11rem, 50vw, 50rem); --wm-crop: 0.12; display: block; color: var(--fg); opacity: 0.08; user-select: none; margin-top: var(--s-6); pointer-events: none; }
+.foot-wordmark .logo { width: var(--wm-w); margin-left: auto; margin-bottom: calc(-1 * var(--wm-crop) * var(--wm-w) / 2.111); }
 @media (min-width: 900px) {
   .foot-cta__title { grid-column: 1 / span 8; }
   .foot-cta__side { grid-column: 9 / span 4; justify-content: flex-end; }

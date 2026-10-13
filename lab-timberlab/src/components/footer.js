@@ -1,4 +1,5 @@
 import { site } from '../data/site.js';
+import { mark } from './logo.js';
 
 export function renderFooter() {
   const host = document.getElementById('site-footer');
@@ -44,6 +45,6 @@ export function renderFooter() {
         <span>© ${new Date().getFullYear()} ${site.legalName}. L.A.B is a brand of ${site.legalName}.</span>
         <span>Concept v0.1 — not for publication</span>
       </div>
-      <div class="foot-wordmark" aria-hidden="true">L.A.B</div>
+      <div class="foot-wordmark" aria-hidden="true">${mark}</div>
     </div>`;
 }

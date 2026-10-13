@@ -91,7 +91,7 @@ $types = get_terms( [
 				<span><?php echo esc_html( lab_opt( 'foot_note' ) ); ?></span>
 			<?php endif; ?>
 		</div>
-		<div class="foot-wordmark" aria-hidden="true">L.A.B</div>
+		<div class="foot-wordmark" aria-hidden="true"><?php echo lab_logo( 'mark' ); ?></div>
 	</div>
 </footer>
 
