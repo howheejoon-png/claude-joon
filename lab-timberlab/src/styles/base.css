@@ -30,7 +30,8 @@ ul, ol { padding: 0; list-style: none; }
 :focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+  white-space: nowrap; border: 0;
 }
 
 /* Layout primitives */
@@ -203,6 +204,7 @@ ul, ol { padding: 0; list-style: none; }
 /* Pills */
 .pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .pill {
+  position: relative;
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.55rem 1rem;
   border-radius: var(--radius-pill);
@@ -212,6 +214,9 @@ ul, ol { padding: 0; list-style: none; }
   user-select: none;
 }
 .pill:hover { background: var(--bg-elevated); }
+/* The real radio is clipped, so the pill has to show the focus ring itself —
+   without this a keyboard user tabbing through the form sees nothing at all. */
+.pill:has(:focus-visible) { outline: 2px solid var(--signal); outline-offset: 3px; }
 .pill:active { transform: scale(0.97); }
 .pill.is-active, .pill[aria-pressed="true"], .pill[aria-selected="true"] { background: var(--fg); color: var(--bg); box-shadow: none; }
 

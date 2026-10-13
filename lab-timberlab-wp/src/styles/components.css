@@ -23,17 +23,20 @@
    supplied lockup is stacked, so the header sets the two halves side by side. */
 .logo-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .logo { display: block; width: auto; }
-.brand { display: inline-flex; align-items: center; justify-self: start; }
+.brand { grid-column: 1; display: inline-flex; align-items: center; justify-self: start; }
 /* Fluid, so the mark is proportional to the screen rather than one fixed size.
    The 1.6rem floor is load-bearing: below it the tagline's hairlines fall under
    a pixel and "By Timberlab" starts reading as "Bv Timberlah". */
 .brand .logo { height: clamp(1.6rem, 1.25rem + 0.8vw, 2.1rem); }
-.nav { display: none; gap: 2.25rem; justify-self: center; }
+.nav { grid-column: 2; display: none; gap: 2.25rem; justify-self: center; }
 .nav a { font-size: var(--text-sm); font-weight: 500; position: relative; padding-block: 0.25rem; }
 .nav a::after { content: ''; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform var(--dur) var(--ease-out); }
 .nav a:hover::after, .nav a:focus-visible::after, .nav a[aria-current="page"]::after { transform: scaleX(1); transform-origin: left; }
 .nav a:active { opacity: 0.6; }
-.header-cta { justify-self: end; display: flex; align-items: center; gap: 0.75rem; }
+/* Explicit column, because .nav is display:none below 900px and a hidden grid
+   item is removed from the grid — leaving this to auto-place into the middle
+   cell, which is why the menu button sat centred on a phone. */
+.header-cta { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 0.75rem; }
 .header-cta .btn { display: none; padding: 0.75rem 1.15rem; }
 .on-dark:not(.is-solid) .btn { --btn-bg: var(--paper); --btn-fg: var(--ink); }
 .menu-btn { display: inline-flex; align-items: center; gap: 0.6rem; font-size: var(--text-sm); font-weight: 500; padding: 0.5rem; margin: -0.5rem; }
@@ -107,7 +110,11 @@
 .field { display: grid; gap: 0.6rem; }
 .field label, .field .field__label { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-muted); }
 .field .optional { text-transform: none; letter-spacing: 0.02em; opacity: 0.7; }
-.field input, .field textarea, .field select {
+/* :not(.sr-only) matters — this rule is more specific than the .sr-only utility,
+   so without it the pills' visually-hidden radios were stretched to 100% width.
+   clip hides them but does not take them out of layout, and .pill was static, so
+   they escaped to the page and made it 642px wide on a 390px phone. */
+.field input:not(.sr-only), .field textarea, .field select {
   width: 100%; background: transparent; border: 0; border-bottom: 1px solid var(--rule-strong);
   padding: 0.7rem 0; font-size: var(--text-md); border-radius: 0;
   transition: border-color var(--dur-fast) ease;

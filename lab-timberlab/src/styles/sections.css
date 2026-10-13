@@ -197,14 +197,14 @@
 .figure__val { font-family: var(--font-display); font-weight: 500; font-variation-settings: 'wdth' var(--display-wdth); font-size: var(--display-md); line-height: 1; letter-spacing: -0.03em; color: var(--ink); font-variant-numeric: tabular-nums; }
 .figure__key { font-size: var(--text-sm); color: var(--ink-3); }
 .recognition { grid-column: 1 / -1; display: grid; gap: var(--s-4); }
-.recognition__row { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-3); }
+.recognition__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3); }
 .recognition__slot { aspect-ratio: 5 / 2; border: 1px dashed var(--rule-strong); display: grid; place-items: center; font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--stone); text-align: center; padding: 1rem; }
 @media (min-width: 900px) {
   .principles { grid-column: 1 / span 7; grid-row: 1 / span 2; }
   .quote { grid-column: 9 / span 4; }
   .figures { grid-template-columns: repeat(3, 1fr); }
   .recognition { grid-column: 9 / span 4; }
-  .recognition__row { grid-template-columns: repeat(2, 1fr); }
+  .recognition__row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* ============ ENQUIRY ============ */
