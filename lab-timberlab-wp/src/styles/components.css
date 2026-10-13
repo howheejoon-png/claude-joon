@@ -87,15 +87,13 @@
 .foot-col a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .foot-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-3); padding-top: var(--s-5); border-top: 1px solid var(--rule); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.06em; color: var(--fg-muted); }
 .site-footer { overflow: hidden; }
-/* The decorative wordmark bleeding off the bottom-right. It is the client's own
-   letterforms, so it is sized to keep the visible band the same height the
-   Archivo version had — matching on width instead would double it, Bodoni being
-   half as wide for its height. --wm-crop is how much bleeds past the edge, kept
-   small because the full stops sit on the baseline and a deeper crop cuts them
-   off, leaving the mark reading "L A B". .site-footer's overflow does the
-   cutting. Bodoni's hairlines vanish at the 7% Archivo could carry. */
-.foot-wordmark { --wm-w: clamp(11rem, 50vw, 50rem); --wm-crop: 0.12; display: block; color: var(--fg); opacity: 0.08; user-select: none; margin-top: var(--s-6); pointer-events: none; }
-.foot-wordmark .logo { width: var(--wm-w); margin-left: auto; margin-bottom: calc(-1 * var(--wm-crop) * var(--wm-w) / 2.111); }
+/* The decorative wordmark, bottom-right. It is the client's own letterforms, so
+   it is sized on width and shown whole: the Archivo version used to bleed off
+   the bottom edge, but a real logo cut in half just reads as broken, and the
+   full stops sit on the baseline where any crop takes them first. Bodoni's
+   hairlines vanish at the 7% Archivo could carry, hence the lift. */
+.foot-wordmark { --wm-w: clamp(11rem, 50vw, 50rem); display: block; color: var(--fg); opacity: 0.08; user-select: none; margin-top: var(--s-6); pointer-events: none; }
+.foot-wordmark .logo { width: var(--wm-w); margin-left: auto; }
 @media (min-width: 900px) {
   .foot-cta__title { grid-column: 1 / span 8; }
   .foot-cta__side { grid-column: 9 / span 4; justify-content: flex-end; }
