@@ -379,7 +379,7 @@ function parseScope(text) {
       } else {
         // pick the first token that looks like a path, FQCN or class name
         // ("Foo#bar", "Foo::bar" and "Foo.java:42" name a member or line of the class Foo)
-        const parts = s.split(/[\s,;|]+/).filter(Boolean).map((p) => p.replace(/(?:#|::|(?<=\.java):\d+).*$/, ''));
+        const parts = s.split(/[\s,;|]+/).filter(Boolean).map(stripMember);
         token = parts.find((p) => /\.(java|xml|properties|ya?ml|sql|json|kt|gradle|txt|md)$/i.test(p) || p.indexOf('/') >= 0 || RE_FQCN.test(p) || RE_SIMPLE_CLASS.test(p)) || '';
         const restParts = parts.filter((p) => p !== token);
         if (restParts.length && restParts.length === parts.length - 1 && token && parts.length > 1 && RE_SIMPLE_CLASS.test(token) && parts.every((p) => RE_SIMPLE_CLASS.test(p) || RE_FQCN.test(p))) {
@@ -394,7 +394,7 @@ function parseScope(text) {
   });
 
   function addClassToken(token, change, lineNo, moduleHint) {
-    token = token.replace(/[,;]+$/, '').replace(/(?:#|::|(?<=\.java):\d+).*$/, '');
+    token = stripMember(token.replace(/[,;]+$/, ''));
     let e;
     if (/[/\\]/.test(token) || /\.(java|xml|properties|ya?ml|sql|json|kt|gradle|txt|md)$/i.test(token)) {
       e = entryFor(token, change);
@@ -417,6 +417,11 @@ function parseScope(text) {
     if (moduleHint && !e.module) e.module = moduleHint;
   }
   return finishScope(out);
+}
+
+// "Foo#bar", "Foo::bar" and "Foo.java:42" name a member or line of the class Foo.
+function stripMember(token) {
+  return token.replace(/(\.java):\d+.*$/i, '$1').replace(/(?:#|::).*$/, '');
 }
 
 function changeLetter(s) {

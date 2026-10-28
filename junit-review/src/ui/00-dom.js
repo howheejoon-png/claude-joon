@@ -142,6 +142,17 @@ function toast(message, opts) {
   setTimeout(() => { t.classList.remove('in'); setTimeout(() => t.remove(), 400); }, ms);
 }
 
+function showDialog(dlg) {
+  if (dlg.open) return;
+  if (typeof dlg.showModal === 'function') dlg.showModal();
+  else dlg.setAttribute('open', '');
+}
+
+function hideDialog(dlg) {
+  if (typeof dlg.close === 'function') dlg.close();
+  else dlg.removeAttribute('open');
+}
+
 function debounce(fn, ms) {
   let t = null;
   return function () {

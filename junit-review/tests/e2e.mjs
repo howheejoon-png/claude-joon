@@ -40,7 +40,7 @@ async function step(name, fn) {
 }
 
 async function openPage(opts = {}) {
-  const context = await browser.newContext({ viewport: opts.viewport || { width: 1440, height: 900 }, colorScheme: opts.dark ? 'dark' : 'light' })
+  const context = await browser.newContext(Object.assign({ viewport: opts.viewport || { width: 1440, height: 900 }, colorScheme: opts.dark ? 'dark' : 'light' }, opts.ctx || {}))
   if (opts.clipboard) await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: base })
   const page = await context.newPage()
   const log = { requests: [], errors: [], dialogs: [] }
@@ -69,9 +69,10 @@ console.log('JUnit Review — end-to-end')
 
 const { page, context, log } = await openPage({ clipboard: true })
 
-await step('loads with no console errors', async () => {
+await step('loads with no console errors, and the start-up banner is hidden', async () => {
   await settle(page)
   assert.deepEqual(log.errors, [])
+  assert.equal(await page.isVisible('#boot-warning'), false)
   assert.equal(await page.textContent('#fact-tests'), '0 test classes · 0 test methods')
 })
 
@@ -219,6 +220,23 @@ await step('works when opened directly from disk (file://)', async () => {
   assert.equal(await p.textContent('#fact-tests'), '1 test class · 5 test methods')
   assert.deepEqual(l.errors, [])
   assert.deepEqual(l.requests.filter((u) => !u.startsWith('file:')), [])
+  await c.close()
+})
+
+await step('if scripts cannot run (preview window, blocked scripts), the page says so instead of doing nothing', async () => {
+  const { page: p, context: c } = await openPage({ url: pathToFileURL(FILE).href, ctx: { javaScriptEnabled: false } })
+  assert.equal(await p.isVisible('#boot-warning'), true)
+  assert.match(await p.textContent('#boot-warning'), /open that saved copy directly in a current version of Microsoft Edge or Google Chrome/)
+  await c.close()
+})
+
+await step('if the analysis engine cannot load (unsupported browser), the banner names the problem', async () => {
+  const { page: p, context: c } = await openPage({ url: 'about:blank' })
+  const html = readFileSync(FILE, 'utf8').replace(/<script id="engine">[\s\S]*?<\/script>/, '<script id="engine"></script>').replace(/script-src [^;]+;/, "script-src 'unsafe-inline';")
+  await p.setContent(html)
+  await p.waitForTimeout(200)
+  assert.equal(await p.isVisible('#boot-warning'), true)
+  assert.match(await p.textContent('#boot-detail'), /analysis engine did not load/)
   await c.close()
 })
 

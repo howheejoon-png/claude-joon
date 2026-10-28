@@ -13,9 +13,9 @@ function openModal(title, bodyNodes, actions) {
   append(clear($('#modal-body')), bodyNodes);
   const host = clear($('#modal-actions'));
   for (const a of actions) {
-    host.appendChild(button(a.label, { class: 'btn ' + (a.cls || ''), onclick: () => { const keep = a.run && a.run() === false; if (!keep) dlg.close(); } }));
+    host.appendChild(button(a.label, { class: 'btn ' + (a.cls || ''), onclick: () => { const keep = a.run && a.run() === false; if (!keep) hideDialog(dlg); } }));
   }
-  if (!dlg.open) dlg.showModal();
+  showDialog(dlg);
   const first = $('textarea, input, .btn-primary', dlg);
   if (first) first.focus();
 }

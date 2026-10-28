@@ -110,8 +110,11 @@ function meetsThreshold(covered, total, threshold) {
   if (!total) return null;
   const t = Number(threshold);
   if (t >= 100) return covered === total;
-  const scaled = BigInt(Math.round(t * 10000));
-  return BigInt(covered) * 1000000n >= scaled * BigInt(total);
+  const scaled = Math.round(t * 10000);
+  const left = covered * 1000000;
+  const right = scaled * total;
+  if (Number.isSafeInteger(left) && Number.isSafeInteger(right)) return left >= right;
+  return BigInt(covered) * BigInt(1000000) >= BigInt(scaled) * BigInt(total);
 }
 
 function counterOf(counters, type) {

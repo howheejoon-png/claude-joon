@@ -32,7 +32,29 @@ function concatDir(dir) {
 }
 
 const engine = `var JR = (function () {\n'use strict';\n\n${concatDir('engine')}\n})();\n`
-const ui = `(function () {\n'use strict';\n\n${concatDir('ui')}\n})();\n`
+// The UI first checks that the engine loaded; if anything fails at start-up it
+// says why in the page's start-up banner instead of leaving dead buttons.
+const ui = `(function () {
+'use strict';
+
+function bootFail(message) {
+  var el = document.getElementById('boot-detail');
+  if (el) el.textContent = message;
+  document.documentElement.classList.remove('js-ready');
+}
+
+if (typeof JR === 'undefined') {
+  bootFail('The analysis engine did not load in this browser. Please open the file in a current version of Microsoft Edge or Google Chrome.');
+  return;
+}
+
+try {
+${concatDir('ui')}
+} catch (e) {
+  bootFail('The page could not start in this browser (' + (e && e.message) + '). Please open the file in a current version of Microsoft Edge or Google Chrome.');
+}
+})();
+`
 const styles = readFileSync(src('styles.css'), 'utf8').trim()
 const shell = readFileSync(src('shell.html'), 'utf8')
 

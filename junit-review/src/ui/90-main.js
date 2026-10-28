@@ -115,6 +115,16 @@ function onStateEvent(kind) {
 }
 
 function init() {
+  try {
+    start();
+    document.documentElement.classList.add('js-ready');
+  } catch (e) {
+    bootFail('The page could not start in this browser (' + (e && e.message) + '). Please open the file in a current version of Microsoft Edge or Google Chrome.');
+    throw e;
+  }
+}
+
+function start() {
   onChange(onStateEvent);
   initTabs();
   initForm();

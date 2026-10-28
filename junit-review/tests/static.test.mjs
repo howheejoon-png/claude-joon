@@ -60,3 +60,17 @@ test('fixture inventory covers every scenario the specification lists', () => {
   for (const d of ['controller-only', 'model-only', 'service-heavy', 'multi-class-cr', 'package-conventions', 'partial-snippets', 'duplicate-classes',
     'junit-without-jacoco', 'jacoco-100', 'jacoco-incomplete', 'missing-source-and-scope']) assert.ok(dirs.includes(d), d)
 })
+
+test('no syntax that older Edge/Chrome/Safari builds reject at parse time', () => {
+  // One unsupported construct makes the whole script fail to parse, which leaves every button dead.
+  const code = scripts.map((s) => s.body).join('\n')
+  assert.doesNotMatch(code, /\(\?<[=!]/, 'regex lookbehind')
+  assert.doesNotMatch(code, /\b\d+n\b/, 'BigInt literal')
+  assert.doesNotMatch(code, /\?\?=|\|\|=|&&=/, 'logical assignment')
+  assert.doesNotMatch(code, /\bstatic\s*\{/, 'class static block')
+})
+
+test('a visible start-up banner explains what to do if the scripts cannot run', () => {
+  assert.match(html, /<div class="boot-warning" id="boot-warning" role="alert">/)
+  assert.match(html, /\.js-ready \.boot-warning \{ display: none; \}/)
+})

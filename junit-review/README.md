@@ -4,6 +4,8 @@ An offline JUnit code-coverage and test-quality review tool for restricted envir
 
 **To use it, open `junit-review.html` in Microsoft Edge, Google Chrome or Firefox.** Double-click the file or drag it onto a browser window. It is one self-contained file of about 430 KB. It works from a local disk or a network share, with no internet connection.
 
+**If the tabs and buttons don't respond**, the page's scripts are not running, and a red banner at the top of the page says so. The usual cause is that the file is being shown inside a preview window, such as the file preview in a chat, email or document app, where scripts are blocked. Save the file to your computer and open that saved copy directly in Edge or Chrome. The address bar should start with `file:///`. The same banner appears if the browser is too old to run the page, or if the file was altered while being copied.
+
 ---
 
 ## How a review works

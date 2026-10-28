@@ -87,7 +87,7 @@ function openViewer(snippetId, line) {
   body.appendChild(pre);
   if (!tinted) body.prepend(h('p', { class: 'small muted', text: 'Large snippet (' + fmt(count) + ' lines): shown without colouring.' }));
   const dlg = $('#viewer');
-  if (!dlg.open) dlg.showModal();
+  showDialog(dlg);
   requestAnimationFrame(() => {
     const target = line ? $('#vl-' + line, body) : null;
     if (target) target.scrollIntoView({ block: 'center' });
@@ -98,5 +98,5 @@ function openViewer(snippetId, line) {
 
 function closeViewer() {
   const dlg = $('#viewer');
-  if (dlg.open) dlg.close();
+  if (dlg.open) hideDialog(dlg);
 }

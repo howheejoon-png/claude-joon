@@ -2,7 +2,7 @@
 <html lang="en" translate="no">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-2dQUR4tAF82M3yom+k8rUbijmslIpMb01sLej66nSJc=' 'sha256-UKbQEHQUEO5H9O23xM8FNYgRItpL4t1I+U8gKc5MdY0='; style-src 'unsafe-inline'; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-xZZVKx4GeOF47YHsLzW6lYVPG5/Z85NtOBAmhQrojYU=' 'sha256-9lVitJseBNmSaa6PqVSv9FDzkRVVcOskAPmViB0qmeA='; style-src 'unsafe-inline'; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -106,6 +106,12 @@ code, .mono { font-family: var(--font-mono); font-size: 0.92em; }
 [hidden] { display: none !important; }
 
 .icon { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.boot-warning { margin: 16px; padding: 16px 20px; border-radius: 10px; border: 2px solid #a1261b; background: #f8e3df; color: #15212a; font: 15px/1.6 system-ui, "Segoe UI", Arial, sans-serif; }
+.boot-warning p { margin: 0 0 8px; }
+.boot-warning p:last-child { margin: 0; }
+.boot-title { font-weight: 700; color: #a1261b; }
+.js-ready .boot-warning { display: none; }
 
 .skip-link { position: absolute; left: var(--s4); top: -60px; z-index: 100; background: var(--surface); color: var(--ink); padding: var(--s2) var(--s4); border-radius: var(--r1); box-shadow: var(--shadow-2); }
 .skip-link:focus { top: var(--s3); }
@@ -593,6 +599,11 @@ dialog[open] { animation: dlg-in 260ms var(--spring); }
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
+<div class="boot-warning" id="boot-warning" role="alert">
+  <p class="boot-title">The review tool has not started, so its tabs and buttons will not respond.</p>
+  <p id="boot-detail">This happens when the file is shown inside a preview window (for example in a chat, email or document app), when this browser blocks the page's built-in scripts, or when the file was changed while being copied.</p>
+  <p><strong>To fix it:</strong> save <code>junit-review.html</code> to your computer, then open that saved copy directly in a current version of Microsoft Edge or Google Chrome (double-click it, or right-click &rarr; Open with). The address bar should start with <code>file:///</code>.</p>
+</div>
 
 <header class="topbar">
   <div class="topbar-inner">
@@ -941,8 +952,11 @@ function meetsThreshold(covered, total, threshold) {
   if (!total) return null;
   const t = Number(threshold);
   if (t >= 100) return covered === total;
-  const scaled = BigInt(Math.round(t * 10000));
-  return BigInt(covered) * 1000000n >= scaled * BigInt(total);
+  const scaled = Math.round(t * 10000);
+  const left = covered * 1000000;
+  const right = scaled * total;
+  if (Number.isSafeInteger(left) && Number.isSafeInteger(right)) return left >= right;
+  return BigInt(covered) * BigInt(1000000) >= BigInt(scaled) * BigInt(total);
 }
 
 function counterOf(counters, type) {
@@ -2201,7 +2215,7 @@ function parseScope(text) {
       } else {
         // pick the first token that looks like a path, FQCN or class name
         // ("Foo#bar", "Foo::bar" and "Foo.java:42" name a member or line of the class Foo)
-        const parts = s.split(/[\s,;|]+/).filter(Boolean).map((p) => p.replace(/(?:#|::|(?<=\.java):\d+).*$/, ''));
+        const parts = s.split(/[\s,;|]+/).filter(Boolean).map(stripMember);
         token = parts.find((p) => /\.(java|xml|properties|ya?ml|sql|json|kt|gradle|txt|md)$/i.test(p) || p.indexOf('/') >= 0 || RE_FQCN.test(p) || RE_SIMPLE_CLASS.test(p)) || '';
         const restParts = parts.filter((p) => p !== token);
         if (restParts.length && restParts.length === parts.length - 1 && token && parts.length > 1 && RE_SIMPLE_CLASS.test(token) && parts.every((p) => RE_SIMPLE_CLASS.test(p) || RE_FQCN.test(p))) {
@@ -2216,7 +2230,7 @@ function parseScope(text) {
   });
 
   function addClassToken(token, change, lineNo, moduleHint) {
-    token = token.replace(/[,;]+$/, '').replace(/(?:#|::|(?<=\.java):\d+).*$/, '');
+    token = stripMember(token.replace(/[,;]+$/, ''));
     let e;
     if (/[/\\]/.test(token) || /\.(java|xml|properties|ya?ml|sql|json|kt|gradle|txt|md)$/i.test(token)) {
       e = entryFor(token, change);
@@ -2239,6 +2253,11 @@ function parseScope(text) {
     if (moduleHint && !e.module) e.module = moduleHint;
   }
   return finishScope(out);
+}
+
+// "Foo#bar", "Foo::bar" and "Foo.java:42" name a member or line of the class Foo.
+function stripMember(token) {
+  return token.replace(/(\.java):\d+.*$/i, '$1').replace(/(?:#|::).*$/, '');
 }
 
 function changeLetter(s) {
@@ -6170,6 +6189,18 @@ return {
 <script id="ui">(function () {
 'use strict';
 
+function bootFail(message) {
+  var el = document.getElementById('boot-detail');
+  if (el) el.textContent = message;
+  document.documentElement.classList.remove('js-ready');
+}
+
+if (typeof JR === 'undefined') {
+  bootFail('The analysis engine did not load in this browser. Please open the file in a current version of Microsoft Edge or Google Chrome.');
+  return;
+}
+
+try {
 /* ---- ui/00-dom.js ---- */
 /* ------------------------------------------------------------------------
  * DOM helpers. All pasted text reaches the page through textContent or
@@ -6313,6 +6344,17 @@ function toast(message, opts) {
   requestAnimationFrame(() => t.classList.add('in'));
   const ms = (opts && opts.ms) || 4200;
   setTimeout(() => { t.classList.remove('in'); setTimeout(() => t.remove(), 400); }, ms);
+}
+
+function showDialog(dlg) {
+  if (dlg.open) return;
+  if (typeof dlg.showModal === 'function') dlg.showModal();
+  else dlg.setAttribute('open', '');
+}
+
+function hideDialog(dlg) {
+  if (typeof dlg.close === 'function') dlg.close();
+  else dlg.removeAttribute('open');
 }
 
 function debounce(fn, ms) {
@@ -7231,7 +7273,7 @@ function openViewer(snippetId, line) {
   body.appendChild(pre);
   if (!tinted) body.prepend(h('p', { class: 'small muted', text: 'Large snippet (' + fmt(count) + ' lines): shown without colouring.' }));
   const dlg = $('#viewer');
-  if (!dlg.open) dlg.showModal();
+  showDialog(dlg);
   requestAnimationFrame(() => {
     const target = line ? $('#vl-' + line, body) : null;
     if (target) target.scrollIntoView({ block: 'center' });
@@ -7242,7 +7284,7 @@ function openViewer(snippetId, line) {
 
 function closeViewer() {
   const dlg = $('#viewer');
-  if (dlg.open) dlg.close();
+  if (dlg.open) hideDialog(dlg);
 }
 
 /* ---- ui/50-report.js ---- */
@@ -7321,9 +7363,9 @@ function openModal(title, bodyNodes, actions) {
   append(clear($('#modal-body')), bodyNodes);
   const host = clear($('#modal-actions'));
   for (const a of actions) {
-    host.appendChild(button(a.label, { class: 'btn ' + (a.cls || ''), onclick: () => { const keep = a.run && a.run() === false; if (!keep) dlg.close(); } }));
+    host.appendChild(button(a.label, { class: 'btn ' + (a.cls || ''), onclick: () => { const keep = a.run && a.run() === false; if (!keep) hideDialog(dlg); } }));
   }
-  if (!dlg.open) dlg.showModal();
+  showDialog(dlg);
   const first = $('textarea, input, .btn-primary', dlg);
   if (first) first.focus();
 }
@@ -7534,6 +7576,16 @@ function onStateEvent(kind) {
 }
 
 function init() {
+  try {
+    start();
+    document.documentElement.classList.add('js-ready');
+  } catch (e) {
+    bootFail('The page could not start in this browser (' + (e && e.message) + '). Please open the file in a current version of Microsoft Edge or Google Chrome.');
+    throw e;
+  }
+}
+
+function start() {
   onChange(onStateEvent);
   initTabs();
   initForm();
@@ -7551,6 +7603,9 @@ function init() {
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
 else init();
+} catch (e) {
+  bootFail('The page could not start in this browser (' + (e && e.message) + '). Please open the file in a current version of Microsoft Edge or Google Chrome.');
+}
 })();
 </script>
 </body>
