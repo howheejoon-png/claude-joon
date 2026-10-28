@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.1//EN" "report.dtd">
+<report name="common-lib">
+  <sessioninfo id="azure-agent-03-common-lib" start="1793345163027" dump="1793345168441"/>
+  <package name="com/acme/common/text">
+    <class name="com/acme/common/text/StringMasks" sourcefilename="StringMasks.java">
+      <method name="maskAllButLast" desc="(Ljava/lang/String;I)Ljava/lang/String;" line="15">
+        <counter type="INSTRUCTION" missed="0" covered="24"/>
+        <counter type="BRANCH" missed="0" covered="4"/>
+        <counter type="LINE" missed="0" covered="6"/>
+        <counter type="COMPLEXITY" missed="0" covered="3"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <method name="maskEmail" desc="(Ljava/lang/String;)Ljava/lang/String;" line="26">
+        <counter type="INSTRUCTION" missed="0" covered="28"/>
+        <counter type="BRANCH" missed="0" covered="2"/>
+        <counter type="LINE" missed="0" covered="4"/>
+        <counter type="COMPLEXITY" missed="0" covered="2"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <counter type="INSTRUCTION" missed="0" covered="52"/>
+      <counter type="BRANCH" missed="0" covered="6"/>
+      <counter type="LINE" missed="0" covered="10"/>
+      <counter type="COMPLEXITY" missed="0" covered="5"/>
+      <counter type="METHOD" missed="0" covered="2"/>
+      <counter type="CLASS" missed="0" covered="1"/>
+    </class>
+    <sourcefile name="StringMasks.java">
+      <line nr="15" mi="0" ci="2" mb="0" cb="2"/>
+      <line nr="16" mi="0" ci="2" mb="0" cb="0"/>
+      <line nr="18" mi="0" ci="4" mb="0" cb="2"/>
+      <line nr="19" mi="0" ci="2" mb="0" cb="0"/>
+      <line nr="21" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="22" mi="0" ci="9" mb="0" cb="0"/>
+      <line nr="26" mi="0" ci="4" mb="0" cb="0"/>
+      <line nr="27" mi="0" ci="3" mb="0" cb="2"/>
+      <line nr="28" mi="0" ci="7" mb="0" cb="0"/>
+      <line nr="30" mi="0" ci="14" mb="0" cb="0"/>
+      <counter type="INSTRUCTION" missed="0" covered="52"/>
+      <counter type="BRANCH" missed="0" covered="6"/>
+      <counter type="LINE" missed="0" covered="10"/>
+      <counter type="COMPLEXITY" missed="0" covered="5"/>
+      <counter type="METHOD" missed="0" covered="2"/>
+      <counter type="CLASS" missed="0" covered="1"/>
+    </sourcefile>
+    <counter type="INSTRUCTION" missed="0" covered="52"/>
+    <counter type="BRANCH" missed="0" covered="6"/>
+    <counter type="LINE" missed="0" covered="10"/>
+    <counter type="COMPLEXITY" missed="0" covered="5"/>
+    <counter type="METHOD" missed="0" covered="2"/>
+    <counter type="CLASS" missed="0" covered="1"/>
+  </package>
+  <package name="com/acme/common/validation">
+    <class name="com/acme/common/validation/PostalCodeValidator" sourcefilename="PostalCodeValidator.java">
+      <method name="isValid" desc="(Ljava/lang/String;Ljava/lang/String;)Z" line="20">
+        <counter type="INSTRUCTION" missed="0" covered="24"/>
+        <counter type="BRANCH" missed="0" covered="8"/>
+        <counter type="LINE" missed="0" covered="4"/>
+        <counter type="COMPLEXITY" missed="0" covered="5"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <method name="isSupported" desc="(Ljava/lang/String;)Z" line="28">
+        <counter type="INSTRUCTION" missed="0" covered="11"/>
+        <counter type="BRANCH" missed="0" covered="4"/>
+        <counter type="LINE" missed="0" covered="1"/>
+        <counter type="COMPLEXITY" missed="0" covered="3"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <method name="&lt;clinit&gt;" desc="()V" line="11">
+        <counter type="INSTRUCTION" missed="0" covered="12"/>
+        <counter type="LINE" missed="0" covered="4"/>
+        <counter type="COMPLEXITY" missed="0" covered="1"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <counter type="INSTRUCTION" missed="0" covered="47"/>
+      <counter type="BRANCH" missed="0" covered="12"/>
+      <counter type="LINE" missed="0" covered="9"/>
+      <counter type="COMPLEXITY" missed="0" covered="9"/>
+      <counter type="METHOD" missed="0" covered="3"/>
+      <counter type="CLASS" missed="0" covered="1"/>
+    </class>
+    <sourcefile name="PostalCodeValidator.java">
+      <line nr="11" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="12" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="13" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="14" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="20" mi="0" ci="4" mb="0" cb="4"/>
+      <line nr="21" mi="0" ci="2" mb="0" cb="0"/>
+      <line nr="23" mi="0" ci="6" mb="0" cb="0"/>
+      <line nr="24" mi="0" ci="12" mb="0" cb="4"/>
+      <line nr="28" mi="0" ci="11" mb="0" cb="4"/>
+      <counter type="INSTRUCTION" missed="0" covered="47"/>
+      <counter type="BRANCH" missed="0" covered="12"/>
+      <counter type="LINE" missed="0" covered="9"/>
+      <counter type="COMPLEXITY" missed="0" covered="9"/>
+      <counter type="METHOD" missed="0" covered="3"/>
+      <counter type="CLASS" missed="0" covered="1"/>
+    </sourcefile>
+    <counter type="INSTRUCTION" missed="0" covered="47"/>
+    <counter type="BRANCH" missed="0" covered="12"/>
+    <counter type="LINE" missed="0" covered="9"/>
+    <counter type="COMPLEXITY" missed="0" covered="9"/>
+    <counter type="METHOD" missed="0" covered="3"/>
+    <counter type="CLASS" missed="0" covered="1"/>
+  </package>
+  <counter type="INSTRUCTION" missed="0" covered="99"/>
+  <counter type="BRANCH" missed="0" covered="18"/>
+  <counter type="LINE" missed="0" covered="19"/>
+  <counter type="COMPLEXITY" missed="0" covered="14"/>
+  <counter type="METHOD" missed="0" covered="5"/>
+  <counter type="CLASS" missed="0" covered="2"/>
+</report>

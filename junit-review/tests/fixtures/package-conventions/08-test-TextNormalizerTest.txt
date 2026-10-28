@@ -1,0 +1,25 @@
+package gov.moh.platform.common.util.text;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+class TextNormalizerTest {
+
+    @Test
+    @DisplayName("collapseWhitespace: tabs/newlines become single spaces")
+    void collapsesWhitespace() {
+        assertThat(TextNormalizer.collapseWhitespace("  Tan \t Ah\n Kow ")).isEqualTo("Tan Ah Kow");
+    }
+
+    @Test
+    void collapseWhitespace_null() {
+        assertThat(TextNormalizer.collapseWhitespace(null)).isNull();
+    }
+
+    @Test
+    void foldForSearch_stripsAccentsAndLowercases() {
+        assertThat(TextNormalizer.foldForSearch("  Zoë   Ñúñez ")).isEqualTo("zoe nunez");
+    }
+}

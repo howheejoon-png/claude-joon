@@ -1,0 +1,48 @@
+package com.acme.common.validation;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullSource;
+
+@DisplayName("PostalCodeValidator")
+class PostalCodeValidatorTest {
+
+    @ParameterizedTest
+    @CsvSource({
+            "SG, 018956, true",
+            "sg, ' 018956 ', true",
+            "SG, 01895, false",
+            "MY, 50450, true",
+            "GB, SW1A 1AA, true",
+            "GB, 12345, false",
+            "US, 10001, false"
+    })
+    void validatesPerCountry(final String country, final String code, final boolean expected) {
+        assertThat(PostalCodeValidator.isValid(country, code)).isEqualTo(expected);
+    }
+
+    @org.junit.jupiter.api.Test
+    void nullCountryIsInvalid() {
+        assertThat(PostalCodeValidator.isValid(null, "018956")).isFalse();
+    }
+
+    @org.junit.jupiter.api.Test
+    void nullPostalCodeIsInvalid() {
+        assertThat(PostalCodeValidator.isValid("SG", null)).isFalse();
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @CsvSource({"XX"})
+    void unsupportedCountries(final String country) {
+        assertThat(PostalCodeValidator.isSupported(country)).isFalse();
+    }
+
+    @org.junit.jupiter.api.Test
+    void singaporeIsSupported() {
+        assertThat(PostalCodeValidator.isSupported("sg")).isTrue();
+    }
+}

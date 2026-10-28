@@ -1,0 +1,104 @@
+package com.acme.notify.template;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Minimal "{{placeholder}}" renderer for notification e-mails and SMS.
+ *
+ * <pre>
+ *   renderer.render("Hi {{name}}; your order {{orderId}} shipped", Map.of("name", "Ana", "orderId", "A-1"))
+ * </pre>
+ */
+public class TemplateRenderer {
+
+    private static final Pattern PLACEHOLDER = Pattern.compile("\\{\\{\\s*([a-zA-Z0-9_.]+)\\s*}}");
+
+    private final Map<String, Function<String, String>> filters = new LinkedHashMap<>();
+    private final boolean strict;
+
+    public TemplateRenderer(final boolean strict) {
+        this.strict = strict;
+        filters.put("upper", String::toUpperCase);
+        filters.put("trim", String::trim);
+    }
+
+    public String render(final String template, final Map<String, ?> model) {
+        Objects.requireNonNull(template, "template");
+        Matcher m = PLACEHOLDER.matcher(template);
+        StringBuilder out = new StringBuilder();
+        while (m.find()) {
+            String key = m.group(1);
+            Object value = model.get(key);
+            if (value == null && strict) {
+                throw new MissingPlaceholderException(key);
+            }
+            m.appendReplacement(out, Matcher.quoteReplacement(value == null ? "" : value.toString()));
+        }
+        m.appendTail(out);
+        return out.toString();
+    }
+
+    /** Groups templates by channel, e.g. {"EMAIL": [reset, welcome], "SMS": [otp]}. */
+    public static Map<String, List<Item>> byChannel(final Item... items) {
+        Map<String, List<Item>> grouped = new LinkedHashMap<>();
+        for (Item item : items) {
+            grouped.computeIfAbsent(item.channel(), k -> new ArrayList<>()).add(item);
+        }
+        grouped.values().forEach(list -> Collections.sort(list, new Comparator<Item>() {
+            @Override
+            public int compare(final Item a, final Item b) {
+                return a.name().compareToIgnoreCase(b.name());
+            }
+        }));
+        return grouped;
+    }
+
+    public String applyFilter(final String filterName, final String input) {
+        Function<String, String> f = filters.getOrDefault(filterName, Function.identity());
+        return f.apply(input);
+    }
+
+    public String[] placeholders(final String template) {
+        List<String> names = new ArrayList<>();
+        Matcher m = PLACEHOLDER.matcher(template);
+        while (m.find()) {
+            names.add(m.group(1));
+        }
+        return names.toArray(new String[0]);
+    }
+
+    /** A named template on a delivery channel. */
+    public static final class Item {
+        private final String name;
+        private final String channel;
+
+        public Item(final String name, final String channel) {
+            this.name = name;
+            this.channel = channel;
+        }
+
+        public String name() {
+            return name;
+        }
+
+        public String channel() {
+            return channel;
+        }
+    }
+
+    /** Thrown in strict mode when the model has no value for a placeholder. */
+    public static class MissingPlaceholderException extends RuntimeException {
+        public MissingPlaceholderException(final String key) {
+            super("No value for placeholder '" + key + "'");
+        }
+    }
+}

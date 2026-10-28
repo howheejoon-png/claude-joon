@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.acme.order.service.OrderServiceImplTest" time="2.318" tests="17" errors="0" skipped="1" failures="1">
+  <properties>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property name="java.version" value="17.0.12"/>
+    <property name="os.name" value="Linux"/>
+    <property name="user.dir" value="/home/jenkins/agent/workspace/order-service_PR-1187"/>
+    <property name="basedir" value="/home/jenkins/agent/workspace/order-service_PR-1187"/>
+    <property name="surefire.test.class.path" value="/home/jenkins/agent/workspace/order-service_PR-1187/target/test-classes:/home/jenkins/agent/workspace/order-service_PR-1187/target/classes"/>
+    <property name="file.encoding" value="UTF-8"/>
+  </properties>
+  <testcase name="shouldPlaceOrderWhenStockAvailable" classname="com.acme.order.service.OrderServiceImplTest" time="0.391"/>
+  <testcase name="cancelOrder_shipped_throwsIllegalState" classname="com.acme.order.service.OrderServiceImplTest" time="0.012"/>
+  <testcase name="shouldThrowOutOfStockWhenReservationFails" classname="com.acme.order.service.OrderServiceImplTest" time="0.009"/>
+  <testcase name="test3" classname="com.acme.order.service.OrderServiceImplTest" time="0.004"/>
+  <testcase name="quantityAtLimitIsAccepted" classname="com.acme.order.service.OrderServiceImplTest" time="0.006"/>
+  <testcase name="shouldRequireApprovalAboveCreditLimit" classname="com.acme.order.service.OrderServiceImplTest" time="0">
+    <skipped/>
+  </testcase>
+  <testcase name="discountTiers" classname="com.acme.order.service.OrderServiceImplTest" time="0.002"/>
+  <testcase name="shouldCancelConfirmedOrder" classname="com.acme.order.service.OrderServiceImplTest" time="0.007"/>
+  <testcase name="notificationFailure_doesNotFailTheOrder" classname="com.acme.order.service.OrderServiceImplTest" time="0.021">
+    <system-out><![CDATA[10:20:16.402 [main] WARN com.acme.order.service.OrderServiceImpl -- order 502 saved but notification failed: smtp down
+]]></system-out>
+  </testcase>
+  <testcase name="placeOrder_nullCommand_throwsIllegalArgument" classname="com.acme.order.service.OrderServiceImplTest" time="0.003"/>
+  <testcase name="shouldRetryNotification" classname="com.acme.order.service.OrderServiceImplTest" time="1.517">
+    <failure message="&#10;notifier.send(&#10;    &lt;any com.acme.order.notification.OrderEvent&gt;&#10;);&#10;Wanted 2 times:&#10;-&gt; at com.acme.order.service.OrderServiceImplTest.shouldRetryNotification(OrderServiceImplTest.java:209)&#10;But was 1 time:&#10;-&gt; at com.acme.order.service.OrderServiceImpl.placeOrder(OrderServiceImpl.java:68)&#10;" type="org.mockito.exceptions.verification.TooFewActualInvocations"><![CDATA[org.mockito.exceptions.verification.TooFewActualInvocations:
+notifier.send(
+    <any com.acme.order.notification.OrderEvent>
+);
+Wanted 2 times:
+-> at com.acme.order.service.OrderServiceImplTest.shouldRetryNotification(OrderServiceImplTest.java:209)
+But was 1 time:
+-> at com.acme.order.service.OrderServiceImpl.placeOrder(OrderServiceImpl.java:68)
+
+	at com.acme.order.service.OrderServiceImplTest.shouldRetryNotification(OrderServiceImplTest.java:209)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+]]></failure>
+  </testcase>
+  <testcase name="cancelOrder_confirmed_releasesStockAndCancels" classname="com.acme.order.service.OrderServiceImplTest" time="0.005"/>
+  <testcase name="given_quantityAboveLimit_when_placeOrder_then_limitExceeded" classname="com.acme.order.service.OrderServiceImplTest" time="0.004"/>
+  <testcase name="cancelOrder_pendingApproval_doesNotReleaseStock" classname="com.acme.order.service.OrderServiceImplTest" time="0.006"/>
+  <testcase name="calculatesFee(int, int, int)[1]" classname="com.acme.order.service.OrderServiceImplTest" time="0.011"/>
+  <testcase name="calculatesFee(int, int, int)[2]" classname="com.acme.order.service.OrderServiceImplTest" time="0.001"/>
+  <testcase name="calculatesFee(int, int, int)[3]" classname="com.acme.order.service.OrderServiceImplTest" time="0.001"/>
+</testsuite>

@@ -1,0 +1,65 @@
+package com.acme.shipping.label;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+class LabelServiceTest {
+
+    private LabelService service;
+
+    @BeforeEach
+    void setUp() {
+        TrackingNumber.resetSequenceForTests();
+        service = new LabelService(Clock.fixed(Instant.parse("2026-10-28T01:00:00Z"), ZoneId.of("Asia/Singapore")));
+    }
+
+    @Test
+    void createsLabelWithUppercasedRecipientAndTracking() {
+        Label label = service.create(parcel(1200, false, null));
+
+        assertThat(label.tracking().value()).isEqualTo("AP-20261028-000001");
+        assertThat(label.lines()).containsExactly("TAN AH KOW", "Blk 123 Ang Mo Kio Ave 3", "#05-67", "560123 SG");
+    }
+
+    @Test
+    void dangerousGoodsAreMarked() {
+        Label label = service.create(parcel(800, true, "UN3481"));
+
+        assertThat(label.lines()).contains("DG: UN3481", "HANDLE WITH CARE");
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, -1, 30_001})
+    void rejectsInvalidWeights(final int grams) {
+        assertThatThrownBy(() -> service.create(parcel(grams, false, null)))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void maximumWeightIsAccepted() {
+        assertThat(service.create(parcel(30_000, false, null)).weightGrams()).isEqualTo(30_000);
+    }
+
+    @Test
+    void zplContainsBarcodeAndEscapedText() {
+        Label label = service.create(parcel(1200, false, null));
+
+        String zpl = service.zpl(label);
+
+        assertThat(zpl).startsWith("^XA").endsWith("^XZ").contains("^FDAP-20261028-000001^FS");
+    }
+
+    private static Shipment parcel(final int grams, final boolean dg, final String un) {
+        return new Shipment(Carrier.ACME_POST, "Tan Ah Kow", List.of("Blk 123 Ang Mo Kio Ave 3", "#05-67"),
+                "560123", "SG", grams, 30, 20, 10, dg, un);
+    }
+}

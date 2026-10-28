@@ -1,0 +1,40 @@
+package com.acme.common.text;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+class StringMasksTest {
+
+    @ParameterizedTest(name = "[{index}] {0} keep {1} -> {2}")
+    @CsvSource({
+            "S1234567D, 4, *****567D",
+            "1234, 4, 1234",
+            "12, 9, 12"
+    })
+    void masksAllButLast(final String value, final int visible, final String expected) {
+        assertThat(StringMasks.maskAllButLast(value, visible)).isEqualTo(expected);
+    }
+
+    @Test
+    void nullStaysNull() {
+        assertThat(StringMasks.maskAllButLast(null, 4)).isNull();
+    }
+
+    @Nested
+    class Email {
+
+        @Test
+        void keepsFirstCharacterAndDomain() {
+            assertThat(StringMasks.maskEmail("ana.tan@example.com")).isEqualTo("a******@example.com");
+        }
+
+        @Test
+        void singleCharacterLocalPartIsFullyMasked() {
+            assertThat(StringMasks.maskEmail("a@example.com")).isEqualTo("*@example.com");
+        }
+    }
+}

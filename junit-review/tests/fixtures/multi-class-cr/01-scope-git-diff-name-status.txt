@@ -1,0 +1,12 @@
+M	invoicing-service/src/main/java/com/acme/invoicing/web/InvoiceController.java
+M	invoicing-service/src/main/java/com/acme/invoicing/service/InvoiceServiceImpl.java
+M	invoicing-service/src/main/java/com/acme/invoicing/repository/InvoiceRepository.java
+A	invoicing-service/src/main/java/com/acme/invoicing/util/InvoiceNumberUtils.java
+D	invoicing-service/src/main/java/com/acme/invoicing/util/LegacyInvoiceNumberGenerator.java
+A	invoicing-service/src/main/resources/db/migration/V42__invoice_sequence.sql
+M	invoicing-service/src/main/resources/application.properties
+M	invoicing-service/src/test/java/com/acme/invoicing/web/InvoiceControllerTest.java
+R087	invoicing-service/src/test/java/com/acme/invoicing/service/InvoiceServiceTest.java	invoicing-service/src/test/java/com/acme/invoicing/service/InvoiceServiceImplTest.java
+A	invoicing-service/src/test/java/com/acme/invoicing/repository/InvoiceRepositoryTest.java
+A	invoicing-service/src/test/java/com/acme/invoicing/util/InvoiceNumberUtilsTest.java
+M	invoicing-service/pom.xml

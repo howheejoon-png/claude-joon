@@ -1,0 +1,22 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * Pre-2015 helper kept for the nightly extract job. It lives in the default package
+ * because the job's shell script loads it by simple name.
+ */
+public class LegacyDateHelper {
+
+    private static final String PATTERN = "dd/MM/yyyy";
+
+    public static Date parse(final String text) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat(PATTERN);
+        format.setLenient(false);
+        return format.parse(text);
+    }
+
+    public static String format(final Date date) {
+        return new SimpleDateFormat(PATTERN).format(date);
+    }
+}

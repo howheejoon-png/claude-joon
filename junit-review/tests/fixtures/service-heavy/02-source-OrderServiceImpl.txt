@@ -1,0 +1,137 @@
+package com.acme.order.service;
+
+import com.acme.order.domain.Order;
+import com.acme.order.domain.OrderStatus;
+import com.acme.order.domain.OrderSummary;
+import com.acme.order.exception.OrderLimitExceededException;
+import com.acme.order.exception.OrderNotFoundException;
+import com.acme.order.exception.OutOfStockException;
+import com.acme.order.notification.NotificationException;
+import com.acme.order.notification.NotificationService;
+import com.acme.order.notification.OrderEvent;
+import com.acme.order.pricing.ShippingRateTable;
+import com.acme.order.repository.OrderRepository;
+import com.acme.order.service.command.PlaceOrderCommand;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+public class OrderServiceImpl implements OrderService {
+
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
+
+    /** Orders above this many units must go through the bulk channel. */
+    static final int MAX_QUANTITY = 100;
+    static final int PREMIUM_SURCHARGE_CENTS = 350;
+    static final BigDecimal CREDIT_LIMIT = new BigDecimal("5000.00");
+
+    private final OrderRepository orderRepository;
+    private final InventoryService inventoryService;
+    private final NotificationService notifier;
+
+    public OrderServiceImpl(final OrderRepository orderRepository,
+                            final InventoryService inventoryService,
+                            final NotificationService notifier) {
+        this.orderRepository = orderRepository;
+        this.inventoryService = inventoryService;
+        this.notifier = notifier;
+    }
+
+    @Override
+    public Order placeOrder(final PlaceOrderCommand command) {
+        if (command == null) {
+            throw new IllegalArgumentException("command must not be null");
+        }
+        if (command.quantity() > MAX_QUANTITY) {
+            throw new OrderLimitExceededException(command.quantity(), MAX_QUANTITY);
+        }
+        if (!inventoryService.reserve(command.sku(), command.quantity())) {
+            throw new OutOfStockException(command.sku());
+        }
+
+        BigDecimal total = command.unitPrice().multiply(BigDecimal.valueOf(command.quantity()));
+        Order order = Order.newOrder(command.customerId(), command.sku(), command.quantity(), total);
+        if (total.compareTo(CREDIT_LIMIT) > 0) {
+            order.setStatus(OrderStatus.PENDING_APPROVAL);
+        } else {
+            order.setStatus(OrderStatus.CONFIRMED);
+        }
+
+        Order saved = orderRepository.save(order);
+        try {
+            notifier.send(OrderEvent.placed(saved.getId(), saved.getCustomerId()));
+        } catch (NotificationException ex) {
+            // never roll back a paid order because of e-mail; the outbox relay retries { see OutboxRelay }
+            log.warn("order {} saved but notification failed: {}", saved.getId(), ex.getMessage());
+        }
+        return saved;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Order getOrder(final Long orderId) {
+        return findOrderOrThrow(orderId);
+    }
+
+    @Override
+    public Order cancelOrder(final Long orderId, final String reason) {
+        Order order = findOrderOrThrow(orderId);
+        switch (order.getStatus()) {
+            case PENDING_APPROVAL:
+                order.setStatus(OrderStatus.CANCELLED);
+                break;
+            case CONFIRMED:
+                inventoryService.release(order.getSku(), order.getQuantity());
+                order.setStatus(OrderStatus.CANCELLED);
+                break;
+            case SHIPPED:
+                throw new IllegalStateException("order " + orderId + " already shipped; raise a return instead");
+            default:
+                throw new IllegalStateException("cannot cancel order in status " + order.getStatus());
+        }
+        order.setCancellationReason(reason == null ? "unspecified" : reason);
+        Order saved = orderRepository.save(order);
+        notifier.send(OrderEvent.cancelled(saved.getId(), saved.getCustomerId()));
+        return saved;
+    }
+
+    @Override
+    public int calculateFee(final int zone, final int weightGrams) {
+        final int base = ShippingRateTable.feeFor(zone, weightGrams);
+        return ShippingRateTable.isPremiumZone(zone) ? base + PREMIUM_SURCHARGE_CENTS : base;
+    }
+
+    @Override
+    public int discountFor(final int quantity) {
+        if (quantity > 50) {
+            return 500;
+        } else if (quantity >= 10) {
+            return 250;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrderSummary> listOpenOrders(final String customerId) {
+        return orderRepository.findByCustomerId(customerId).stream()
+                .filter(Order::isOpen)
+                .map(OrderSummary::from)
+                .collect(Collectors.toList());
+    }
+
+    private Order findOrderOrThrow(final Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> {
+                    log.info("order {} not found", orderId);
+                    return new OrderNotFoundException(orderId);
+                });
+    }
+}

@@ -1,0 +1,39 @@
+> Task :inventory-service:compileJava UP-TO-DATE
+> Task :inventory-service:processResources UP-TO-DATE
+> Task :inventory-service:classes UP-TO-DATE
+> Task :inventory-service:compileTestJava
+> Task :inventory-service:processTestResources NO-SOURCE
+> Task :inventory-service:testClasses
+
+> Task :inventory-service:test
+
+ReorderPolicyTest > shouldReorderWhenBelowMinimum() PASSED
+
+ReorderPolicyTest > shouldNotReorderDiscontinuedItems() FAILED
+    org.opentest4j.AssertionFailedError at ReorderPolicyTest.java:24
+
+ReorderPolicyTest > reorderQuantityRoundsUpToCaseSize(int, int) > [1] 7, 12 PASSED
+
+ReorderPolicyTest > reorderQuantityRoundsUpToCaseSize(int, int) > [2] 12, 12 PASSED
+
+ReorderPolicyTest > reorderQuantityRoundsUpToCaseSize(int, int) > [3] 13, 24 PASSED
+
+ReorderPolicyTest > Seasonal items > peakSeasonDoublesMinimum() PASSED
+
+ReorderPolicyTest > legacyMinimumTable() SKIPPED
+
+7 tests completed, 1 failed, 1 skipped
+
+> Task :inventory-service:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':inventory-service:test'.
+> There were failing tests. See the report at: file:///builds/inventory/inventory-service/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 9s
+5 actionable tasks: 2 executed, 3 up-to-date

@@ -1,0 +1,44 @@
+package com.acme.payments.validation;
+
+import java.time.YearMonth;
+
+/**
+ * Card number / expiry checks performed before we call the acquirer.
+ */
+public class CardValidator {
+
+    private final java.time.Clock clock;
+
+    public CardValidator(final java.time.Clock clock) {
+        this.clock = clock;
+    }
+
+    /** Luhn mod-10 check; spaces and dashes are ignored. */
+    public boolean isValidNumber(final String pan) {
+        if (pan == null) {
+            return false;
+        }
+        final String digits = pan.replaceAll("[ -]", "");
+        if (digits.length() < 12 || digits.length() > 19) {
+            return false;
+        }
+        int sum = 0;
+        boolean doubleIt = false;
+        for (int i = digits.length() - 1; i >= 0; i--) {
+            int d = digits.charAt(i) - '0';
+            if (doubleIt) {
+                d *= 2;
+                if (d > 9) {
+                    d -= 9;
+                }
+            }
+            sum += d;
+            doubleIt = !doubleIt;
+        }
+        return sum % 10 == 0;
+    }
+
+    public boolean isExpired(final int month, final int year) {
+        return YearMonth.of(year, month).isBefore(YearMonth.now(clock));
+    }
+}

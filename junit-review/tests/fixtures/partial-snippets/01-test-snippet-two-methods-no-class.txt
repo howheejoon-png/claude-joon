@@ -1,0 +1,19 @@
+    @Test
+    void declinesInvalidPanWithoutCallingAcquirer() {
+        when(cardValidator.isValidNumber("1234")).thenReturn(false);
+
+        AuthorizationResponse response = service.authorize("1234", 12, 2027, new BigDecimal("10.00"));
+
+        assertThat(response.isApproved()).isFalse();
+        assertThat(response.reason()).isEqualTo("INVALID_PAN");
+        verifyNoInteractions(acquirer);
+    }
+
+    @Test
+    @DisplayName("amount above 30.00 requests SCA")
+    void requestsScaAboveThreshold() {
+        when(cardValidator.isValidNumber(PAN)).thenReturn(true);
+        when(acquirer.authorize(PAN, new BigDecimal("30.01"), true)).thenReturn(AuthorizationResponse.approved("A1"));
+
+        assertThat(service.authorize(PAN, 12, 2027, new BigDecimal("30.01")).isApproved()).isTrue();
+    }

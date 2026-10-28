@@ -1,0 +1,45 @@
+{
+  "scenario": "duplicate-classes",
+  "description": "Duplicate and near-duplicate pastes. The same test class (com.acme.crm.address.AddressFormatterTest) is pasted twice byte-for-byte, then an updated version with the same FQCN (one extra test, one changed assertion, one extra import) is pasted, then the updated version is pasted again with its package line missing. Two different classes share the simple name ValidatorTest in different packages (one JUnit 5, one JUnit 4) and must NOT be treated as duplicates. Only test code is pasted.",
+  "pastes": [
+    {"file": "01-test-AddressFormatterTest.txt", "kind": "test", "incomplete": false},
+    {
+      "file": "02-test-AddressFormatterTest-pasted-again.txt",
+      "kind": "test",
+      "incomplete": false,
+      "duplicateOf": "01-test-AddressFormatterTest.txt",
+      "identical": true
+    },
+    {"file": "03-test-AddressFormatterTest-updated.txt", "kind": "test", "incomplete": false, "supersedes": "01-test-AddressFormatterTest.txt"},
+    {"file": "04-test-ValidatorTest-crm.txt", "kind": "test", "incomplete": false},
+    {"file": "05-test-ValidatorTest-billing.txt", "kind": "test", "incomplete": false},
+    {
+      "file": "06-test-AddressFormatterTest-no-package-line.txt",
+      "kind": "test",
+      "incomplete": false,
+      "packageMissing": true,
+      "likelyDuplicateOf": "03-test-AddressFormatterTest-updated.txt"
+    }
+  ],
+  "testClasses": {
+    "com.acme.crm.address.AddressFormatterTest": {
+      "framework": "junit5",
+      "testMethods": ["formatsSingaporeAddressOnTwoLines", "omitsMissingUnitNumber", "uppercasesCountryCode", "rejectsUnknownCountry"],
+      "disabled": []
+    },
+    "com.acme.crm.validation.ValidatorTest": {"framework": "junit5", "testMethods": ["acceptsWellFormedEmail", "rejectsEmailWithoutDomain"], "disabled": []},
+    "com.acme.billing.validation.ValidatorTest": {"framework": "junit4", "testMethods": ["reportsEveryMissingField", "acceptsCompleteDraft"], "disabled": []}
+  },
+  "quality": [],
+  "scenarios": [
+    {"class": "com.acme.crm.address.AddressFormatterTest", "method": "formatsSingaporeAddressOnTwoLines", "tags": ["positive"]},
+    {"class": "com.acme.crm.address.AddressFormatterTest", "method": "omitsMissingUnitNumber", "tags": ["nullEmpty"]},
+    {"class": "com.acme.crm.address.AddressFormatterTest", "method": "uppercasesCountryCode", "tags": ["positive"]},
+    {"class": "com.acme.crm.address.AddressFormatterTest", "method": "rejectsUnknownCountry", "tags": ["negative", "exception"]},
+    {"class": "com.acme.crm.validation.ValidatorTest", "method": "acceptsWellFormedEmail", "tags": ["positive"]},
+    {"class": "com.acme.crm.validation.ValidatorTest", "method": "rejectsEmailWithoutDomain", "tags": ["negative"]},
+    {"class": "com.acme.billing.validation.ValidatorTest", "method": "reportsEveryMissingField", "tags": ["negative", "nullEmpty"]},
+    {"class": "com.acme.billing.validation.ValidatorTest", "method": "acceptsCompleteDraft", "tags": ["positive"]}
+  ],
+  "notes": ["Paste-level extension keys: duplicateOf + identical (byte-identical repeat), supersedes (same FQCN, different content: the later paste wins), packageMissing + likelyDuplicateOf (same content as the referenced paste except the \"package ...;\" line and the blank line after it were not copied).", "Expected merged view has exactly 3 test classes. The AddressFormatterTest entry reflects the latest version (paste 03): 4 test methods. Version 1 (pastes 01/02) had 3: formatsSingaporeAddressOnTwoLines, omitsMissingUnitNumber, uppercasesCountryCode.", "Differences 01 -> 03: added import assertThatThrownBy (line 4), omitsMissingUnitNumber now expects \"...\\nSINGAPORE 138632\" instead of \"...\\nSingapore 138632\" (line 27), new test rejectsUnknownCountry (lines 35-40).", "Paste 06 has no package line, so read literally it would be a default-package class named AddressFormatterTest. It must not silently become a 4th class: it should be flagged as missing its package and as a likely copy of com.acme.crm.address.AddressFormatterTest (identical body to paste 03).", "Pastes 01 and 02 must not double-count test methods (4 AddressFormatterTest methods total, not 3+3+4+4).", "com.acme.crm.validation.ValidatorTest (JUnit 5, package-private) and com.acme.billing.validation.ValidatorTest (JUnit 4, public) share only the simple name ValidatorTest; they are distinct classes and are NOT duplicates. Their method names do not overlap either.", "No production source, JaCoCo, results or scope: coverage is NOT VERIFIED."]
+}

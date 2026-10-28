@@ -1,0 +1,28 @@
+package com.acme.billing.v2.internal;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.math.BigDecimal;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+
+class BillingCalculatorTest {
+
+	private final BillingCalculator calculator = new BillingCalculator();
+
+	@Test
+	void subtotalOfEmptyListIsZero() {
+		assertThat(calculator.subtotal(List.of())).isEqualByComparingTo("0");
+	}
+
+	@Test
+	void gstIsNinePercentRoundedHalfUp() {
+		assertThat(calculator.gst(new BigDecimal("10.05"))).isEqualByComparingTo("0.90");
+	}
+
+	@Test
+	void totalAddsGst() {
+		assertThat(calculator.total(new BigDecimal("100.00"), new BigDecimal("50.00")))
+				.isEqualByComparingTo("163.50");
+	}
+}

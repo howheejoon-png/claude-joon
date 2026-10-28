@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2026 Example Agency. All rights reserved.
+ * This package is part of the claims service; see claims-service/README.md.
+ */
+package sg.gov.agency.cpf.claims.web;
+
+import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import sg.gov.agency.cpf.claims.service.ClaimQueryService;
+import sg.gov.agency.cpf.claims.web.dto.ClaimView;
+
+@RestController
+@RequestMapping("/api/claims")
+public class ClaimController {
+
+    private final ClaimQueryService claimQueryService;
+
+    public ClaimController(final ClaimQueryService claimQueryService) {
+        this.claimQueryService = claimQueryService;
+    }
+
+    @GetMapping("/{claimId}")
+    public ResponseEntity<ClaimView> byId(@PathVariable final String claimId) {
+        return claimQueryService.find(claimId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/member/{nric}")
+    public List<ClaimView> byMember(@PathVariable("nric") final String maskedNric) {
+        return claimQueryService.findByMember(maskedNric);
+    }
+}

@@ -1,0 +1,11 @@
+package com.acme.shipping.label;
+
+/**
+ * Adapter for the pre-2020 carrier API. Scheduled for removal once LEGACY volume is zero.
+ */
+public class LegacyCarrierAdapter {
+
+    public String toLegacyServiceCode(final Carrier carrier) {
+        return "LG/" + carrier.name().toLowerCase(java.util.Locale.ROOT);
+    }
+}

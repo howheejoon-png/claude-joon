@@ -1,0 +1,48 @@
+package com.acme.invoicing.util;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.regex.Pattern;
+
+/**
+ * Invoice number helpers.
+ *
+ * <p>Format: {PREFIX}-{yyyyMM}-{6-digit sequence}{check digit}, e.g. INV-202610-0001230.
+ */
+public final class InvoiceNumberUtils {
+
+    private static final DateTimeFormatter PERIOD = DateTimeFormatter.ofPattern("yyyyMM");
+    private static final Pattern FORMAT = Pattern.compile("^[A-Z]{3}-\\d{6}-\\d{7}$");
+
+    private InvoiceNumberUtils() {
+    }
+
+    public static String format(final String prefix, final LocalDate date, final long sequence) {
+        if (sequence < 1 || sequence > 999_999) {
+            throw new IllegalArgumentException("sequence out of range: " + sequence);
+        }
+        final String body = String.format("%06d", sequence);
+        return prefix + "-" + PERIOD.format(date) + "-" + body + checkDigit(body);
+    }
+
+    public static boolean isValid(final String invoiceNo) {
+        if (invoiceNo == null || !FORMAT.matcher(invoiceNo).matches()) {
+            return false;
+        }
+        final String body = invoiceNo.substring(11, 17);
+        return invoiceNo.charAt(17) == checkDigit(body);
+    }
+
+    /* weights 3,1,3,1,... like EAN; result is '0'..'9' */
+    static char checkDigit(final String digits) {
+        int sum = 0;
+        for (int i = 0; i < digits.length(); i++) {
+            sum += (digits.charAt(i) - '0') * (i % 2 == 0 ? 3 : 1);
+        }
+        return (char) ('0' + (10 - sum % 10) % 10);
+    }
+
+    public static long parseSequence(final String invoiceNo) {
+        return Long.parseLong(invoiceNo.substring(11, 17));
+    }
+}

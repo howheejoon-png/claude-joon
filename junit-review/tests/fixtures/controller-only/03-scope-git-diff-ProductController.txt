@@ -1,0 +1,74 @@
+diff --git a/catalog-service/src/main/java/com/acme/catalog/web/ProductController.java b/catalog-service/src/main/java/com/acme/catalog/web/ProductController.java
+index 1ef494a..f1e8722 100644
+--- a/catalog-service/src/main/java/com/acme/catalog/web/ProductController.java
++++ b/catalog-service/src/main/java/com/acme/catalog/web/ProductController.java
+@@ -2,6 +2,7 @@ package com.acme.catalog.web;
+ 
+ import com.acme.catalog.service.ProductService;
+ import com.acme.catalog.web.dto.CreateProductRequest;
++import com.acme.catalog.web.dto.PriceChangeRequest;
+ import com.acme.catalog.web.dto.ProductResponse;
+ import com.acme.catalog.web.dto.UpdateProductRequest;
+ import jakarta.validation.Valid;
+@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
+ import org.springframework.security.access.prepost.PreAuthorize;
+ import org.springframework.web.bind.annotation.DeleteMapping;
+ import org.springframework.web.bind.annotation.GetMapping;
++import org.springframework.web.bind.annotation.PatchMapping;
+ import org.springframework.web.bind.annotation.PathVariable;
+ import org.springframework.web.bind.annotation.PostMapping;
+ import org.springframework.web.bind.annotation.PutMapping;
+@@ -25,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
+ /**
+  * Product catalogue REST API.
+  *
+- * <p>CR-1870: initial catalogue endpoints.
++ * <p>CR-2291: search page-size clamp and the price patch endpoint.
+  * Sample body: {"name": "Desk lamp", "priceCents": 4599}
+  */
+ @RestController
+@@ -34,6 +36,7 @@ public class ProductController {
+ 
+     private static final Logger log = LoggerFactory.getLogger(ProductController.class);
+ 
++    static final int MAX_PAGE_SIZE = 100;
+     private static final String LOCATION_TEMPLATE = "/api/v1/products/{id}";
+ 
+     private final ProductService productService;
+@@ -52,11 +55,16 @@ public class ProductController {
+         return ResponseEntity.ok(product.get());
+     }
+ 
++    // paging rules: page is 0-based { size is clamped to MAX_PAGE_SIZE } -- see @Test testSearch
+     @GetMapping
+     public List<ProductResponse> search(
+             @RequestParam(name = "q", required = false) final String query,
+             @RequestParam(defaultValue = "0") final int page,
+-            @RequestParam(defaultValue = "20") final int size) {
++            @RequestParam(defaultValue = "20") int size) {
++        if (size > MAX_PAGE_SIZE) {
++            log.info("clamping page size {} -> {}", size, MAX_PAGE_SIZE);
++            size = MAX_PAGE_SIZE;
++        }
+         return productService.search(query == null ? "" : query.trim(), page, size);
+     }
+ 
+@@ -85,4 +93,18 @@ public class ProductController {
+         productService.delete(id);
+         return ResponseEntity.noContent().build();
+     }
++
++    /*
++     * Price changes are audited downstream. Body: { "priceCents": 1299; "reason": "promo" }
++     */
++    @PatchMapping("/{id}/price")
++    @PreAuthorize("hasAnyRole('ADMIN', 'PRICING')")
++    public ResponseEntity<ProductResponse> updatePrice(
++            @PathVariable final Long id,
++            @Valid @RequestBody final PriceChangeRequest request) {
++        if (request.priceCents() <= 0) {
++            return ResponseEntity.badRequest().build();
++        }
++        return ResponseEntity.ok(productService.changePrice(id, request.priceCents(), request.reason()));
++    }
+ }

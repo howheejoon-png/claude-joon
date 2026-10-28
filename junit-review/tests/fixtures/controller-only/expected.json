@@ -1,0 +1,67 @@
+{
+  "scenario": "controller-only",
+  "description": "Spring MVC controller enhancement (CR-2291): ProductController gains a page-size clamp in search() and a new @PreAuthorize-protected PATCH /{id}/price endpoint. The @WebMvcTest slice test mixes status-only checks, jsonPath checks, a 404 test, a 400 validation test (text-block JSON), one @WithMockUser test and one test that performs a request without any assertion. The scope is a unified git diff touching only the controller; JaCoCo (pretty-printed) shows the new clamp lines and the whole updatePrice method uncovered.",
+  "pastes": [
+    {"file": "01-test-ProductControllerTest.txt", "kind": "test", "incomplete": false},
+    {"file": "02-source-ProductController.txt", "kind": "source", "incomplete": false},
+    {"file": "03-scope-git-diff-ProductController.txt", "kind": "scope", "incomplete": false},
+    {"file": "04-jacoco-catalog-web.txt", "kind": "jacoco", "incomplete": false}
+  ],
+  "testClasses": {
+    "com.acme.catalog.web.ProductControllerTest": {
+      "framework": "junit5",
+      "testMethods": ["getProduct_returnsOk", "shouldReturnProductJsonWhenFound", "shouldReturn404WhenProductMissing", "createProduct_withBlankName_returns400", "create", "updateProduct", "deleteProduct_asAdmin_returnsNoContent", "testSearch"],
+      "disabled": []
+    }
+  },
+  "productionClasses": {
+    "com.acme.catalog.web.ProductController": {"methods": ["getProduct", "search", "create", "update", "delete", "updatePrice"], "noTestMethods": ["updatePrice"]}
+  },
+  "jacoco": {
+    "reportTotals": {"INSTRUCTION": [34, 80], "BRANCH": [4, 4], "LINE": [7, 19], "COMPLEXITY": [5, 8], "METHOD": [2, 7], "CLASS": [0, 1]},
+    "classes": {
+      "com/acme/catalog/web/ProductController": {"INSTRUCTION": [34, 80], "BRANCH": [4, 4], "LINE": [7, 19], "COMPLEXITY": [5, 8], "METHOD": [2, 7], "CLASS": [0, 1]}
+    },
+    "uncoveredLines": {"com/acme/catalog/web/ProductController.java": [65, 66, 85, 86, 105, 106, 108]},
+    "partialBranchLines": {"com/acme/catalog/web/ProductController.java": [64, 68]},
+    "strict100": false
+  },
+  "scope": {
+    "changedFiles": ["catalog-service/src/main/java/com/acme/catalog/web/ProductController.java"],
+    "changedProductionClasses": ["com.acme.catalog.web.ProductController"],
+    "addedLines": {
+      "catalog-service/src/main/java/com/acme/catalog/web/ProductController.java": [5, 18, 30, 39, 58, 63, 64, 65, 66, 67, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109]
+    }
+  },
+  "quality": [
+    {
+      "class": "com.acme.catalog.web.ProductControllerTest",
+      "method": "testSearch",
+      "issue": "NO_ASSERTION",
+      "note": "Stubs the service and calls mockMvc.perform(...) but never calls andExpect/verify/assert; given(...) is stubbing, not an assertion."
+    },
+    {
+      "class": "com.acme.catalog.web.ProductControllerTest",
+      "method": "getProduct_returnsOk",
+      "issue": "STATUS_ONLY",
+      "note": "Only andExpect(status().isOk()); body is never checked."
+    },
+    {
+      "class": "com.acme.catalog.web.ProductControllerTest",
+      "method": "updateProduct",
+      "issue": "STATUS_ONLY",
+      "note": "Only andExpect(status().isOk()) after a PUT; response body and service interaction unchecked."
+    }
+  ],
+  "scenarios": [
+    {"class": "com.acme.catalog.web.ProductControllerTest", "method": "getProduct_returnsOk", "tags": ["positive"]},
+    {"class": "com.acme.catalog.web.ProductControllerTest", "method": "shouldReturnProductJsonWhenFound", "tags": ["positive"]},
+    {"class": "com.acme.catalog.web.ProductControllerTest", "method": "shouldReturn404WhenProductMissing", "tags": ["negative"]},
+    {"class": "com.acme.catalog.web.ProductControllerTest", "method": "createProduct_withBlankName_returns400", "tags": ["negative", "nullEmpty"]},
+    {"class": "com.acme.catalog.web.ProductControllerTest", "method": "create", "tags": ["positive"]},
+    {"class": "com.acme.catalog.web.ProductControllerTest", "method": "updateProduct", "tags": ["positive"]},
+    {"class": "com.acme.catalog.web.ProductControllerTest", "method": "deleteProduct_asAdmin_returnsNoContent", "tags": ["positive", "security"]},
+    {"class": "com.acme.catalog.web.ProductControllerTest", "method": "testSearch", "tags": ["positive"]}
+  ],
+  "notes": ["Source line 58 is a // comment containing \"{\", \"}\" and the text \"@Test\"; it must not affect brace depth or be read as a test annotation. Source lines 31 (Javadoc) and 98 (block comment) also contain braces/semicolons.", "Source line 40 has a string literal \"/api/v1/products/{id}\" and line 74 has \"{id}\" - braces inside strings must not affect brace depth.", "Test file: the class Javadoc (line 38) and the TODO comment above testSearch contain braces; createProduct_withBlankName_returns400 and updateProduct use Java text blocks (\"\"\") containing JSON braces; create uses an escaped-quote JSON string literal.", "create is a test method literally named \"create\" with a @DisplayName; it must not be confused with the production method ProductController.create.", "Exactly one test (deleteProduct_asAdmin_returnsNoContent) carries @WithMockUser; the class uses @AutoConfigureMockMvc(addFilters = false).", "testSearch has no assertion but still executes search(): JaCoCo shows search() as covered (lines 64 and 68 partially), i.e. coverage without verification.", "updatePrice (@PreAuthorize(\"hasAnyRole('ADMIN', 'PRICING')\")) is never exercised: METHOD missed=1. lambda$update$0 (the not-found path of update) is the other method with METHOD missed=1.", "shouldReturn404WhenProductMissing and createProduct_withBlankName_returns400 assert only on status, but the status code is the behaviour under test (negative scenarios) and the 400 test also verifies never(); they are deliberately NOT listed as STATUS_ONLY.", "Executable lines among the diff additions: 64, 65, 66 (search clamp) and 105, 106, 108 (updatePrice). Line 64 is covered with a partial branch; 65, 66, 105, 106, 108 are uncovered. All other added lines (imports 5/18, Javadoc 30, constant 39, comments 58/97-99, annotations 100/101, signatures 63/102-104, braces) are non-executable.", "MAX_PAGE_SIZE (line 39) and LOCATION_TEMPLATE (line 40) are compile-time constants and produce no bytecode, so <clinit> only covers line 37.", "JaCoCo paste is pretty-printed (one element per line) rather than the single-line form Maven writes."]
+}

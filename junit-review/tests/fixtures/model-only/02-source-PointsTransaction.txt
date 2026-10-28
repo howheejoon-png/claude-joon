@@ -1,0 +1,56 @@
+package com.acme.loyalty.model;
+
+import java.time.Instant;
+import java.util.Objects;
+
+/**
+ * Immutable ledger entry. Positive points = earn, negative = burn.
+ * JSON shape: {"memberId": 1, "points": -200, "reason": "REDEEM; voucher"}
+ */
+public record PointsTransaction(
+        Long memberId,
+        int points,
+        String reason,
+        Instant occurredAt) {
+
+    /** Compact canonical constructor; every reference component is mandatory. */
+    public PointsTransaction {
+        Objects.requireNonNull(memberId, "memberId");
+        Objects.requireNonNull(reason, "reason");
+        Objects.requireNonNull(occurredAt, "occurredAt");
+    }
+
+    public static PointsTransaction earn(final Long memberId, final int points, final String reason) {
+        return new PointsTransaction(memberId, Math.abs(points), reason, Instant.now());
+    }
+
+    public PointsTransaction reversed() {
+        return new PointsTransaction(memberId, -points, "REVERSAL: " + reason, occurredAt);
+    }
+
+    // Accessors are spelled out because the API checker requires Javadoc on every public method.
+
+    /** Owning member's database id. */
+    @Override
+    public Long memberId() {
+        return memberId;
+    }
+
+    /** Signed points: positive = earn, negative = burn. */
+    @Override
+    public int points() {
+        return points;
+    }
+
+    /** Free-text reason, e.g. "REDEEM; voucher #12". */
+    @Override
+    public String reason() {
+        return reason;
+    }
+
+    /** When the transaction happened (UTC). */
+    @Override
+    public Instant occurredAt() {
+        return occurredAt;
+    }
+}

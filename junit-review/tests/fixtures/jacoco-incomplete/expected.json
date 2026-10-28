@@ -1,0 +1,61 @@
+{
+  "scenario": "jacoco-incomplete",
+  "description": "Near-complete coverage that must not be reported as complete. JaCoCo (single-line XML) is at 97.13% instructions / 93.85% lines / 75% branches for three classes: LabelService (changed by CR-4471, mostly covered), TrackingNumber (no branches at all, so no BRANCH counter anywhere for it) and LegacyCarrierAdapter (never executed: CLASS missed=1 covered=0, every line ci=\"0\"). A unified git diff with @@ hunks adds lines to LabelService that fall partly on covered and partly on uncovered executable lines, and changes one (uncovered) line in LegacyCarrierAdapter. A vendor-typed summary claims \"Line coverage: 100%  Branch coverage: 100%\", which conflicts with the JaCoCo evidence.",
+  "pastes": [
+    {"file": "01-source-LabelService.txt", "kind": "source", "incomplete": false},
+    {"file": "02-source-TrackingNumber.txt", "kind": "source", "incomplete": false},
+    {"file": "03-source-LegacyCarrierAdapter.txt", "kind": "source", "incomplete": false},
+    {"file": "04-test-LabelServiceTest.txt", "kind": "test", "incomplete": false},
+    {"file": "05-test-TrackingNumberTest.txt", "kind": "test", "incomplete": false},
+    {"file": "06-scope-git-diff.txt", "kind": "scope", "incomplete": false},
+    {"file": "07-jacoco-shipping-core.txt", "kind": "jacoco", "incomplete": false},
+    {"file": "08-summary-vendor-coverage.txt", "kind": "summary", "incomplete": false}
+  ],
+  "testClasses": {
+    "com.acme.shipping.label.LabelServiceTest": {
+      "framework": "junit5",
+      "testMethods": ["createsLabelWithUppercasedRecipientAndTracking", "dangerousGoodsAreMarked", "rejectsInvalidWeights", "maximumWeightIsAccepted", "zplContainsBarcodeAndEscapedText"],
+      "disabled": []
+    },
+    "com.acme.shipping.label.TrackingNumberTest": {"framework": "junit5", "testMethods": ["nextIsSequentialPerJvm", "ofTrimsWhitespace"], "disabled": []}
+  },
+  "productionClasses": {
+    "com.acme.shipping.label.LabelService": {"methods": ["create", "isOversize", "validate", "zpl", "escape"], "noTestMethods": ["isOversize", "validate", "escape"]},
+    "com.acme.shipping.label.TrackingNumber": {"methods": ["next", "of", "value", "toString", "resetSequenceForTests"], "noTestMethods": []},
+    "com.acme.shipping.label.LegacyCarrierAdapter": {"methods": ["toLegacyServiceCode"], "noTestMethods": ["toLegacyServiceCode"]}
+  },
+  "jacoco": {
+    "reportTotals": {"INSTRUCTION": [20, 676], "BRANCH": [5, 15], "LINE": [4, 61], "COMPLEXITY": [7, 18], "METHOD": [2, 13], "CLASS": [1, 2]},
+    "classes": {
+      "com/acme/shipping/label/LabelService": {"INSTRUCTION": [11, 626], "BRANCH": [5, 15], "LINE": [2, 49], "COMPLEXITY": [5, 11], "METHOD": [0, 6], "CLASS": [0, 1]},
+      "com/acme/shipping/label/TrackingNumber": {"INSTRUCTION": [0, 50], "LINE": [0, 12], "COMPLEXITY": [0, 7], "METHOD": [0, 7], "CLASS": [0, 1]},
+      "com/acme/shipping/label/LegacyCarrierAdapter": {"INSTRUCTION": [9, 0], "LINE": [2, 0], "COMPLEXITY": [2, 0], "METHOD": [2, 0], "CLASS": [1, 0]}
+    },
+    "uncoveredLines": {"com/acme/shipping/label/LabelService.java": [45, 63], "com/acme/shipping/label/LegacyCarrierAdapter.java": [6, 9]},
+    "partialBranchLines": {"com/acme/shipping/label/LabelService.java": [44, 52, 62]},
+    "strict100": false
+  },
+  "scope": {
+    "changedFiles": ["shipping-core/src/main/java/com/acme/shipping/label/LabelService.java", "shipping-core/src/main/java/com/acme/shipping/label/LegacyCarrierAdapter.java"],
+    "changedProductionClasses": ["com.acme.shipping.label.LabelService", "com.acme.shipping.label.LegacyCarrierAdapter"],
+    "addedLines": {
+      "shipping-core/src/main/java/com/acme/shipping/label/LabelService.java": [14, 19, 40, 41, 42, 43, 44, 45, 46, 50, 51, 52, 53, 54, 62, 63, 64],
+      "shipping-core/src/main/java/com/acme/shipping/label/LegacyCarrierAdapter.java": [9]
+    },
+    "addedLineCoverage": {
+      "shipping-core/src/main/java/com/acme/shipping/label/LabelService.java": {"covered": [40, 41, 42, 44, 51, 52, 62], "uncovered": [45, 63], "nonExecutable": [14, 19, 43, 46, 50, 53, 54, 64]},
+      "shipping-core/src/main/java/com/acme/shipping/label/LegacyCarrierAdapter.java": {"covered": [], "uncovered": [9], "nonExecutable": []}
+    }
+  },
+  "quality": [],
+  "scenarios": [
+    {"class": "com.acme.shipping.label.LabelServiceTest", "method": "createsLabelWithUppercasedRecipientAndTracking", "tags": ["positive"]},
+    {"class": "com.acme.shipping.label.LabelServiceTest", "method": "dangerousGoodsAreMarked", "tags": ["positive"]},
+    {"class": "com.acme.shipping.label.LabelServiceTest", "method": "rejectsInvalidWeights", "tags": ["negative", "exception", "boundary"]},
+    {"class": "com.acme.shipping.label.LabelServiceTest", "method": "maximumWeightIsAccepted", "tags": ["positive", "boundary"]},
+    {"class": "com.acme.shipping.label.LabelServiceTest", "method": "zplContainsBarcodeAndEscapedText", "tags": ["positive"]},
+    {"class": "com.acme.shipping.label.TrackingNumberTest", "method": "nextIsSequentialPerJvm", "tags": ["positive"]},
+    {"class": "com.acme.shipping.label.TrackingNumberTest", "method": "ofTrimsWhitespace", "tags": ["positive"]}
+  ],
+  "notes": ["Report totals: INSTRUCTION 676/696 = 97.13%, LINE 61/65 = 93.85%, BRANCH 15/20 = 75.00%, METHOD 13/15, CLASS 2/3. None of these may be displayed as 100%.", "TrackingNumber has no branches: no BRANCH counter on the class, its methods or TrackingNumber.java. It is 100% on every counter it has; a tool should show branch coverage as N/A (not 0% and not 100%) for it. Its private constructor assigns a field, so it is NOT filtered by JaCoCo.", "LegacyCarrierAdapter is never executed: CLASS missed=1 covered=0, METHOD 2/0, every <line> has ci=\"0\" (lines 6 and 9). Line 6 carries the implicit default constructor. No test class references it.", "scope.addedLineCoverage (extension key) classifies every \"+\" line of the diff against the JaCoCo <line> data: covered = executable with ci>0, uncovered = executable with ci=0, nonExecutable = no <line> entry (Javadoc, compile-time constant, braces, method signature, blank). Among covered added lines, 44 and 62 have partial branches and 52 has both missed instructions and missed branches.", "Newly added but uncovered executable lines: LabelService 45 (oversize surcharge note; isOversize is never true in tests) and 63 (dangerous goods without UN number is never tested), LegacyCarrierAdapter 9.", "The vendor summary (08) conflicts with the evidence: it claims Line 100% / Branch 100% overall and for LabelService (actual LabelService LINE 49/51 = 96.08%, BRANCH 15/20 = 75.00%), and it omits LegacyCarrierAdapter (0%) entirely. Its TrackingNumber row (100%, N/A) and its test count (9 executions = 5 LabelServiceTest methods with 3 rejectsInvalidWeights invocations + 2 TrackingNumberTest) do agree with the pastes. The summary is TAB-separated rows plus free text; the exact phrase \"Line coverage: 100%  Branch coverage: 100%\" contains two spaces.", "LabelService <init> starts at line 23 (the carrierPrefixes field initialiser runs inside the constructor), so the method line attribute is 23 even though the constructor is declared on line 25.", "javac attributes the back-edge goto of the enhanced for loop in zpl() to its closing brace (line 80), so that \"}\" line is executable in JaCoCo. Unchanged lines (e.g. zpl()) are covered and are not part of the diff; addedLines are new-side line numbers of \"+\" lines only (the replaced Javadoc line 14 counts as added).", "noTestMethods uses direct-call semantics: isOversize, validate and escape are only reached through create()/zpl(). LabelService.MAX_WEIGHT_GRAMS and OVERSIZE_CM are compile-time constants (no bytecode).", "String literals with characters that look like syntax: RETURN_ADDRESS contains \";\" and the ZPL format strings contain \"^\", \"%d\" and \",\"."]
+}

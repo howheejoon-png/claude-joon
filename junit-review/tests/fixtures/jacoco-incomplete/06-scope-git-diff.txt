@@ -1,0 +1,62 @@
+diff --git a/shipping-core/src/main/java/com/acme/shipping/label/LabelService.java b/shipping-core/src/main/java/com/acme/shipping/label/LabelService.java
+index 82936b8..6157051 100644
+--- a/shipping-core/src/main/java/com/acme/shipping/label/LabelService.java
++++ b/shipping-core/src/main/java/com/acme/shipping/label/LabelService.java
+@@ -11,11 +11,12 @@ import java.util.Map;
+ /**
+  * Builds carrier shipping labels.
+  *
+- * <p>CR-3902: ZPL output for the new thermal printers.
++ * <p>CR-4471: dangerous-goods marking and the oversize surcharge note.
+  */
+ public class LabelService {
+ 
+     static final int MAX_WEIGHT_GRAMS = 30_000;
++    static final int OVERSIZE_CM = 150;
+     private static final String RETURN_ADDRESS = "21 Changi North Way; Singapore 498774";
+ 
+     private final Clock clock;
+@@ -36,9 +37,21 @@ public class LabelService {
+         lines.add(shipment.recipientName().toUpperCase(Locale.ROOT));
+         lines.addAll(shipment.addressLines());
+         lines.add(shipment.postalCode() + " " + shipment.countryCode());
++        if (shipment.dangerousGoods()) {
++            lines.add("DG: " + shipment.unNumber());
++            lines.add("HANDLE WITH CARE");
++        }
++        if (isOversize(shipment)) {
++            lines.add("OVERSIZE - SURCHARGE APPLIES");
++        }
+         return new Label(tracking, lines, shipment.weightGrams());
+     }
+ 
++    boolean isOversize(final Shipment shipment) {
++        final int longest = Math.max(shipment.lengthCm(), Math.max(shipment.widthCm(), shipment.heightCm()));
++        return longest > OVERSIZE_CM || shipment.lengthCm() + shipment.widthCm() + shipment.heightCm() > 300;
++    }
++
+     private void validate(final Shipment shipment) {
+         if (shipment.weightGrams() <= 0) {
+             throw new IllegalArgumentException("weight must be positive");
+@@ -46,6 +59,9 @@ public class LabelService {
+         if (shipment.weightGrams() > MAX_WEIGHT_GRAMS) {
+             throw new IllegalArgumentException("parcel exceeds " + MAX_WEIGHT_GRAMS + " g");
+         }
++        if (shipment.dangerousGoods() && (shipment.unNumber() == null || shipment.unNumber().isBlank())) {
++            throw new IllegalArgumentException("UN number required for dangerous goods");
++        }
+     }
+ 
+     /** Renders the label as ZPL II for 4x6 in (812 x 1218 dots) thermal printers. */
+diff --git a/shipping-core/src/main/java/com/acme/shipping/label/LegacyCarrierAdapter.java b/shipping-core/src/main/java/com/acme/shipping/label/LegacyCarrierAdapter.java
+index 3eb57c8..22446f5 100644
+--- a/shipping-core/src/main/java/com/acme/shipping/label/LegacyCarrierAdapter.java
++++ b/shipping-core/src/main/java/com/acme/shipping/label/LegacyCarrierAdapter.java
+@@ -6,6 +6,6 @@ package com.acme.shipping.label;
+ public class LegacyCarrierAdapter {
+ 
+     public String toLegacyServiceCode(final Carrier carrier) {
+-        return "LG-" + carrier.name();
++        return "LG/" + carrier.name().toLowerCase(java.util.Locale.ROOT);
+     }
+ }

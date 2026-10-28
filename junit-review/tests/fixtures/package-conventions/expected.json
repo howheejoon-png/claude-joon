@@ -1,0 +1,56 @@
+{
+  "scenario": "package-conventions",
+  "description": "The same kinds of classes (controller, calculator/service, plain class, static utility) under very different package styles: sg.gov.agency.cpf.claims.web, com.acme.billing.v2.internal, org.example, the deeply nested gov.moh.platform.common.util.text and the default package (no package line). Line-ending and indentation variety: the ClaimController paste uses CRLF line endings, the BillingCalculator source and test use tab indentation. The scope is an Excel copy (tab-separated, CRLF, header row \"File Path<TAB>Change Type<TAB>Module\") listing files from five Maven modules. No JaCoCo and no results are pasted.",
+  "pastes": [
+    {"file": "01-source-ClaimController.txt", "kind": "source", "incomplete": false},
+    {"file": "02-test-ClaimControllerTest.txt", "kind": "test", "incomplete": false},
+    {"file": "03-source-BillingCalculator.txt", "kind": "source", "incomplete": false},
+    {"file": "04-test-BillingCalculatorTest.txt", "kind": "test", "incomplete": false},
+    {"file": "05-source-Greeter.txt", "kind": "source", "incomplete": false},
+    {"file": "06-test-GreeterTest.txt", "kind": "test", "incomplete": false},
+    {"file": "07-source-TextNormalizer.txt", "kind": "source", "incomplete": false},
+    {"file": "08-test-TextNormalizerTest.txt", "kind": "test", "incomplete": false},
+    {"file": "09-source-LegacyDateHelper.txt", "kind": "source", "incomplete": false},
+    {"file": "10-test-LegacyDateHelperTest.txt", "kind": "test", "incomplete": false},
+    {"file": "11-scope-changed-files-excel.txt", "kind": "scope", "incomplete": false}
+  ],
+  "testClasses": {
+    "sg.gov.agency.cpf.claims.web.ClaimControllerTest": {"framework": "junit5", "testMethods": ["byId_found", "byId_unknown_is404", "byMember_returnsList"], "disabled": []},
+    "com.acme.billing.v2.internal.BillingCalculatorTest": {"framework": "junit5", "testMethods": ["subtotalOfEmptyListIsZero", "gstIsNinePercentRoundedHalfUp", "totalAddsGst"], "disabled": []},
+    "org.example.GreeterTest": {"framework": "junit5", "testMethods": ["greetsByName", "blankNameGreetsTheWorld"], "disabled": []},
+    "gov.moh.platform.common.util.text.TextNormalizerTest": {
+      "framework": "junit5",
+      "testMethods": ["collapsesWhitespace", "collapseWhitespace_null", "foldForSearch_stripsAccentsAndLowercases"],
+      "disabled": []
+    },
+    "LegacyDateHelperTest": {"framework": "junit5", "testMethods": ["roundTrip", "rejectsImpossibleDate"], "disabled": []}
+  },
+  "productionClasses": {
+    "sg.gov.agency.cpf.claims.web.ClaimController": {"methods": ["byId", "byMember"], "noTestMethods": []},
+    "com.acme.billing.v2.internal.BillingCalculator": {"methods": ["subtotal", "gst", "total"], "noTestMethods": []},
+    "org.example.Greeter": {"methods": ["greet"], "noTestMethods": []},
+    "gov.moh.platform.common.util.text.TextNormalizer": {"methods": ["collapseWhitespace", "foldForSearch"], "noTestMethods": []},
+    "LegacyDateHelper": {"methods": ["parse", "format"], "noTestMethods": []}
+  },
+  "scope": {
+    "changedFiles": ["claims-service/src/main/java/sg/gov/agency/cpf/claims/web/ClaimController.java", "claims-service/src/test/java/sg/gov/agency/cpf/claims/web/ClaimControllerTest.java", "billing-core/src/main/java/com/acme/billing/v2/internal/BillingCalculator.java", "billing-core/src/test/java/com/acme/billing/v2/internal/BillingCalculatorTest.java", "sample-app/src/main/java/org/example/Greeter.java", "sample-app/src/test/java/org/example/GreeterTest.java", "common-lib/src/main/java/gov/moh/platform/common/util/text/TextNormalizer.java", "common-lib/src/test/java/gov/moh/platform/common/util/text/TextNormalizerTest.java", "legacy-tools/src/main/java/LegacyDateHelper.java", "legacy-tools/src/test/java/LegacyDateHelperTest.java"],
+    "changedProductionClasses": ["sg.gov.agency.cpf.claims.web.ClaimController", "com.acme.billing.v2.internal.BillingCalculator", "org.example.Greeter", "gov.moh.platform.common.util.text.TextNormalizer", "LegacyDateHelper"]
+  },
+  "quality": [],
+  "scenarios": [
+    {"class": "sg.gov.agency.cpf.claims.web.ClaimControllerTest", "method": "byId_found", "tags": ["positive"]},
+    {"class": "sg.gov.agency.cpf.claims.web.ClaimControllerTest", "method": "byId_unknown_is404", "tags": ["negative"]},
+    {"class": "sg.gov.agency.cpf.claims.web.ClaimControllerTest", "method": "byMember_returnsList", "tags": ["positive"]},
+    {"class": "com.acme.billing.v2.internal.BillingCalculatorTest", "method": "subtotalOfEmptyListIsZero", "tags": ["nullEmpty", "boundary"]},
+    {"class": "com.acme.billing.v2.internal.BillingCalculatorTest", "method": "gstIsNinePercentRoundedHalfUp", "tags": ["positive", "boundary"]},
+    {"class": "com.acme.billing.v2.internal.BillingCalculatorTest", "method": "totalAddsGst", "tags": ["positive"]},
+    {"class": "org.example.GreeterTest", "method": "greetsByName", "tags": ["positive"]},
+    {"class": "org.example.GreeterTest", "method": "blankNameGreetsTheWorld", "tags": ["nullEmpty"]},
+    {"class": "gov.moh.platform.common.util.text.TextNormalizerTest", "method": "collapsesWhitespace", "tags": ["positive"]},
+    {"class": "gov.moh.platform.common.util.text.TextNormalizerTest", "method": "collapseWhitespace_null", "tags": ["nullEmpty"]},
+    {"class": "gov.moh.platform.common.util.text.TextNormalizerTest", "method": "foldForSearch_stripsAccentsAndLowercases", "tags": ["positive"]},
+    {"class": "LegacyDateHelperTest", "method": "roundTrip", "tags": ["positive", "boundary"]},
+    {"class": "LegacyDateHelperTest", "method": "rejectsImpossibleDate", "tags": ["negative", "exception"]}
+  ],
+  "notes": ["Classes with no package declaration (09-source-LegacyDateHelper.txt, 10-test-LegacyDateHelperTest.txt) are in the default package: their FQCN is the simple name (\"LegacyDateHelper\", \"LegacyDateHelperTest\"). Their path in the scope is legacy-tools/src/main/java/LegacyDateHelper.java (no package directories).", "01-source-ClaimController.txt uses CRLF line endings throughout (37 lines) and starts with a /* ... */ licence header whose text contains the word \"package\" (\"This package is part of ...\") before the real package line on line 5; the package must be read from line 5, not from the comment.", "03-source-BillingCalculator.txt and 04-test-BillingCalculatorTest.txt are indented with TAB characters (Javadoc continuation lines keep their single leading space).", "05-source-Greeter.txt starts with a // comment and a blank line before \"package org.example;\" (line 3).", "11-scope-changed-files-excel.txt is an Excel copy: TAB-separated cells, CRLF row endings, a header row that must not be treated as a file, and a Module column. Production classes are derived by stripping \"<module>/src/main/java/\" and \".java\"; src/test/java rows are test files, not production classes.", "Module of each production class: ClaimController -> claims-service, BillingCalculator -> billing-core, Greeter -> sample-app, TextNormalizer -> common-lib, LegacyDateHelper -> legacy-tools.", "No JaCoCo, results or coverage summary are pasted: actual coverage is NOT VERIFIED for every class.", "Every production method has at least one test that calls it directly (ClaimController methods via MockMvc URLs /api/claims/{claimId} and /api/claims/member/{nric}); foldForSearch(null) and TextNormalizer's private constructor are not exercised but that is a scenario gap, not a missing-test method.", "TextNormalizer uses a static import of a JDK constant (import static java.util.Locale.ROOT) and regex literals containing braces (\"\\\\p{M}+\"). TextNormalizerTest line 23 contains non-ASCII characters (UTF-8).", "BillingCalculator.total uses varargs (BigDecimal... lineAmounts) and the test calls it with two arguments.", "blankNameGreetsTheWorld runs 4 invocations (@NullAndEmptySource adds null and \"\", plus \"   \" and \"\\t\")."]
+}

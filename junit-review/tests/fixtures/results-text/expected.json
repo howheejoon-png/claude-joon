@@ -1,0 +1,67 @@
+{
+  "scenario": "results-text",
+  "description": "Test results pasted as console text instead of XML: Maven Surefire console output for StockLevelServiceTest (\"Tests run: 12, Failures: 1, Errors: 0, Skipped: 1 ... <<< FAILURE! - in ...\" plus an \"[ERROR] method(class)  Time elapsed ... <<< FAILURE!\" line) and Gradle test logging for ReorderPolicyTest (\"ReorderPolicyTest > method() PASSED / FAILED / SKIPPED\", including parameterized and @Nested display names). The matching JUnit 5 test code for both classes is pasted; failure line numbers in the logs point at the real assertion lines. No production code, JaCoCo or scope.",
+  "coverageStatus": "NOT_VERIFIED",
+  "pastes": [
+    {"file": "01-test-StockLevelServiceTest.txt", "kind": "test", "incomplete": false},
+    {"file": "02-test-ReorderPolicyTest.txt", "kind": "test", "incomplete": false},
+    {
+      "file": "03-results-maven-surefire-console.txt",
+      "kind": "results",
+      "incomplete": false,
+      "results": {"tests": 12, "failures": 1, "errors": 0, "skipped": 1, "failed": ["com.acme.inventory.StockLevelServiceTest.shouldFlagLowStockAtThreshold"]}
+    },
+    {
+      "file": "04-results-gradle-console.txt",
+      "kind": "results",
+      "incomplete": false,
+      "results": {"tests": 7, "failures": 1, "errors": 0, "skipped": 1, "failed": ["com.acme.inventory.ReorderPolicyTest.shouldNotReorderDiscontinuedItems"]}
+    }
+  ],
+  "testClasses": {
+    "com.acme.inventory.StockLevelServiceTest": {
+      "framework": "junit5",
+      "testMethods": ["availableIsOnHandMinusReserved", "availableIsNeverNegative", "shouldFlagLowStockBelowThreshold", "shouldFlagLowStockAtThreshold", "notLowWhenAboveThreshold", "rejectsMalformedSku", "unknownSkuHasZeroAvailable", "snapshotContainsEverySku", "thresholdIsConfigurable", "syncsWithWarehouse"],
+      "disabled": ["syncsWithWarehouse"]
+    },
+    "com.acme.inventory.ReorderPolicyTest": {
+      "framework": "junit5",
+      "testMethods": ["shouldReorderWhenBelowMinimum", "shouldNotReorderDiscontinuedItems", "reorderQuantityRoundsUpToCaseSize", "Seasonal.peakSeasonDoublesMinimum", "legacyMinimumTable"],
+      "disabled": ["legacyMinimumTable"]
+    }
+  },
+  "results": {
+    "tests": 19,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 2,
+    "failed": ["com.acme.inventory.StockLevelServiceTest.shouldFlagLowStockAtThreshold", "com.acme.inventory.ReorderPolicyTest.shouldNotReorderDiscontinuedItems"]
+  },
+  "quality": [
+    {
+      "class": "com.acme.inventory.StockLevelServiceTest",
+      "method": "syncsWithWarehouse",
+      "issue": "DISABLED",
+      "note": "@Disabled(\"waiting for the warehouse API sandbox; see INV-102\")."
+    },
+    {"class": "com.acme.inventory.ReorderPolicyTest", "method": "legacyMinimumTable", "issue": "DISABLED", "note": "@Disabled with no reason."}
+  ],
+  "scenarios": [
+    {"class": "com.acme.inventory.StockLevelServiceTest", "method": "availableIsOnHandMinusReserved", "tags": ["positive"]},
+    {"class": "com.acme.inventory.StockLevelServiceTest", "method": "availableIsNeverNegative", "tags": ["boundary"]},
+    {"class": "com.acme.inventory.StockLevelServiceTest", "method": "shouldFlagLowStockBelowThreshold", "tags": ["positive", "boundary"]},
+    {"class": "com.acme.inventory.StockLevelServiceTest", "method": "shouldFlagLowStockAtThreshold", "tags": ["boundary"]},
+    {"class": "com.acme.inventory.StockLevelServiceTest", "method": "notLowWhenAboveThreshold", "tags": ["negative", "boundary"]},
+    {"class": "com.acme.inventory.StockLevelServiceTest", "method": "rejectsMalformedSku", "tags": ["negative", "exception", "nullEmpty"]},
+    {"class": "com.acme.inventory.StockLevelServiceTest", "method": "unknownSkuHasZeroAvailable", "tags": ["negative", "nullEmpty"]},
+    {"class": "com.acme.inventory.StockLevelServiceTest", "method": "snapshotContainsEverySku", "tags": ["positive"]},
+    {"class": "com.acme.inventory.StockLevelServiceTest", "method": "thresholdIsConfigurable", "tags": ["positive"]},
+    {"class": "com.acme.inventory.StockLevelServiceTest", "method": "syncsWithWarehouse", "tags": ["positive"]},
+    {"class": "com.acme.inventory.ReorderPolicyTest", "method": "shouldReorderWhenBelowMinimum", "tags": ["positive", "boundary"]},
+    {"class": "com.acme.inventory.ReorderPolicyTest", "method": "shouldNotReorderDiscontinuedItems", "tags": ["negative", "boundary"]},
+    {"class": "com.acme.inventory.ReorderPolicyTest", "method": "reorderQuantityRoundsUpToCaseSize", "tags": ["positive", "boundary"]},
+    {"class": "com.acme.inventory.ReorderPolicyTest", "method": "Seasonal.peakSeasonDoublesMinimum", "tags": ["positive"]},
+    {"class": "com.acme.inventory.ReorderPolicyTest", "method": "legacyMinimumTable", "tags": ["positive"]}
+  ],
+  "notes": ["Top-level results aggregate both result pastes (12 + 7 executions); per-paste numbers are in the paste-level \"results\" extension key. results.failed uses \"<fully-qualified class>.<method name>\" without parameters or parentheses.", "Maven paste: \"Tests run: 12\" appears twice (per-class line and the final summary) and must not be double-counted. 12 = 9 plain test methods + 3 rejectsMalformedSku invocations; the skipped one is the @Disabled syncsWithWarehouse. The failing method is given as \"shouldFlagLowStockAtThreshold(com.acme.inventory.StockLevelServiceTest)\" and again as \"StockLevelServiceTest.shouldFlagLowStockAtThreshold:63\"; line 63 of 01-test-StockLevelServiceTest.txt is its assertTrue.", "Gradle paste: the class is shown by simple name only (\"ReorderPolicyTest > ...\"); the FQCN com.acme.inventory.ReorderPolicyTest comes from the pasted test code. Method names carry \"()\" or a parameter-type list \"(int, int)\"; parameterized invocations add \"> [n] args\"; the @Nested class appears by its @DisplayName (\"Seasonal items\"), not by its class name Seasonal. \"7 tests completed, 1 failed, 1 skipped\" is the authoritative total. The failure location ReorderPolicyTest.java:24 is the real assertion line.", "The Gradle output has no PASSED/FAILED line for the nested class itself and no per-test timing; the Maven output only lists failures individually (passing tests are not named).", "Neither console format reports errors separately for these runs: errors = 0 in both.", "coverageStatus is an extension key: no JaCoCo was pasted, so coverage is NOT VERIFIED; passing tests are not evidence of coverage.", "ReorderPolicyTest.legacyMinimumTable contains a // comment with braces and the text \"@Test\" (line 46) that must not be counted as an annotation.", "shouldFlagLowStockAtThreshold is a genuine boundary test (on-hand == threshold) and it is the one that fails; the test is not defective, it exposes a likely \"<\" vs \"<=\" bug in production code that is not pasted."]
+}

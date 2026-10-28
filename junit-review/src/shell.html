@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="{{CSP}}">
+<meta name="referrer" content="no-referrer">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>JUnit Review — Paste-Only</title>
+<style>{{STYLES}}</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M6 6h20v20H6z" /><path d="M10 17l4 4 8-10" /></svg>
+      <div class="brand-text">
+        <span class="brand-name">JUnit Review</span>
+        <span class="brand-sub">Coverage &amp; test-quality review · paste-only</span>
+      </div>
+    </div>
+    <div class="topbar-facts" aria-live="polite">
+      <span class="fact" id="fact-cr" title="Enhancement / CR reference">No CR reference</span>
+      <span class="fact" id="fact-tests" title="Collected test classes and methods">0 test classes · 0 test methods</span>
+      <span id="fact-status"></span>
+    </div>
+    <div class="topbar-actions">
+      <span class="offline-flag" title="This page's Content-Security-Policy blocks every network connection. Pasted text never leaves this browser tab."><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 11h12v9H6z"/><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></svg><span>Offline · nothing saved</span></span>
+      <button type="button" class="btn btn-quiet btn-sm" id="btn-backup" title="Copy the whole workspace (including pasted code) to the clipboard as text">Copy backup</button>
+      <button type="button" class="btn btn-quiet btn-sm" id="btn-restore" title="Restore a workspace from backup text you paste">Restore</button>
+      <button type="button" class="btn btn-quiet btn-sm" id="btn-clear" title="Discard all pasted evidence and details">Clear session</button>
+    </div>
+  </div>
+  <nav class="steps" role="tablist" aria-label="Review steps">
+    <button type="button" role="tab" class="step" id="tab-enhancement" aria-controls="panel-enhancement" aria-selected="true" data-tab="enhancement"><span class="step-n">1</span><span class="step-label">Enhancement</span></button>
+    <button type="button" role="tab" class="step" id="tab-evidence" aria-controls="panel-evidence" aria-selected="false" tabindex="-1" data-tab="evidence"><span class="step-n">2</span><span class="step-label">Paste evidence</span><span class="step-count" id="step-count-evidence"></span></button>
+    <button type="button" role="tab" class="step" id="tab-review" aria-controls="panel-review" aria-selected="false" tabindex="-1" data-tab="review"><span class="step-n">3</span><span class="step-label">Review dashboard</span><span class="step-status" id="step-status-review"></span></button>
+    <button type="button" role="tab" class="step" id="tab-report" aria-controls="panel-report" aria-selected="false" tabindex="-1" data-tab="report"><span class="step-n">4</span><span class="step-label">Report</span></button>
+  </nav>
+</header>
+
+<main id="main" tabindex="-1">
+
+  <!-- 1. Enhancement workspace -->
+  <section class="panel" id="panel-enhancement" role="tabpanel" aria-labelledby="tab-enhancement">
+    <div class="panel-grid two">
+      <form class="card elevated" id="review-form" autocomplete="off" novalidate>
+        <div class="card-head">
+          <h2>Enhancement workspace</h2>
+          <p class="lede">Describe the change being reviewed. These details head the report.</p>
+        </div>
+        <div class="form-grid">
+          <label class="field">
+            <span class="field-label">Enhancement / CR reference <span class="req" aria-hidden="true">*</span></span>
+            <input type="text" id="f-cr" name="crRef" maxlength="120" placeholder="e.g. CR-2026-0142" spellcheck="false" autocomplete="off" data-gramm="false">
+          </label>
+          <label class="field">
+            <span class="field-label">Application name <span class="req" aria-hidden="true">*</span></span>
+            <input type="text" id="f-app" name="appName" maxlength="120" placeholder="e.g. Claims Processing Portal" spellcheck="false" autocomplete="off" data-gramm="false">
+          </label>
+          <label class="field">
+            <span class="field-label">Module name <span class="opt">(optional)</span></span>
+            <input type="text" id="f-module" name="moduleName" maxlength="120" placeholder="e.g. claims-service" spellcheck="false" autocomplete="off" data-gramm="false">
+            <span class="hint">If it matches a JaCoCo report or group name, module-level coverage is shown.</span>
+          </label>
+          <label class="field">
+            <span class="field-label">Coverage threshold (%)</span>
+            <input type="number" id="f-threshold" name="threshold" min="0" max="100" step="0.01" value="100" inputmode="decimal">
+            <span class="hint">100% is strict: a pass requires zero missed elements. 99.99% is never shown as 100%.</span>
+          </label>
+          <label class="field span-2">
+            <span class="field-label">Review scope description</span>
+            <textarea id="f-scope" name="scopeDesc" rows="4" maxlength="4000" placeholder="What changed, which business functions are affected, anything excluded from this review." spellcheck="false" autocorrect="off" autocapitalize="off" data-gramm="false" data-enable-grammarly="false"></textarea>
+          </label>
+          <fieldset class="field span-2 metrics-field">
+            <legend class="field-label">Metrics assessed against the threshold</legend>
+            <div class="checks" id="f-metrics"></div>
+          </fieldset>
+        </div>
+        <div class="card-foot">
+          <button type="button" class="btn btn-primary" id="btn-to-evidence">Continue to evidence <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </form>
+
+      <aside class="card guide">
+        <h2>How a review works</h2>
+        <ol class="guide-steps">
+          <li><strong>Describe</strong> the enhancement and set the threshold.</li>
+          <li><strong>Paste</strong> each piece of evidence: test classes, production classes, the JaCoCo XML report, JUnit results and the git diff or changed-file list. Paste as many times as needed.</li>
+          <li><strong>Review</strong> the dashboard: every finding shows what was observed, why it matters and where in the evidence it comes from.</li>
+          <li><strong>Copy</strong> the report as formatted text or as a table for Excel.</li>
+        </ol>
+        <div class="assurance">
+          <h3><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.6-3 8.3-7 10-4-1.7-7-5.4-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg> Handling of pasted code</h3>
+          <ul>
+            <li>Runs entirely in this browser tab; the page's security policy blocks all network connections.</li>
+            <li>Nothing is stored: no browser storage, no cookies. Closing the tab discards the session.</li>
+            <li>Pasted Java and XML are only read as text — never executed or rendered as HTML.</li>
+            <li>The clipboard is only written when you press a copy button, and never read.</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 2. Evidence collection -->
+  <section class="panel" id="panel-evidence" role="tabpanel" aria-labelledby="tab-evidence" hidden>
+    <div class="panel-grid evidence-grid">
+      <div class="card elevated editor-card" id="editor-card">
+        <div class="card-head row">
+          <div>
+            <h2 id="editor-title">Paste evidence</h2>
+            <p class="lede" id="editor-lede">Paste one item at a time — a test class, a production class, a JaCoCo report, test results or a change list.</p>
+          </div>
+        </div>
+        <div class="editor-controls">
+          <label class="field inline">
+            <span class="field-label">Input type</span>
+            <select id="input-type"></select>
+          </label>
+          <label class="field inline" id="provenance-field" hidden>
+            <span class="field-label">Source of figures</span>
+            <select id="input-provenance">
+              <option value="Vendor-declared">Vendor-declared</option>
+              <option value="User-entered">User-entered</option>
+            </select>
+          </label>
+          <div class="detected" id="detected" aria-live="polite"></div>
+        </div>
+        <div class="editor" id="editor">
+          <pre class="gutter" id="gutter" aria-hidden="true">1</pre>
+          <textarea id="code" class="code-input" wrap="off" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" aria-label="Evidence text" aria-describedby="editor-help" placeholder="Paste here (Ctrl+V)…"></textarea>
+        </div>
+        <div class="editor-meta">
+          <span id="editor-help">Tab inserts a tab character; press Esc then Tab to leave the editor.</span>
+          <span id="editor-size"></span>
+        </div>
+        <div class="dup-warning" id="dup-warning" hidden></div>
+        <div class="card-foot row">
+          <button type="button" class="btn btn-primary" id="btn-add"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg><span>Add to review</span></button>
+          <button type="button" class="btn" id="btn-cancel-edit" hidden>Cancel edit</button>
+          <button type="button" class="btn btn-ghost" id="btn-clear-editor">Clear editor</button>
+          <span class="spacer"></span>
+          <span class="analysis-status" id="analysis-status" aria-live="polite"></span>
+        </div>
+        <details class="manual-entry" id="manual-entry">
+          <summary>Enter a coverage figure manually</summary>
+          <p class="hint">Figures entered here are labelled <em>user-entered</em> or <em>vendor-declared</em> and are never treated as verified coverage.</p>
+          <div class="form-grid compact">
+            <label class="field"><span class="field-label">Scope</span><input type="text" id="m-scope" value="Overall" maxlength="160" spellcheck="false" autocomplete="off"></label>
+            <label class="field"><span class="field-label">Metric</span><select id="m-metric"><option>Line</option><option>Branch</option><option>Instruction</option><option>Method</option><option>Class</option></select></label>
+            <label class="field"><span class="field-label">Covered</span><input type="number" id="m-covered" min="0" step="1" inputmode="numeric"></label>
+            <label class="field"><span class="field-label">Total</span><input type="number" id="m-total" min="0" step="1" inputmode="numeric"></label>
+            <label class="field"><span class="field-label">or Percent</span><input type="number" id="m-percent" min="0" max="100" step="0.01" inputmode="decimal"></label>
+            <label class="field"><span class="field-label">Source</span><select id="m-provenance"><option>User-entered</option><option>Vendor-declared</option></select></label>
+          </div>
+          <div class="row"><button type="button" class="btn" id="btn-manual-add">Add declared figure</button><span class="hint" id="m-error" role="alert"></span></div>
+        </details>
+      </div>
+
+      <div class="card collected">
+        <div class="card-head">
+          <h2>Collected evidence</h2>
+          <div class="counters" id="counters" aria-live="polite"></div>
+        </div>
+        <div id="snippet-list" class="snippet-list"></div>
+        <div class="card-foot row">
+          <span class="spacer"></span>
+          <button type="button" class="btn btn-primary" id="btn-to-review">Open review dashboard <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Dashboard -->
+  <section class="panel" id="panel-review" role="tabpanel" aria-labelledby="tab-review" hidden>
+    <div class="dash">
+      <nav class="dash-nav" aria-label="Dashboard sections" id="dash-nav"></nav>
+      <div class="dash-body" id="dash-body"></div>
+    </div>
+  </section>
+
+  <!-- 4. Report -->
+  <section class="panel" id="panel-report" role="tabpanel" aria-labelledby="tab-report" hidden>
+    <div class="card elevated">
+      <div class="card-head row">
+        <div>
+          <h2>Review report</h2>
+          <p class="lede">Copy the report to the clipboard — nothing is downloaded. The table version pastes straight into Excel (select cell A1, then paste).</p>
+        </div>
+      </div>
+      <div class="report-actions">
+        <button type="button" class="btn btn-primary" id="btn-copy-text"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9h10v11H9z"/><path d="M5 15V4h10"/></svg><span>Copy formatted report</span></button>
+        <button type="button" class="btn btn-primary" id="btn-copy-tsv"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9h10v11H9z"/><path d="M5 15V4h10"/></svg><span>Copy all tables for Excel</span></button>
+        <label class="field inline"><span class="field-label">Single table</span>
+          <select id="tsv-which">
+            <option value="findings">Findings</option>
+            <option value="inventory">Test inventory</option>
+            <option value="traceability">Traceability</option>
+            <option value="coverage">Coverage metrics</option>
+            <option value="uncovered">Uncovered code</option>
+            <option value="evidence">Evidence &amp; conclusion</option>
+          </select>
+        </label>
+        <button type="button" class="btn" id="btn-copy-one">Copy table</button>
+        <button type="button" class="btn btn-ghost" id="btn-print"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V4h10v5"/><path d="M7 17H5V10h14v7h-2"/><path d="M7 14h10v6H7z"/></svg><span>Print</span></button>
+      </div>
+      <div class="report-views">
+        <div class="report-view">
+          <h3>Formatted text report</h3>
+          <textarea id="report-text" class="report-box" readonly wrap="off" spellcheck="false" aria-label="Formatted text report"></textarea>
+        </div>
+        <div class="report-view">
+          <h3>Tab-separated tables (Excel)</h3>
+          <textarea id="report-tsv" class="report-box" readonly wrap="off" spellcheck="false" aria-label="Tab-separated report"></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <span>JUnit Review runs offline in this tab. Static analysis findings indicate where to look; only JaCoCo evidence is treated as measured coverage.</span>
+</footer>
+
+<dialog id="viewer" class="viewer" aria-labelledby="viewer-title">
+  <div class="viewer-head">
+    <h2 id="viewer-title">Snippet</h2>
+    <button type="button" class="btn btn-ghost btn-icon" id="viewer-close" aria-label="Close"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></button>
+  </div>
+  <div class="viewer-sub" id="viewer-sub"></div>
+  <div class="viewer-body" id="viewer-body" tabindex="0"></div>
+</dialog>
+
+<dialog id="modal" class="modal" aria-labelledby="modal-title">
+  <h2 id="modal-title"></h2>
+  <div id="modal-body"></div>
+  <div class="modal-actions" id="modal-actions"></div>
+</dialog>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<div id="print-root" class="print-root" aria-hidden="true"></div>
+
+<script id="engine">{{ENGINE}}</script>
+<script id="ui">{{UI}}</script>
+</body>
+</html>

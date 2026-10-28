@@ -1,0 +1,23 @@
+// sample-app: minimal example used by the onboarding guide
+
+package org.example;
+
+public class Greeter {
+
+    private final String greeting;
+
+    public Greeter() {
+        this("Hello");
+    }
+
+    public Greeter(final String greeting) {
+        this.greeting = greeting;
+    }
+
+    public String greet(final String name) {
+        if (name == null || name.isBlank()) {
+            return greeting + ", world!";
+        }
+        return greeting + ", " + name.trim() + "!";
+    }
+}

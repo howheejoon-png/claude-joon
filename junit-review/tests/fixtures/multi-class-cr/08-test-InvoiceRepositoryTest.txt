@@ -1,0 +1,59 @@
+package com.acme.invoicing.repository;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.acme.invoicing.domain.Invoice;
+import com.acme.invoicing.domain.InvoiceStatus;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.jdbc.Sql;
+
+@DataJpaTest
+class InvoiceRepositoryTest {
+
+    @Autowired
+    private TestEntityManager em;
+
+    @Autowired
+    private InvoiceRepository repository;
+
+    @BeforeEach
+    void seed() {
+        em.persist(invoice("INV-202609-0000017", LocalDate.of(2026, 9, 1), InvoiceStatus.OPEN));
+        em.persist(invoice("INV-202609-0000025", LocalDate.of(2026, 9, 20), InvoiceStatus.PAID));
+        em.persist(invoice("INV-202610-0000033", LocalDate.of(2026, 10, 30), InvoiceStatus.OPEN));
+        em.flush();
+    }
+
+    @Test
+    void findOverdue_returnsOnlyOpenInvoicesDueBeforeCutoff() {
+        List<Invoice> overdue = repository.findOverdue(LocalDate.of(2026, 10, 15));
+
+        assertThat(overdue).extracting(Invoice::getInvoiceNo).containsExactly("INV-202609-0000017");
+    }
+
+    @Test
+    void findByInvoiceNo() {
+        assertThat(repository.findByInvoiceNo("INV-202610-0000033")).isPresent();
+        assertThat(repository.findByInvoiceNo("INV-000000-0000000")).isEmpty();
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO invoice_sequence (prefix, seq) VALUES ('INV', 41), ('INV', 42); -- seeded")
+    void currentSequence_returnsMaxForPrefix() {
+        assertThat(repository.currentSequence("INV")).isEqualTo(42L);
+        assertThat(repository.currentSequence("CRN")).isZero();
+    }
+
+    private static Invoice invoice(final String no, final LocalDate due, final InvoiceStatus status) {
+        Invoice invoice = new Invoice(no, "C-001", new BigDecimal("10.00"), due);
+        invoice.setStatus(status);
+        return invoice;
+    }
+}

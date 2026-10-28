@@ -1,0 +1,70 @@
+package com.acme.invoicing.web;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.acme.invoicing.domain.Invoice;
+import com.acme.invoicing.service.InvoiceService;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+@WebMvcTest(InvoiceController.class)
+class InvoiceControllerTest {
+
+    private static final String NO = "INV-202610-0001230";
+
+    @Autowired
+    MockMvc mvc;
+
+    @MockBean
+    InvoiceService invoiceService;
+
+    @Test
+    @DisplayName("GET /invoices/{invoiceNo} returns the invoice as JSON")
+    void getInvoice() throws Exception {
+        given(invoiceService.findByNumber(NO)).willReturn(sampleInvoice());
+
+        mvc.perform(get("/invoices/{invoiceNo}", NO))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.invoiceNo").value(NO))
+                .andExpect(jsonPath("$.outstanding").value(250.00));
+    }
+
+    @Test
+    void overdue_rejectsMoreThan365Days() throws Exception {
+        mvc.perform(get("/invoices/overdue").param("days", "366"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void issueInvoice_returns201WithDueDate() throws Exception {
+        given(invoiceService.issue(any())).willReturn(sampleInvoice());
+
+        mvc.perform(post("/invoices")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "customerId": "C-001",
+                                  "amount": 250.00,
+                                  "termDays": 0
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.dueDate").value("2026-11-14"));
+    }
+
+    private static Invoice sampleInvoice() {
+        return new Invoice(NO, "C-001", new BigDecimal("250.00"), LocalDate.of(2026, 11, 14));
+    }
+}

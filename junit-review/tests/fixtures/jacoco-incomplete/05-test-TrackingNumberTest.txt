@@ -1,0 +1,27 @@
+package com.acme.shipping.label;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class TrackingNumberTest {
+
+    @BeforeEach
+    void reset() {
+        TrackingNumber.resetSequenceForTests();
+    }
+
+    @Test
+    void nextIsSequentialPerJvm() {
+        LocalDate day = LocalDate.of(2026, 10, 28);
+        assertThat(TrackingNumber.next("SX", day).value()).isEqualTo("SX-20261028-000001");
+        assertThat(TrackingNumber.next("SX", day)).hasToString("SX-20261028-000002");
+    }
+
+    @Test
+    void ofTrimsWhitespace() {
+        assertThat(TrackingNumber.of("  AP-1  ").value()).isEqualTo("AP-1");
+    }
+}

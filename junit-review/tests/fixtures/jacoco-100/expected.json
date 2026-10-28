@@ -1,0 +1,55 @@
+{
+  "scenario": "jacoco-100",
+  "description": "A small validator (PostalCodeValidator) and a masking utility (StringMasks), both with private empty constructors, fully tested with JUnit 5 parameterized tests, a @Nested class and fully-qualified @org.junit.jupiter.api.Test annotations. JaCoCo (pretty-printed) is exactly 100% on every counter. The scope is a plain list of fully-qualified class names, one per line, that matches the report classes exactly. Two Surefire XML pastes (one per test class) are all green and use display-name style testcase names (\"[1] SG, 018956, true\", \"nullCountryIsInvalid()\").",
+  "pastes": [
+    {"file": "01-source-PostalCodeValidator.txt", "kind": "source", "incomplete": false},
+    {"file": "02-source-StringMasks.txt", "kind": "source", "incomplete": false},
+    {"file": "03-test-PostalCodeValidatorTest.txt", "kind": "test", "incomplete": false},
+    {"file": "04-test-StringMasksTest.txt", "kind": "test", "incomplete": false},
+    {"file": "05-scope-changed-classes.txt", "kind": "scope", "incomplete": false},
+    {"file": "06-jacoco-common-lib.txt", "kind": "jacoco", "incomplete": false},
+    {"file": "07-results-TEST-PostalCodeValidatorTest.txt", "kind": "results", "incomplete": false},
+    {"file": "08-results-TEST-StringMasksTest.txt", "kind": "results", "incomplete": false}
+  ],
+  "testClasses": {
+    "com.acme.common.validation.PostalCodeValidatorTest": {
+      "framework": "junit5",
+      "testMethods": ["validatesPerCountry", "nullCountryIsInvalid", "nullPostalCodeIsInvalid", "unsupportedCountries", "singaporeIsSupported"],
+      "disabled": []
+    },
+    "com.acme.common.text.StringMasksTest": {
+      "framework": "junit5",
+      "testMethods": ["masksAllButLast", "nullStaysNull", "Email.keepsFirstCharacterAndDomain", "Email.singleCharacterLocalPartIsFullyMasked"],
+      "disabled": []
+    }
+  },
+  "productionClasses": {
+    "com.acme.common.validation.PostalCodeValidator": {"methods": ["isValid", "isSupported"], "noTestMethods": []},
+    "com.acme.common.text.StringMasks": {"methods": ["maskAllButLast", "maskEmail"], "noTestMethods": []}
+  },
+  "jacoco": {
+    "reportTotals": {"INSTRUCTION": [0, 99], "BRANCH": [0, 18], "LINE": [0, 19], "COMPLEXITY": [0, 14], "METHOD": [0, 5], "CLASS": [0, 2]},
+    "classes": {
+      "com/acme/common/text/StringMasks": {"INSTRUCTION": [0, 52], "BRANCH": [0, 6], "LINE": [0, 10], "COMPLEXITY": [0, 5], "METHOD": [0, 2], "CLASS": [0, 1]},
+      "com/acme/common/validation/PostalCodeValidator": {"INSTRUCTION": [0, 47], "BRANCH": [0, 12], "LINE": [0, 9], "COMPLEXITY": [0, 9], "METHOD": [0, 3], "CLASS": [0, 1]}
+    },
+    "uncoveredLines": {},
+    "partialBranchLines": {},
+    "strict100": true
+  },
+  "scope": {"changedFiles": [], "changedProductionClasses": ["com.acme.common.validation.PostalCodeValidator", "com.acme.common.text.StringMasks"]},
+  "results": {"tests": 18, "failures": 0, "errors": 0, "skipped": 0, "failed": []},
+  "quality": [],
+  "scenarios": [
+    {"class": "com.acme.common.validation.PostalCodeValidatorTest", "method": "validatesPerCountry", "tags": ["positive", "negative", "boundary"]},
+    {"class": "com.acme.common.validation.PostalCodeValidatorTest", "method": "nullCountryIsInvalid", "tags": ["nullEmpty", "negative"]},
+    {"class": "com.acme.common.validation.PostalCodeValidatorTest", "method": "nullPostalCodeIsInvalid", "tags": ["nullEmpty", "negative"]},
+    {"class": "com.acme.common.validation.PostalCodeValidatorTest", "method": "unsupportedCountries", "tags": ["negative", "nullEmpty"]},
+    {"class": "com.acme.common.validation.PostalCodeValidatorTest", "method": "singaporeIsSupported", "tags": ["positive"]},
+    {"class": "com.acme.common.text.StringMasksTest", "method": "masksAllButLast", "tags": ["positive", "boundary"]},
+    {"class": "com.acme.common.text.StringMasksTest", "method": "nullStaysNull", "tags": ["nullEmpty"]},
+    {"class": "com.acme.common.text.StringMasksTest", "method": "Email.keepsFirstCharacterAndDomain", "tags": ["positive"]},
+    {"class": "com.acme.common.text.StringMasksTest", "method": "Email.singleCharacterLocalPartIsFullyMasked", "tags": ["boundary"]}
+  ],
+  "notes": ["strict100 is true; both classes have BRANCH counters (PostalCodeValidator 12 + StringMasks 6 = 18 branches), all covered.", "The scope paste is a bare FQCN list (no paths), so changedFiles is empty and changedProductionClasses equals the set of <class> names in the report (with \"/\" -> \".\"). Every changed class is present in JaCoCo at 100%.", "Both classes have private empty no-arg constructors, which JaCoCo filters: there is no <init> method for either class. StringMasks has no <clinit> because MASK is a compile-time char constant; PostalCodeValidator <clinit> covers the multi-line Map.of initialiser (lines 11-14).", "Three PostalCodeValidatorTest methods use the fully-qualified annotation @org.junit.jupiter.api.Test and there is no import of org.junit.jupiter.api.Test in that file.", "Surefire: 12 testcases for PostalCodeValidatorTest (7 validatesPerCountry + 2 unsupportedCountries + 3 plain) and 6 for StringMasksTest (3 masksAllButLast + nullStaysNull + 2 in the @Nested class, reported with classname com.acme.common.text.StringMasksTest$Email). Testcase names are display names (phrased reporter): plain tests end with \"()\", parameterized invocations start with \"[n]\" and do not contain the method name.", "The second validatesPerCountry invocation name is \"[2] sg,  018956 , true\" because the quoted CSV value ' 018956 ' keeps its spaces. The StringMasksTest invocation names come from @ParameterizedTest(name = \"[{index}] {0} keep {1} -> {2}\") and contain \"->\" (escaped as -&gt; in the XML).", "Source Javadoc line 13 of StringMasks contains {@code visible} and an arrow example; the PostalCodeValidator regex literals contain {6}, {5}, {1,2} and {2} quantifiers."]
+}

@@ -1,0 +1,71 @@
+package com.acme.notify.template;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class TemplateRendererTest {
+
+    private final TemplateRenderer lenient = new TemplateRenderer(false);
+    private final TemplateRenderer strict = new TemplateRenderer(true);
+
+    @Test
+    void rendersAllPlaceholders() {
+        String out = lenient.render("Hi {{name}}; order {{ orderId }} shipped", Map.of("name", "Ana", "orderId", "A-1"));
+        assertEquals("Hi Ana; order A-1 shipped", out);
+    }
+
+    @Test
+    void lenientModeLeavesMissingValuesBlank() {
+        assertEquals("Hello !", lenient.render("Hello {{who}}!", Map.of()));
+    }
+
+    @Test
+    void strictModeThrowsForMissingValue() {
+        TemplateRenderer.MissingPlaceholderException ex = assertThrows(
+                TemplateRenderer.MissingPlaceholderException.class,
+                () -> strict.render("Hello {{who}}!", Map.of()));
+        assertEquals("No value for placeholder 'who'", ex.getMessage());
+    }
+
+    @Test
+    void groupsByChannelSortedByName() {
+        Map<String, List<TemplateRenderer.Item>> grouped = TemplateRenderer.byChannel(
+                new TemplateRenderer.Item("reset", "EMAIL"),
+                new TemplateRenderer.Item("otp", "SMS"),
+                new TemplateRenderer.Item("Welcome", "EMAIL"));
+
+        assertThat(grouped).containsOnlyKeys("EMAIL", "SMS");
+        assertThat(grouped.get("EMAIL")).extracting(TemplateRenderer.Item::name).containsExactly("reset", "Welcome");
+    }
+
+    @Test
+    void filterResultIsConsistent() {
+        String expected = lenient.applyFilter("upper", "abc");
+        assertEquals(expected, expected);
+    }
+
+    @Test
+    void unknownFilterIsIdentity() {
+    }
+
+    // @Test
+    // void placeholdersAreListedInOrder() {
+    //     assertArrayEquals(new String[] {"a", "b"}, lenient.placeholders("{{a}} {{b}}"));
+    // }
+
+    @Test
+    private void trimFilterRemovesSpaces() {
+        assertEquals("x", lenient.applyFilter("trim", "  x  "));
+    }
+
+    @Test
+    void nullTemplateIsRejected() {
+        assertThrows(NullPointerException.class, () -> lenient.render(null, Map.of()));
+    }
+}

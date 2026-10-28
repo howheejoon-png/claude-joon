@@ -1,0 +1,42 @@
+package com.acme.shipping.label;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicLong;
+
+/**
+ * Value object for carrier tracking numbers, e.g. AP-20261028-000042.
+ */
+public final class TrackingNumber {
+
+    private static final DateTimeFormatter DAY = DateTimeFormatter.BASIC_ISO_DATE;
+    private static final AtomicLong SEQUENCE = new AtomicLong();
+
+    private final String value;
+
+    private TrackingNumber(final String value) {
+        this.value = value;
+    }
+
+    public static TrackingNumber next(final String prefix, final LocalDate day) {
+        final long seq = SEQUENCE.incrementAndGet();
+        return new TrackingNumber(prefix + "-" + DAY.format(day) + "-" + String.format("%06d", seq));
+    }
+
+    public static TrackingNumber of(final String value) {
+        return new TrackingNumber(value.trim());
+    }
+
+    public String value() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return value;
+    }
+
+    static void resetSequenceForTests() {
+        SEQUENCE.set(0);
+    }
+}

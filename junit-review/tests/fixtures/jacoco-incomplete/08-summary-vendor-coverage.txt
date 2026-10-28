@@ -1,0 +1,10 @@
+CR-4471 Shipping Labels - Unit Test Coverage Summary
+Prepared by: Vendor QA	Date: 27/10/2026	Tool: JaCoCo 0.8.12
+
+Module	Class	Tests	Line Coverage	Branch Coverage	Remarks
+shipping-core	LabelService	7	100%	100%	All new DG / oversize logic covered
+shipping-core	TrackingNumber	2	100%	N/A	No branches
+
+Overall
+Line coverage: 100%  Branch coverage: 100%
+Total tests: 9   Passed: 9   Failed: 0   Skipped: 0

@@ -1,0 +1,120 @@
+{
+  "scenario": "multi-class-cr",
+  "description": "One change request (CR-3310) touching a controller, a service implementation, a Spring Data repository interface with @Query methods and a static utility class. Four test classes are pasted separately: a JUnit 5 @WebMvcTest, a JUnit 4 Mockito test (@RunWith(MockitoJUnitRunner.class), @Before, @Test(expected = ...)), a @DataJpaTest repository test and a JUnit 5 utility test that accidentally contains one JUnit 4 @org.junit.Test method. Scope is `git diff --name-status` output with M/A/D/R lines, a deleted class and non-Java files (.sql, .properties, pom.xml). The JaCoCo XML (pretty-printed) and the matching JaCoCo CSV cover only InvoiceServiceImpl and InvoiceNumberUtils: the changed InvoiceController is entirely missing from the report.",
+  "pastes": [
+    {"file": "01-scope-git-diff-name-status.txt", "kind": "scope", "incomplete": false},
+    {"file": "02-source-InvoiceController.txt", "kind": "source", "incomplete": false},
+    {"file": "03-source-InvoiceServiceImpl.txt", "kind": "source", "incomplete": false},
+    {"file": "04-source-InvoiceRepository.txt", "kind": "source", "incomplete": false},
+    {"file": "05-source-InvoiceNumberUtils.txt", "kind": "source", "incomplete": false},
+    {"file": "06-test-InvoiceControllerTest.txt", "kind": "test", "incomplete": false},
+    {"file": "07-test-InvoiceServiceImplTest.txt", "kind": "test", "incomplete": false},
+    {"file": "08-test-InvoiceRepositoryTest.txt", "kind": "test", "incomplete": false},
+    {"file": "09-test-InvoiceNumberUtilsTest.txt", "kind": "test", "incomplete": false},
+    {"file": "10-jacoco-invoicing.txt", "kind": "jacoco", "incomplete": false},
+    {"file": "11-jacococsv-invoicing.txt", "kind": "jacococsv", "incomplete": false}
+  ],
+  "testClasses": {
+    "com.acme.invoicing.web.InvoiceControllerTest": {"framework": "junit5", "testMethods": ["getInvoice", "overdue_rejectsMoreThan365Days", "issueInvoice_returns201WithDueDate"], "disabled": []},
+    "com.acme.invoicing.service.InvoiceServiceImplTest": {
+      "framework": "junit4",
+      "testMethods": ["issue_assignsNextNumberAndDefaultTerms", "findByNumber_unknown_throwsNotFound", "findByNumber_malformed", "recordPayment_fullAmount_marksPaid", "testPartialPayment", "recordPayment_overpayment_isRejected"],
+      "disabled": []
+    },
+    "com.acme.invoicing.repository.InvoiceRepositoryTest": {
+      "framework": "junit5",
+      "testMethods": ["findOverdue_returnsOnlyOpenInvoicesDueBeforeCutoff", "findByInvoiceNo", "currentSequence_returnsMaxForPrefix"],
+      "disabled": []
+    },
+    "com.acme.invoicing.util.InvoiceNumberUtilsTest": {
+      "framework": "mixed",
+      "testMethods": ["formatPadsSequenceAndAppendsCheckDigit", "formatRejectsNonPositiveSequence", "isValidRejects", "isValidAcceptsWellFormedNumber", "checkDigitOfAllZerosIsZero"],
+      "disabled": []
+    }
+  },
+  "productionClasses": {
+    "com.acme.invoicing.web.InvoiceController": {"methods": ["get", "overdue", "issue", "pay"], "noTestMethods": ["pay"]},
+    "com.acme.invoicing.service.InvoiceServiceImpl": {"methods": ["issue", "findByNumber", "findOverdue", "recordPayment"], "noTestMethods": ["findOverdue"]},
+    "com.acme.invoicing.repository.InvoiceRepository": {"methods": ["findByInvoiceNo", "findOverdue", "currentSequence"], "noTestMethods": []},
+    "com.acme.invoicing.util.InvoiceNumberUtils": {"methods": ["format", "isValid", "checkDigit", "parseSequence"], "noTestMethods": ["parseSequence"]}
+  },
+  "jacoco": {
+    "reportTotals": {"INSTRUCTION": [34, 217], "BRANCH": [6, 24], "LINE": [4, 39], "COMPLEXITY": [8, 17], "METHOD": [2, 8], "CLASS": [0, 2]},
+    "classes": {
+      "com/acme/invoicing/service/InvoiceServiceImpl": {"INSTRUCTION": [28, 116], "BRANCH": [5, 11], "LINE": [3, 25], "COMPLEXITY": [6, 7], "METHOD": [1, 4], "CLASS": [0, 1]},
+      "com/acme/invoicing/util/InvoiceNumberUtils": {"INSTRUCTION": [6, 101], "BRANCH": [1, 13], "LINE": [1, 14], "COMPLEXITY": [2, 10], "METHOD": [1, 4], "CLASS": [0, 1]}
+    },
+    "uncoveredLines": {"com/acme/invoicing/service/InvoiceServiceImpl.java": [57, 65, 68], "com/acme/invoicing/util/InvoiceNumberUtils.java": [46]},
+    "partialBranchLines": {"com/acme/invoicing/service/InvoiceServiceImpl.java": [40, 64, 67], "com/acme/invoicing/util/InvoiceNumberUtils.java": [21]},
+    "strict100": false,
+    "missingChangedClasses": ["com.acme.invoicing.web.InvoiceController"]
+  },
+  "scope": {
+    "changedFiles": ["invoicing-service/src/main/java/com/acme/invoicing/web/InvoiceController.java", "invoicing-service/src/main/java/com/acme/invoicing/service/InvoiceServiceImpl.java", "invoicing-service/src/main/java/com/acme/invoicing/repository/InvoiceRepository.java", "invoicing-service/src/main/java/com/acme/invoicing/util/InvoiceNumberUtils.java", "invoicing-service/src/main/java/com/acme/invoicing/util/LegacyInvoiceNumberGenerator.java", "invoicing-service/src/main/resources/db/migration/V42__invoice_sequence.sql", "invoicing-service/src/main/resources/application.properties", "invoicing-service/src/test/java/com/acme/invoicing/web/InvoiceControllerTest.java", "invoicing-service/src/test/java/com/acme/invoicing/service/InvoiceServiceImplTest.java", "invoicing-service/src/test/java/com/acme/invoicing/repository/InvoiceRepositoryTest.java", "invoicing-service/src/test/java/com/acme/invoicing/util/InvoiceNumberUtilsTest.java", "invoicing-service/pom.xml"],
+    "changedProductionClasses": ["com.acme.invoicing.web.InvoiceController", "com.acme.invoicing.service.InvoiceServiceImpl", "com.acme.invoicing.repository.InvoiceRepository", "com.acme.invoicing.util.InvoiceNumberUtils"]
+  },
+  "quality": [
+    {
+      "class": "com.acme.invoicing.service.InvoiceServiceImplTest",
+      "method": "findByNumber_malformed",
+      "issue": "BROAD_EXCEPTION",
+      "note": "@Test(expected = Exception.class): passes for any exception (even an NPE), not specifically the IllegalArgumentException the code throws."
+    },
+    {
+      "class": "com.acme.invoicing.util.InvoiceNumberUtilsTest",
+      "method": "checkDigitOfAllZerosIsZero",
+      "issue": "MIXED_JUNIT",
+      "note": "Annotated with the JUnit 4 @org.junit.Test (fully qualified) inside an otherwise JUnit 5 class."
+    },
+    {
+      "class": "com.acme.invoicing.util.InvoiceNumberUtilsTest",
+      "method": "checkDigitOfAllZerosIsZero",
+      "issue": "NOT_RUNNABLE",
+      "note": "Jupiter ignores @org.junit.Test; the Vintage engine would reject it because neither the class nor the method is public. The test never runs."
+    }
+  ],
+  "scenarios": [
+    {"class": "com.acme.invoicing.web.InvoiceControllerTest", "method": "getInvoice", "tags": ["positive"]},
+    {"class": "com.acme.invoicing.web.InvoiceControllerTest", "method": "overdue_rejectsMoreThan365Days", "tags": ["negative", "boundary"]},
+    {"class": "com.acme.invoicing.web.InvoiceControllerTest", "method": "issueInvoice_returns201WithDueDate", "tags": ["positive"]},
+    {
+      "class": "com.acme.invoicing.service.InvoiceServiceImplTest",
+      "method": "issue_assignsNextNumberAndDefaultTerms",
+      "tags": ["positive", "boundary"]
+    },
+    {
+      "class": "com.acme.invoicing.service.InvoiceServiceImplTest",
+      "method": "findByNumber_unknown_throwsNotFound",
+      "tags": ["negative", "exception"]
+    },
+    {"class": "com.acme.invoicing.service.InvoiceServiceImplTest", "method": "findByNumber_malformed", "tags": ["negative", "exception"]},
+    {"class": "com.acme.invoicing.service.InvoiceServiceImplTest", "method": "recordPayment_fullAmount_marksPaid", "tags": ["positive", "boundary"]},
+    {"class": "com.acme.invoicing.service.InvoiceServiceImplTest", "method": "testPartialPayment", "tags": ["positive"]},
+    {
+      "class": "com.acme.invoicing.service.InvoiceServiceImplTest",
+      "method": "recordPayment_overpayment_isRejected",
+      "tags": ["negative", "exception", "boundary"]
+    },
+    {
+      "class": "com.acme.invoicing.repository.InvoiceRepositoryTest",
+      "method": "findOverdue_returnsOnlyOpenInvoicesDueBeforeCutoff",
+      "tags": ["positive", "negative"]
+    },
+    {"class": "com.acme.invoicing.repository.InvoiceRepositoryTest", "method": "findByInvoiceNo", "tags": ["positive", "negative"]},
+    {
+      "class": "com.acme.invoicing.repository.InvoiceRepositoryTest",
+      "method": "currentSequence_returnsMaxForPrefix",
+      "tags": ["positive", "nullEmpty"]
+    },
+    {"class": "com.acme.invoicing.util.InvoiceNumberUtilsTest", "method": "formatPadsSequenceAndAppendsCheckDigit", "tags": ["positive"]},
+    {
+      "class": "com.acme.invoicing.util.InvoiceNumberUtilsTest",
+      "method": "formatRejectsNonPositiveSequence",
+      "tags": ["negative", "exception", "boundary"]
+    },
+    {"class": "com.acme.invoicing.util.InvoiceNumberUtilsTest", "method": "isValidRejects", "tags": ["negative", "nullEmpty"]},
+    {"class": "com.acme.invoicing.util.InvoiceNumberUtilsTest", "method": "isValidAcceptsWellFormedNumber", "tags": ["positive"]},
+    {"class": "com.acme.invoicing.util.InvoiceNumberUtilsTest", "method": "checkDigitOfAllZerosIsZero", "tags": ["boundary"]}
+  ],
+  "notes": ["jacoco.missingChangedClasses (extension key) lists changed production classes that have executable code but no <class> element in the report. InvoiceController is changed (M) and has code, yet is absent: its coverage is NOT VERIFIED, it must not be shown as 0% or 100%.", "InvoiceRepository is a Spring Data interface with no default methods, so it has no bytecode and is legitimately absent from JaCoCo; it should not be reported as missing coverage (it is exercised by the @DataJpaTest instead).", "LegacyInvoiceNumberGenerator.java is deleted (D): it appears in changedFiles but not in changedProductionClasses and must not be expected in JaCoCo.", "Rename line \"R087<TAB>old<TAB>new\": changedFiles lists only the new path (InvoiceServiceImplTest.java); the old path .../service/InvoiceServiceTest.java no longer exists. R087 is the similarity score, not part of the path.", "Non-Java changes (V42__invoice_sequence.sql, application.properties, pom.xml) and src/test/java files are in changedFiles but are not production classes.", "The name-status paste uses real TAB separators between status and path(s).", "11-jacococsv-invoicing.txt is the same report as 10-jacoco-invoicing.txt in JaCoCo CSV form (GROUP,PACKAGE,CLASS,... with dotted package names); per-class numbers must agree with the XML. CSV carries no LINE-level detail and no report totals row.", "JUnit 4 tests using @Test(expected = X.class) (findByNumber_unknown_throwsNotFound, findByNumber_malformed, recordPayment_overpayment_isRejected) contain no assert call but expected= is the assertion; they must NOT be reported as NO_ASSERTION.", "isValidRejects runs 5 invocations (@NullAndEmptySource contributes null and \"\" in addition to the 3 @ValueSource strings); formatRejectsNonPositiveSequence runs 2.", "InvoiceController uses the wildcard import org.springframework.web.bind.annotation.* (mapping annotations must still be recognised) and a fully-qualified parameter type java.math.BigDecimal in pay().", "Strings/comments that must not confuse a parser: InvoiceRepository line 19 is a // comment containing braces; the @Query JPQL on lines 15-16 is a concatenated string containing \":cutoff\" and \"<\"; InvoiceNumberUtils Javadoc line 10 contains \"{PREFIX}-{yyyyMM}\" and the regex literal on line 15 contains \"{3}\" quantifiers and escaped backslashes; InvoiceRepositoryTest line 48 has an @Sql statement string containing \";\" and \"--\".", "InvoiceNumberUtils has a private empty constructor (line 17) which JaCoCo filters, so no <init> appears for it; checkDigit is package-private and is covered indirectly (format/isValid) even though its only direct test never runs.", "Uncovered: InvoiceServiceImpl.findOverdue (line 57, METHOD missed=1), the PAID/VOID guard throw (line 65) and the non-positive amount throw (line 68); InvoiceNumberUtils.parseSequence (line 46, METHOD missed=1). Partial branches: InvoiceServiceImpl 40 (termDays ternary), 64 and 67 (two || conditions each only evaluated false), InvoiceNumberUtils 21 (sequence > 999_999 never true)."]
+}

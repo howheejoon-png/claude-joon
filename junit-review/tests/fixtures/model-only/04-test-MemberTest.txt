@@ -1,0 +1,85 @@
+package com.acme.loyalty.model;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+class MemberTest {
+
+    private Member member;
+
+    @BeforeEach
+    void setUp() {
+        member = new Member(1L, "ana@example.com", Tier.SILVER, 1200);
+    }
+
+    @Test
+    void allArgsConstructorPopulatesFields() {
+        assertThat(member.getId()).isEqualTo(1L);
+        assertThat(member.getEmail()).isEqualTo("ana@example.com");
+        assertThat(member.getTier()).isEqualTo(Tier.SILVER);
+        assertThat(member.getPoints()).isEqualTo(1200);
+    }
+
+    @Test
+    void settersOverwriteValues() {
+        Member m = new Member();
+        m.setId(9L);
+        m.setEmail("bo@example.com");
+        m.setTier(Tier.GOLD);
+        m.setPoints(50);
+
+        assertThat(m)
+                .extracting(Member::getId, Member::getEmail, Member::getTier, Member::getPoints)
+                .containsExactly(9L, "bo@example.com", Tier.GOLD, 50);
+    }
+
+    @Test
+    void toString_isNotNull() {
+        assertNotNull(member.toString());
+    }
+
+    @Test
+    @DisplayName("hashCode does not change when the id is assigned later")
+    void hashCodeIsStable() {
+        Member transientMember = new Member(null, "c@example.com", Tier.BRONZE, 0);
+        int before = transientMember.hashCode();
+        transientMember.setId(77L);
+        assertThat(transientMember.hashCode()).isEqualTo(before);
+    }
+
+    @Nested
+    @DisplayName("equals()")
+    class Equality {
+
+        @Test
+        void sameInstanceIsEqual() {
+            assertThat(member.equals(member)).isTrue();
+        }
+
+        @Test
+        void notEqualToOtherTypes() {
+            assertThat(member.equals("Member{id=1}")).isFalse();
+        }
+
+        @Test
+        void transientMembersAreNeverEqual() {
+            assertThat(new Member().equals(new Member())).isFalse();
+        }
+
+        @Test
+        void equalWhenIdsMatch() {
+            Member sameId = new Member(1L, "other@example.com", Tier.GOLD, 0);
+            assertThat(member).isEqualTo(sameId);
+        }
+
+        @Test
+        void notEqualWhenIdsDiffer() {
+            assertThat(member).isNotEqualTo(new Member(2L, "ana@example.com", Tier.SILVER, 1200));
+        }
+    }
+}

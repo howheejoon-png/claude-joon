@@ -1,0 +1,95 @@
+package com.acme.shipping.label;
+
+import java.time.Clock;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+/**
+ * Builds carrier shipping labels.
+ *
+ * <p>CR-4471: dangerous-goods marking and the oversize surcharge note.
+ */
+public class LabelService {
+
+    static final int MAX_WEIGHT_GRAMS = 30_000;
+    static final int OVERSIZE_CM = 150;
+    private static final String RETURN_ADDRESS = "21 Changi North Way; Singapore 498774";
+
+    private final Clock clock;
+    private final Map<Carrier, String> carrierPrefixes = new EnumMap<>(Carrier.class);
+
+    public LabelService(final Clock clock) {
+        this.clock = clock;
+        carrierPrefixes.put(Carrier.ACME_POST, "AP");
+        carrierPrefixes.put(Carrier.SPEEDY, "SX");
+        carrierPrefixes.put(Carrier.LEGACY, "LG");
+    }
+
+    public Label create(final Shipment shipment) {
+        validate(shipment);
+        final String prefix = carrierPrefixes.get(shipment.carrier());
+        final TrackingNumber tracking = TrackingNumber.next(prefix, LocalDate.now(clock));
+        final List<String> lines = new ArrayList<>();
+        lines.add(shipment.recipientName().toUpperCase(Locale.ROOT));
+        lines.addAll(shipment.addressLines());
+        lines.add(shipment.postalCode() + " " + shipment.countryCode());
+        if (shipment.dangerousGoods()) {
+            lines.add("DG: " + shipment.unNumber());
+            lines.add("HANDLE WITH CARE");
+        }
+        if (isOversize(shipment)) {
+            lines.add("OVERSIZE - SURCHARGE APPLIES");
+        }
+        return new Label(tracking, lines, shipment.weightGrams());
+    }
+
+    boolean isOversize(final Shipment shipment) {
+        final int longest = Math.max(shipment.lengthCm(), Math.max(shipment.widthCm(), shipment.heightCm()));
+        return longest > OVERSIZE_CM || shipment.lengthCm() + shipment.widthCm() + shipment.heightCm() > 300;
+    }
+
+    private void validate(final Shipment shipment) {
+        if (shipment.weightGrams() <= 0) {
+            throw new IllegalArgumentException("weight must be positive");
+        }
+        if (shipment.weightGrams() > MAX_WEIGHT_GRAMS) {
+            throw new IllegalArgumentException("parcel exceeds " + MAX_WEIGHT_GRAMS + " g");
+        }
+        if (shipment.dangerousGoods() && (shipment.unNumber() == null || shipment.unNumber().isBlank())) {
+            throw new IllegalArgumentException("UN number required for dangerous goods");
+        }
+    }
+
+    /** Renders the label as ZPL II for 4x6 in (812 x 1218 dots) thermal printers. */
+    public String zpl(final Label label) {
+        final StringBuilder sb = new StringBuilder(1024);
+        sb.append("^XA^CI28^PW812^LL1218^LH0,0");
+        sb.append(String.format("^FO%d,%d^GB%d,%d,%d^FS", 20, 20, 772, 1178, 4));
+        sb.append(String.format("^FO%d,%d^A0N,%d,%d^FD%s^FS", 40, 40, 30, 30, "FROM: ACME LOGISTICS"));
+        sb.append(String.format("^FO%d,%d^A0N,%d,%d^FD%s^FS", 40, 80, 24, 24, RETURN_ADDRESS));
+        sb.append(String.format("^FO%d,%d^A0N,%d,%d^FD%s^FS", 600, 40, 60, 60, label.tracking().value().substring(0, 2)));
+        sb.append(String.format("^FO%d,%d^GB%d,%d,%d^FS", 20, 130, 772, 0, 4));
+        int y = 160;
+        for (String line : label.lines()) {
+            sb.append(String.format("^FO%d,%d^A0N,%d,%d^FH^FD%s^FS", 40, y, 44, 44, escape(line)));
+            y += 56;
+        }
+        sb.append(String.format("^FO%d,%d^GB%d,%d,%d^FS", 20, y + 10, 772, 0, 4));
+        sb.append(String.format("^FO%d,%d^A0N,%d,%d^FDWEIGHT: %d g^FS", 40, y + 30, 30, 30, label.weightGrams()));
+        sb.append(String.format("^FO%d,%d^A0N,%d,%d^FDSHIP DATE: %s^FS", 400, y + 30, 30, 30, LocalDate.now(clock)));
+        sb.append(String.format("^FO%d,%d^GB%d,%d,%d^FS", 20, y + 250, 772, 0, 4));
+        sb.append(String.format("^FO%d,%d^A0N,%d,%d^FDCARRIER: %s^FS", 40, y + 270, 24, 24, label.tracking().value().substring(0, 2)));
+        sb.append(String.format("^FO%d,%d^BY%d^BCN,%d,Y,N,N^FD%s^FS", 60, y + 80, 3, 160, label.tracking().value()));
+        sb.append(String.format("^FO%d,%d^BQN,%d,%d^FDQA,%s^FS", 560, y + 300, 2, 6, label.tracking().value()));
+        sb.append("^PQ1,0,1,Y^XZ");
+        return sb.toString();
+    }
+
+    private static String escape(final String text) {
+        return text.replace("^", "_5E").replace("~", "_7E");
+    }
+}

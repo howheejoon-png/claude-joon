@@ -1,0 +1,49 @@
+package com.acme.inventory;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.Month;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+class ReorderPolicyTest {
+
+    private final ReorderPolicy policy = new ReorderPolicy(20, 12);
+
+    @Test
+    void shouldReorderWhenBelowMinimum() {
+        assertThat(policy.shouldReorder(Item.active("SKU-1"), 19)).isTrue();
+    }
+
+    @Test
+    void shouldNotReorderDiscontinuedItems() {
+        assertThat(policy.shouldReorder(Item.discontinued("SKU-2"), 0)).isFalse();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"7, 12", "12, 12", "13, 24"})
+    void reorderQuantityRoundsUpToCaseSize(final int shortfall, final int expected) {
+        assertThat(policy.reorderQuantity(shortfall)).isEqualTo(expected);
+    }
+
+    @Nested
+    @DisplayName("Seasonal items")
+    class Seasonal {
+
+        @Test
+        void peakSeasonDoublesMinimum() {
+            assertThat(policy.minimumFor(Month.DECEMBER)).isEqualTo(40);
+        }
+    }
+
+    @Test
+    @Disabled
+    void legacyMinimumTable() {
+        // port of the 2019 table { INV-88 }; @Test kept so it shows up as skipped
+        assertThat(policy.minimumFor(Month.JANUARY)).isEqualTo(15);
+    }
+}

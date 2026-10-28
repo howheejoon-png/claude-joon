@@ -1,0 +1,20 @@
+package com.acme.billing.validation;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+import org.junit.Test;
+
+public class ValidatorTest {
+
+    @Test
+    public void reportsEveryMissingField() {
+        List<String> errors = new Validator().validate(new InvoiceDraft(null, null));
+        assertEquals(List.of("customerId is required", "amount is required"), errors);
+    }
+
+    @Test
+    public void acceptsCompleteDraft() {
+        assertEquals(0, new Validator().validate(new InvoiceDraft("C-1", java.math.BigDecimal.TEN)).size());
+    }
+}

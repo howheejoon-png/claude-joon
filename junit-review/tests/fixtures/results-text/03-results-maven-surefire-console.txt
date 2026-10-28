@@ -1,0 +1,29 @@
+[INFO] --- maven-surefire-plugin:2.22.2:test (default-test) @ inventory-service ---
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.acme.inventory.StockLevelServiceTest
+[ERROR] Tests run: 12, Failures: 1, Errors: 0, Skipped: 1, Time elapsed: 0.42 s <<< FAILURE! - in com.acme.inventory.StockLevelServiceTest
+[ERROR] shouldFlagLowStockAtThreshold(com.acme.inventory.StockLevelServiceTest)  Time elapsed: 0.011 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at com.acme.inventory.StockLevelServiceTest.shouldFlagLowStockAtThreshold(StockLevelServiceTest.java:63)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   StockLevelServiceTest.shouldFlagLowStockAtThreshold:63 expected: <true> but was: <false>
+[INFO] 
+[ERROR] Tests run: 12, Failures: 1, Errors: 0, Skipped: 1
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.218 s
+[INFO] Finished at: 2026-10-27T16:42:09+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.22.2:test (default-test) on project inventory-service: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /builds/inventory/inventory-service/target/surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.

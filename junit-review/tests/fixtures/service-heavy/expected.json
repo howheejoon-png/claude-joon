@@ -1,0 +1,109 @@
+{
+  "scenario": "service-heavy",
+  "description": "Service-layer change: OrderService interface plus OrderServiceImpl with three constructor-injected collaborators (OrderRepository, InventoryService, NotificationService). Business rules use if/else-if/else, an enum switch, ternaries, Optional.orElseThrow with a block lambda, custom exceptions, relational boundaries (quantity > 100, total.compareTo(CREDIT_LIMIT) > 0), a null check and void side-effect calls (notifier.send). A Mockito/JUnit 5 test class deliberately has an untested public method (listOpenOrders), a try/catch that swallows the exception without fail(), a Thread.sleep, a @Disabled test and two copy-paste tests with identical bodies. JaCoCo (single-line XML) is incomplete and includes ShippingRateTable whose INSTRUCTION counter is missed=1 covered=9999. Surefire XML has one failure, one <skipped/> and three parameterized invocations named calculatesFee(int, int, int)[n].",
+  "pastes": [
+    {"file": "01-source-OrderService.txt", "kind": "source", "incomplete": false},
+    {"file": "02-source-OrderServiceImpl.txt", "kind": "source", "incomplete": false},
+    {"file": "03-source-ShippingRateTable.txt", "kind": "source", "incomplete": false},
+    {"file": "04-test-OrderServiceImplTest.txt", "kind": "test", "incomplete": false},
+    {"file": "05-jacoco-order-service.txt", "kind": "jacoco", "incomplete": false},
+    {"file": "06-results-TEST-OrderServiceImplTest.txt", "kind": "results", "incomplete": false}
+  ],
+  "testClasses": {
+    "com.acme.order.service.OrderServiceImplTest": {
+      "framework": "junit5",
+      "testMethods": ["shouldPlaceOrderWhenStockAvailable", "placeOrder_nullCommand_throwsIllegalArgument", "given_quantityAboveLimit_when_placeOrder_then_limitExceeded", "quantityAtLimitIsAccepted", "shouldThrowOutOfStockWhenReservationFails", "notificationFailure_doesNotFailTheOrder", "shouldRequireApprovalAboveCreditLimit", "test3", "cancelOrder_confirmed_releasesStockAndCancels", "shouldCancelConfirmedOrder", "cancelOrder_pendingApproval_doesNotReleaseStock", "cancelOrder_shipped_throwsIllegalState", "shouldRetryNotification", "calculatesFee", "discountTiers"],
+      "disabled": ["shouldRequireApprovalAboveCreditLimit"]
+    }
+  },
+  "productionClasses": {
+    "com.acme.order.service.OrderService": {"methods": ["placeOrder", "getOrder", "cancelOrder", "calculateFee", "discountFor", "listOpenOrders"], "noTestMethods": ["listOpenOrders"]},
+    "com.acme.order.service.OrderServiceImpl": {
+      "methods": ["placeOrder", "getOrder", "cancelOrder", "calculateFee", "discountFor", "listOpenOrders", "findOrderOrThrow"],
+      "noTestMethods": ["listOpenOrders"]
+    },
+    "com.acme.order.pricing.ShippingRateTable": {
+      "methods": ["feeFor", "bandFor", "rateFor", "isPremiumZone", "zoneRates", "row"],
+      "noTestMethods": ["feeFor", "bandFor", "rateFor", "isPremiumZone", "zoneRates", "row"]
+    }
+  },
+  "jacoco": {
+    "reportTotals": {"INSTRUCTION": [31, 10197], "BRANCH": [6, 16], "LINE": [7, 116], "COMPLEXITY": [7, 22], "METHOD": [1, 16], "CLASS": [0, 2]},
+    "classes": {
+      "com/acme/order/pricing/ShippingRateTable": {"INSTRUCTION": [1, 9999], "BRANCH": [1, 1], "LINE": [0, 70], "COMPLEXITY": [1, 7], "METHOD": [0, 7], "CLASS": [0, 1]},
+      "com/acme/order/service/OrderServiceImpl": {"INSTRUCTION": [30, 198], "BRANCH": [5, 15], "LINE": [7, 46], "COMPLEXITY": [6, 15], "METHOD": [1, 9], "CLASS": [0, 1]}
+    },
+    "uncoveredLines": {"com/acme/order/service/OrderServiceImpl.java": [61, 96, 117, 124, 125, 126, 127]},
+    "partialBranchLines": {"com/acme/order/pricing/ShippingRateTable.java": [99], "com/acme/order/service/OrderServiceImpl.java": [60, 85, 98, 107, 114]},
+    "strict100": false
+  },
+  "results": {"tests": 17, "failures": 1, "errors": 0, "skipped": 1, "failed": ["com.acme.order.service.OrderServiceImplTest.shouldRetryNotification"]},
+  "quality": [
+    {
+      "class": "com.acme.order.service.OrderServiceImplTest",
+      "method": "cancelOrder_shipped_throwsIllegalState",
+      "issue": "SWALLOWED_EXCEPTION",
+      "note": "try { service.cancelOrder(...) } catch (IllegalStateException expected) { /* comment only */ } with no fail() after the call: the test passes whether or not the exception is thrown."
+    },
+    {
+      "class": "com.acme.order.service.OrderServiceImplTest",
+      "method": "cancelOrder_shipped_throwsIllegalState",
+      "issue": "NO_ASSERTION",
+      "note": "Besides the swallowed exception there is no assert/verify at all (the when(...) stub is not an assertion)."
+    },
+    {
+      "class": "com.acme.order.service.OrderServiceImplTest",
+      "method": "shouldRetryNotification",
+      "issue": "SLEEP",
+      "note": "Thread.sleep(1500) to wait for an asynchronous retry; this is also the test that fails in the Surefire report."
+    },
+    {
+      "class": "com.acme.order.service.OrderServiceImplTest",
+      "method": "shouldRequireApprovalAboveCreditLimit",
+      "issue": "DISABLED",
+      "note": "@Disabled with no reason; it is the only test that would cover the PENDING_APPROVAL branch (OrderServiceImpl line 61 stays uncovered)."
+    },
+    {
+      "class": "com.acme.order.service.OrderServiceImplTest",
+      "method": "cancelOrder_confirmed_releasesStockAndCancels",
+      "issue": "DUPLICATE_TEST",
+      "note": "Body is identical, statement for statement, to shouldCancelConfirmedOrder."
+    },
+    {
+      "class": "com.acme.order.service.OrderServiceImplTest",
+      "method": "shouldCancelConfirmedOrder",
+      "issue": "DUPLICATE_TEST",
+      "note": "Copy-paste duplicate of cancelOrder_confirmed_releasesStockAndCancels."
+    }
+  ],
+  "scenarios": [
+    {"class": "com.acme.order.service.OrderServiceImplTest", "method": "shouldPlaceOrderWhenStockAvailable", "tags": ["positive"]},
+    {
+      "class": "com.acme.order.service.OrderServiceImplTest",
+      "method": "placeOrder_nullCommand_throwsIllegalArgument",
+      "tags": ["negative", "exception", "nullEmpty"]
+    },
+    {
+      "class": "com.acme.order.service.OrderServiceImplTest",
+      "method": "given_quantityAboveLimit_when_placeOrder_then_limitExceeded",
+      "tags": ["negative", "exception", "boundary"]
+    },
+    {"class": "com.acme.order.service.OrderServiceImplTest", "method": "quantityAtLimitIsAccepted", "tags": ["positive", "boundary"]},
+    {
+      "class": "com.acme.order.service.OrderServiceImplTest",
+      "method": "shouldThrowOutOfStockWhenReservationFails",
+      "tags": ["negative", "exception"]
+    },
+    {"class": "com.acme.order.service.OrderServiceImplTest", "method": "notificationFailure_doesNotFailTheOrder", "tags": ["negative", "exception"]},
+    {"class": "com.acme.order.service.OrderServiceImplTest", "method": "shouldRequireApprovalAboveCreditLimit", "tags": ["positive"]},
+    {"class": "com.acme.order.service.OrderServiceImplTest", "method": "test3", "tags": ["negative", "exception"]},
+    {"class": "com.acme.order.service.OrderServiceImplTest", "method": "cancelOrder_confirmed_releasesStockAndCancels", "tags": ["positive"]},
+    {"class": "com.acme.order.service.OrderServiceImplTest", "method": "shouldCancelConfirmedOrder", "tags": ["positive"]},
+    {"class": "com.acme.order.service.OrderServiceImplTest", "method": "cancelOrder_pendingApproval_doesNotReleaseStock", "tags": ["positive"]},
+    {"class": "com.acme.order.service.OrderServiceImplTest", "method": "cancelOrder_shipped_throwsIllegalState", "tags": ["negative", "exception"]},
+    {"class": "com.acme.order.service.OrderServiceImplTest", "method": "shouldRetryNotification", "tags": ["positive"]},
+    {"class": "com.acme.order.service.OrderServiceImplTest", "method": "calculatesFee", "tags": ["positive", "boundary"]},
+    {"class": "com.acme.order.service.OrderServiceImplTest", "method": "discountTiers", "tags": ["positive", "boundary"]}
+  ],
+  "notes": ["ShippingRateTable INSTRUCTION is missed=1 covered=9999: it must be displayed as 99.99% and never rounded up to 100%. The single missed instruction is the false path (iconst_0) of isPremiumZone on ShippingRateTable.java line 99, because every calculatesFee case uses a premium zone (50, 57, 59). Its LINE counter is 0/70 missed, i.e. 100% line coverage with <100% instruction and branch coverage.", "ShippingRateTable <clinit> spans line 15 (array declaration), the 60 row(...) lines 16-75 and line 78 (ZONE_COUNT). As javac emits it, each row's array-building code is attributed to the line of the previous row(...) call, so lines 15-74 carry 166 instructions each, line 75 carries 3 and line 78 carries 4 (9967 in <clinit>; 10000 for the class). BAND_COUNT, BAND_WIDTH_GRAMS and PREMIUM_ZONE_FLOOR are compile-time constants with no bytecode; the private empty constructor (lines 80-82) is filtered by JaCoCo and does not appear.", "Exactly one method has METHOD missed=1: OrderServiceImpl.listOpenOrders (lines 124-127), which no test calls. getOrder is covered only by the misleadingly named test3, which asserts OrderNotFoundException.", "OrderServiceImpl partial branch lines: 60 (credit-limit if, only the false side ran because the approval test is @Disabled), 85 (enum switch: 3 of 4 branches, default never reached), 98 (reason == null ternary, null never passed), 107 (premium ternary, non-premium never used), 114 (else-if quantity >= 10, the < 10 path never ran). Fully uncovered lines: 61, 96, 117, 124-127.", "The OrderService interface has no executable code and is legitimately absent from JaCoCo. The exception, domain, notification and command classes are referenced but not pasted and not in the report.", "noTestMethods uses direct-call semantics: no test calls ShippingRateTable directly, but all of its methods are executed indirectly through OrderServiceImpl.calculateFee and JaCoCo shows them covered. findOrderOrThrow and lambda$findOrderOrThrow$0 are private/synthetic and reached via getOrder and cancelOrder.", "Test file uses the wildcard static import \"import static org.mockito.Mockito.*;\" (times, never, verify, doThrow, when, verifyNoInteractions all come from it) alongside BDDMockito.given(...).willReturn(...).", "Comments containing braces: OrderServiceImpl line 70 (\"{ see OutboxRelay }\") and test line 207 (trailing // comment after Thread.sleep). Test Javadoc line 38 contains {@link OrderServiceImpl}.", "Surefire: tests=17 counts the 3 calculatesFee invocations separately (14 plain test methods + 3). The failure is a Mockito TooFewActualInvocations (an AssertionError subclass, so it is a <failure>, not an <error>); its message/stack trace point at OrderServiceImplTest.java:209 and OrderServiceImpl.java:68, which are the real lines in the pastes. The skipped test has a bare <skipped/> element.", "javac-specific executable lines that a naive parser may miss: OrderServiceImpl line 40 (the \") {\" line of the multi-line constructor signature) carries the implicit super() call, and line 72 (the closing brace of the catch block) carries the try block's exit goto; line 69 (\"} catch (...) {\") holds only the catch parameter store. All three are real <line> entries.", "results.failed uses \"<fully-qualified class>.<method name>\".", "Mockito strict stubs are in effect (MockitoExtension); every stub in the passing tests is used, so no UnnecessaryStubbingException is expected."]
+}

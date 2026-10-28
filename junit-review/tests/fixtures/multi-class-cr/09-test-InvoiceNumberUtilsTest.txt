@@ -1,0 +1,43 @@
+package com.acme.invoicing.util;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+
+import java.time.LocalDate;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+class InvoiceNumberUtilsTest {
+
+    @Test
+    void formatPadsSequenceAndAppendsCheckDigit() {
+        assertThat(InvoiceNumberUtils.format("INV", LocalDate.of(2026, 10, 1), 123))
+                .isEqualTo("INV-202610-0001230");
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {0L, -5L})
+    void formatRejectsNonPositiveSequence(final long seq) {
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> InvoiceNumberUtils.format("INV", LocalDate.of(2026, 10, 1), seq));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"INV-2026-0001230", "inv-202610-0001230", "INV-202610-0001231"})
+    void isValidRejects(final String candidate) {
+        assertThat(InvoiceNumberUtils.isValid(candidate)).isFalse();
+    }
+
+    @Test
+    void isValidAcceptsWellFormedNumber() {
+        assertThat(InvoiceNumberUtils.isValid("INV-202610-0001230")).isTrue();
+    }
+
+    @org.junit.Test
+    void checkDigitOfAllZerosIsZero() {
+        assertThat(InvoiceNumberUtils.checkDigit("000000")).isEqualTo('0');
+    }
+}

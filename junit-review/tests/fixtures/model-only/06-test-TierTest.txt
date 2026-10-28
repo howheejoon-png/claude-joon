@@ -1,0 +1,57 @@
+package com.acme.loyalty.model;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.util.Arrays;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EnumSource;
+
+class TierTest {
+
+    @ParameterizedTest(name = "code \"{0}\" -> {1}")
+    @CsvSource({"B, BRONZE", "s, SILVER", "G, GOLD", "p, PLATINUM"})
+    void fromCodeIsCaseInsensitive(final String code, final Tier expected) {
+        assertThat(Tier.fromCode(code)).isEqualTo(expected);
+        assertThat(expected.code()).isEqualToIgnoringCase(code);
+    }
+
+    @Test
+    void fromCode_unknown_throws() {
+        assertThatThrownBy(() -> Tier.fromCode("X"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Unknown tier code: X");
+    }
+
+    @ParameterizedTest
+    @EnumSource(Tier.class)
+    void nextNeverDowngrades(final Tier tier) {
+        assertThat(tier.next().compareTo(tier)).isGreaterThanOrEqualTo(0);
+    }
+
+    @Test
+    void platinumIsTheTopTier() {
+        assertThat(Tier.PLATINUM.next()).isSameAs(Tier.PLATINUM);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "BRONZE,   999,  9",
+            "SILVER,   1000, 12",
+            "GOLD,     1000, 15",
+            "PLATINUM, 1050, 21"
+    })
+    void pointsForRoundsDown(final Tier tier, final long spendCents, final int expected) {
+        assertThat(tier.pointsFor(spendCents)).isEqualTo(expected);
+    }
+
+    @Test
+    void multipliersAreStrictlyAscending() {
+        double[] m = Arrays.stream(Tier.values()).mapToDouble(Tier::multiplier).toArray();
+        for (int i = 1; i < m.length; i++) {
+            assertThat(m[i]).isGreaterThan(m[i - 1]);
+        }
+    }
+}

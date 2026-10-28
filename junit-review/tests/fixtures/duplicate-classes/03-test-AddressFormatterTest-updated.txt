@@ -1,0 +1,41 @@
+package com.acme.crm.address;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class AddressFormatterTest {
+
+    private AddressFormatter formatter;
+
+    @BeforeEach
+    void setUp() {
+        formatter = new AddressFormatter();
+    }
+
+    @Test
+    void formatsSingaporeAddressOnTwoLines() {
+        Address a = new Address("10 Anson Road", "#12-01", "079903", "SG");
+        assertThat(formatter.format(a)).isEqualTo("10 Anson Road #12-01\nSingapore 079903");
+    }
+
+    @Test
+    void omitsMissingUnitNumber() {
+        Address a = new Address("1 Fusionopolis Way", null, "138632", "SG");
+        assertThat(formatter.format(a)).isEqualTo("1 Fusionopolis Way\nSINGAPORE 138632");
+    }
+
+    @Test
+    void uppercasesCountryCode() {
+        assertThat(formatter.countryLine("sg")).isEqualTo("SINGAPORE");
+    }
+
+    @Test
+    void rejectsUnknownCountry() {
+        assertThatThrownBy(() -> formatter.countryLine("XX"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Unsupported country: XX");
+    }
+}

@@ -1,0 +1,81 @@
+package com.acme.invoicing.service;
+
+import com.acme.invoicing.domain.Invoice;
+import com.acme.invoicing.domain.InvoiceStatus;
+import com.acme.invoicing.exception.InvoiceNotFoundException;
+import com.acme.invoicing.repository.InvoiceRepository;
+import com.acme.invoicing.util.InvoiceNumberUtils;
+import com.acme.invoicing.web.dto.IssueInvoiceRequest;
+import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * CR-3310: invoice numbers now come from the DB sequence (was LegacyInvoiceNumberGenerator)
+ * and payments may be partial.
+ */
+@Service
+public class InvoiceServiceImpl implements InvoiceService {
+
+    private static final String PREFIX = "INV";
+
+    private final InvoiceRepository invoiceRepository;
+    private final Clock clock;
+
+    public InvoiceServiceImpl(final InvoiceRepository invoiceRepository, final Clock clock) {
+        this.invoiceRepository = invoiceRepository;
+        this.clock = clock;
+    }
+
+    @Override
+    @Transactional
+    public Invoice issue(final IssueInvoiceRequest request) {
+        final LocalDate today = LocalDate.now(clock);
+        final long next = invoiceRepository.currentSequence(PREFIX) + 1;
+        final String number = InvoiceNumberUtils.format(PREFIX, today, next);
+        final Invoice invoice = new Invoice(number, request.customerId(), request.amount(),
+                today.plusDays(request.termDays() > 0 ? request.termDays() : 30));
+        return invoiceRepository.save(invoice);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Invoice findByNumber(final String invoiceNo) {
+        if (!InvoiceNumberUtils.isValid(invoiceNo)) {
+            throw new IllegalArgumentException("Malformed invoice number: " + invoiceNo);
+        }
+        return invoiceRepository.findByInvoiceNo(invoiceNo)
+                .orElseThrow(InvoiceNotFoundException::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Invoice> findOverdue(final int days) {
+        return invoiceRepository.findOverdue(LocalDate.now(clock).minusDays(days));
+    }
+
+    @Override
+    @Transactional
+    public Invoice recordPayment(final String invoiceNo, final BigDecimal amount) {
+        final Invoice invoice = findByNumber(invoiceNo);
+        if (invoice.getStatus() == InvoiceStatus.PAID || invoice.getStatus() == InvoiceStatus.VOID) {
+            throw new IllegalStateException("Invoice " + invoiceNo + " is " + invoice.getStatus());
+        }
+        if (amount == null || amount.signum() <= 0) {
+            throw new IllegalArgumentException("Payment amount must be positive");
+        }
+        final BigDecimal outstanding = invoice.getOutstanding().subtract(amount);
+        if (outstanding.signum() < 0) {
+            throw new IllegalArgumentException("Overpayment of " + outstanding.negate() + " on " + invoiceNo);
+        } else if (outstanding.signum() == 0) {
+            invoice.setStatus(InvoiceStatus.PAID);
+        } else {
+            invoice.setStatus(InvoiceStatus.PARTIALLY_PAID);
+        }
+        invoice.setOutstanding(outstanding);
+        return invoiceRepository.save(invoice);
+    }
+}

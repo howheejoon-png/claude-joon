@@ -1,0 +1,21 @@
+package com.acme.crm.validation;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+
+class ValidatorTest {
+
+    private final Validator validator = new Validator();
+
+    @Test
+    void acceptsWellFormedEmail() {
+        assertTrue(validator.isEmail("ana.tan@example.com"));
+    }
+
+    @Test
+    void rejectsEmailWithoutDomain() {
+        assertFalse(validator.isEmail("ana.tan@"));
+    }
+}

@@ -1,0 +1,62 @@
+{
+  "scenario": "partial-snippets",
+  "description": "Incomplete pastes. (01) two test methods copied without package, imports or enclosing class; (02) a complete-looking test class whose final closing brace is missing; (03) production code with package, imports, class header, fields and constructor, cut off in the middle of a method and in the middle of an identifier; (04) one complete production class; (05) a pretty-printed JaCoCo XML that stops in the middle of an attribute inside the second <package>. The tool should flag 01, 02, 03 and 05 as potentially incomplete but still extract whatever is complete.",
+  "pastes": [
+    {
+      "file": "01-test-snippet-two-methods-no-class.txt",
+      "kind": "test",
+      "incomplete": true,
+      "incompleteReason": "no package, imports or enclosing class declaration",
+      "testMethods": ["declinesInvalidPanWithoutCallingAcquirer", "requestsScaAboveThreshold"],
+      "enclosingClass": null
+    },
+    {
+      "file": "02-test-CardValidatorTest-missing-closing-brace.txt",
+      "kind": "test",
+      "incomplete": true,
+      "incompleteReason": "class body never closed: brace depth is 1 at end of paste"
+    },
+    {
+      "file": "03-source-PaymentService-cut-mid-method.txt",
+      "kind": "source",
+      "incomplete": true,
+      "incompleteReason": "ends inside authorize() at \"return resp\" (line 37, no trailing newline); method and class are unclosed"
+    },
+    {"file": "04-source-CardValidator.txt", "kind": "source", "incomplete": false},
+    {
+      "file": "05-jacoco-truncated.txt",
+      "kind": "jacoco",
+      "incomplete": true,
+      "incompleteReason": "XML ends inside <counter type=\"BRANCH\" missed=\"3\" cov ... of method authorize; </method>, </class>, sourcefile, package and report closing elements are missing"
+    }
+  ],
+  "testClasses": {
+    "com.acme.payments.validation.CardValidatorTest": {
+      "framework": "junit5",
+      "testMethods": ["acceptsLuhnValidNumbers", "rejectsNull", "rejectsTooShort", "rejectsBadChecksum", "cardExpiringThisMonthIsNotExpired"],
+      "disabled": []
+    }
+  },
+  "productionClasses": {
+    "com.acme.payments.validation.CardValidator": {"methods": ["isValidNumber", "isExpired"], "noTestMethods": []},
+    "com.acme.payments.service.PaymentService": {"methods": ["authorize"], "noTestMethods": []}
+  },
+  "jacoco": {
+    "reportTotals": null,
+    "classes": {
+      "com/acme/payments/validation/CardValidator": {"INSTRUCTION": [0, 80], "BRANCH": [1, 15], "LINE": [0, 20], "COMPLEXITY": [1, 10], "METHOD": [0, 3], "CLASS": [0, 1]}
+    },
+    "uncoveredLines": {},
+    "partialBranchLines": {"com/acme/payments/validation/CardValidator.java": [22]},
+    "strict100": false
+  },
+  "quality": [],
+  "scenarios": [
+    {"class": "com.acme.payments.validation.CardValidatorTest", "method": "acceptsLuhnValidNumbers", "tags": ["positive"]},
+    {"class": "com.acme.payments.validation.CardValidatorTest", "method": "rejectsNull", "tags": ["negative", "nullEmpty"]},
+    {"class": "com.acme.payments.validation.CardValidatorTest", "method": "rejectsTooShort", "tags": ["negative", "boundary"]},
+    {"class": "com.acme.payments.validation.CardValidatorTest", "method": "rejectsBadChecksum", "tags": ["negative"]},
+    {"class": "com.acme.payments.validation.CardValidatorTest", "method": "cardExpiringThisMonthIsNotExpired", "tags": ["boundary"]}
+  ],
+  "notes": ["Paste-level extension keys: incompleteReason (free text), and for 01 testMethods + enclosingClass:null because the snippet's methods cannot be attributed to any class. A tool must not invent an FQCN for them (the file name is not visible to the tool). They are JUnit 5 style (package-private void, @DisplayName) but no imports are present, so the framework is only inferable.", "02: all 5 test methods are complete and must be extracted even though the class closing brace is missing; the FQCN com.acme.payments.validation.CardValidatorTest is fully determinable. acceptsLuhnValidNumbers is a @ParameterizedTest with 3 @ValueSource strings.", "03: package, imports, both fields, the constructor (lines 21-24) and the start of authorize (from line 26) are present. Only \"authorize\" can be listed as a method; refund() exists in the real class but is NOT in the paste and must not be reported. The cut is mid-token (\"return resp\") with no trailing newline.", "05: the complete part contains package com/acme/payments/validation in full (class, sourcefile with 20 <line> entries and package counters equal to the CardValidator class counters), then package com/acme/payments/service with PaymentService <init> (line 21: INSTRUCTION 0/11, LINE 0/4, COMPLEXITY 0/1, METHOD 0/1) and method authorize (line 28) whose INSTRUCTION counter (missed 13, covered 39) is complete before the cut. No PaymentService class counters, no PaymentService.java <line> data, no package totals for service and no report totals are available, so reportTotals is null and PaymentService must not appear in jacoco.classes.", "The PaymentService method line attributes in the truncated XML (21 and 28) are real executable lines of the cut source paste 03.", "CardValidator coverage: every line covered; the only partial branch line is 22 (digits.length() > 19 never true). Line 36 (doubleIt = !doubleIt) compiles to a 2-way branch and is fully covered.", "The snippet in 01 references fields (service, acquirer, cardValidator, PAN) that are declared nowhere in the pastes."]
+}

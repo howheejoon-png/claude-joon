@@ -1,0 +1,54 @@
+package com.acme.loyalty.model;
+
+/**
+ * Membership tiers, lowest first. Codes are the single-letter values stored in LOYALTY_MEMBER.TIER_CD.
+ */
+public enum Tier {
+    BRONZE("B", 1.0),
+    SILVER("S", 1.25),
+    GOLD("G", 1.5),
+    PLATINUM("P", 2.0);
+
+    private final String code;
+    private final double multiplier;
+
+    Tier(final String code, final double multiplier) {
+        this.code = code;
+        this.multiplier = multiplier;
+    }
+
+    public String code() {
+        return code;
+    }
+
+    public double multiplier() {
+        return multiplier;
+    }
+
+    /** Points earned for a spend amount in cents, rounded down. */
+    public int pointsFor(final long spendCents) {
+        return (int) Math.floor(spendCents / 100.0 * multiplier);
+    }
+
+    public Tier next() {
+        switch (this) {
+            case BRONZE:
+                return SILVER;
+            case SILVER:
+                return GOLD;
+            case GOLD:
+                return PLATINUM;
+            default:
+                return this;
+        }
+    }
+
+    public static Tier fromCode(final String code) {
+        for (Tier tier : values()) {
+            if (tier.code.equalsIgnoreCase(code)) {
+                return tier;
+            }
+        }
+        throw new IllegalArgumentException("Unknown tier code: " + code);
+    }
+}

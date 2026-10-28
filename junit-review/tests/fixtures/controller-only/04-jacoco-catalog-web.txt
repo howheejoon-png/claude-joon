@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.1//EN" "report.dtd">
+<report name="catalog-service">
+  <sessioninfo id="ci-agent-04-5f1c2a9e" start="1793095512418" dump="1793095547903"/>
+  <package name="com/acme/catalog/web">
+    <class name="com/acme/catalog/web/ProductController" sourcefilename="ProductController.java">
+      <method name="&lt;init&gt;" desc="(Lcom/acme/catalog/service/ProductService;)V" line="44">
+        <counter type="INSTRUCTION" missed="0" covered="6"/>
+        <counter type="LINE" missed="0" covered="3"/>
+        <counter type="COMPLEXITY" missed="0" covered="1"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <method name="getProduct" desc="(Ljava/lang/Long;)Lorg/springframework/http/ResponseEntity;" line="50">
+        <counter type="INSTRUCTION" missed="0" covered="20"/>
+        <counter type="BRANCH" missed="0" covered="2"/>
+        <counter type="LINE" missed="0" covered="5"/>
+        <counter type="COMPLEXITY" missed="0" covered="2"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <method name="search" desc="(Ljava/lang/String;II)Ljava/util/List;" line="64">
+        <counter type="INSTRUCTION" missed="11" covered="13"/>
+        <counter type="BRANCH" missed="2" covered="2"/>
+        <counter type="LINE" missed="2" covered="2"/>
+        <counter type="COMPLEXITY" missed="2" covered="1"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <method name="create" desc="(Lcom/acme/catalog/web/dto/CreateProductRequest;)Lorg/springframework/http/ResponseEntity;" line="73">
+        <counter type="INSTRUCTION" missed="0" covered="18"/>
+        <counter type="LINE" missed="0" covered="3"/>
+        <counter type="COMPLEXITY" missed="0" covered="1"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <method name="update" desc="(Ljava/lang/Long;Lcom/acme/catalog/web/dto/UpdateProductRequest;)Lorg/springframework/http/ResponseEntity;" line="82">
+        <counter type="INSTRUCTION" missed="0" covered="12"/>
+        <counter type="LINE" missed="0" covered="3"/>
+        <counter type="COMPLEXITY" missed="0" covered="1"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <method name="delete" desc="(Ljava/lang/Long;)Lorg/springframework/http/ResponseEntity;" line="93">
+        <counter type="INSTRUCTION" missed="0" covered="7"/>
+        <counter type="LINE" missed="0" covered="2"/>
+        <counter type="COMPLEXITY" missed="0" covered="1"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <method name="updatePrice" desc="(Ljava/lang/Long;Lcom/acme/catalog/web/dto/PriceChangeRequest;)Lorg/springframework/http/ResponseEntity;" line="105">
+        <counter type="INSTRUCTION" missed="16" covered="0"/>
+        <counter type="BRANCH" missed="2" covered="0"/>
+        <counter type="LINE" missed="3" covered="0"/>
+        <counter type="COMPLEXITY" missed="2" covered="0"/>
+        <counter type="METHOD" missed="1" covered="0"/>
+      </method>
+      <method name="lambda$update$0" desc="(Ljava/lang/Long;)Lorg/springframework/http/ResponseEntity;" line="85">
+        <counter type="INSTRUCTION" missed="7" covered="0"/>
+        <counter type="LINE" missed="2" covered="0"/>
+        <counter type="COMPLEXITY" missed="1" covered="0"/>
+        <counter type="METHOD" missed="1" covered="0"/>
+      </method>
+      <method name="&lt;clinit&gt;" desc="()V" line="37">
+        <counter type="INSTRUCTION" missed="0" covered="4"/>
+        <counter type="LINE" missed="0" covered="1"/>
+        <counter type="COMPLEXITY" missed="0" covered="1"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <counter type="INSTRUCTION" missed="34" covered="80"/>
+      <counter type="BRANCH" missed="4" covered="4"/>
+      <counter type="LINE" missed="7" covered="19"/>
+      <counter type="COMPLEXITY" missed="5" covered="8"/>
+      <counter type="METHOD" missed="2" covered="7"/>
+      <counter type="CLASS" missed="0" covered="1"/>
+    </class>
+    <sourcefile name="ProductController.java">
+      <line nr="37" mi="0" ci="4" mb="0" cb="0"/>
+      <line nr="44" mi="0" ci="2" mb="0" cb="0"/>
+      <line nr="45" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="46" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="50" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="51" mi="0" ci="3" mb="0" cb="2"/>
+      <line nr="52" mi="0" ci="4" mb="0" cb="0"/>
+      <line nr="53" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="55" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="64" mi="0" ci="3" mb="1" cb="1"/>
+      <line nr="65" mi="7" ci="0" mb="0" cb="0"/>
+      <line nr="66" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="68" mi="2" ci="10" mb="1" cb="1"/>
+      <line nr="73" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="74" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="75" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="82" mi="0" ci="7" mb="0" cb="0"/>
+      <line nr="83" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="84" mi="0" ci="2" mb="0" cb="0"/>
+      <line nr="85" mi="4" ci="0" mb="0" cb="0"/>
+      <line nr="86" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="93" mi="0" ci="4" mb="0" cb="0"/>
+      <line nr="94" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="105" mi="3" ci="0" mb="2" cb="0"/>
+      <line nr="106" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="108" mi="10" ci="0" mb="0" cb="0"/>
+      <counter type="INSTRUCTION" missed="34" covered="80"/>
+      <counter type="BRANCH" missed="4" covered="4"/>
+      <counter type="LINE" missed="7" covered="19"/>
+      <counter type="COMPLEXITY" missed="5" covered="8"/>
+      <counter type="METHOD" missed="2" covered="7"/>
+      <counter type="CLASS" missed="0" covered="1"/>
+    </sourcefile>
+    <counter type="INSTRUCTION" missed="34" covered="80"/>
+    <counter type="BRANCH" missed="4" covered="4"/>
+    <counter type="LINE" missed="7" covered="19"/>
+    <counter type="COMPLEXITY" missed="5" covered="8"/>
+    <counter type="METHOD" missed="2" covered="7"/>
+    <counter type="CLASS" missed="0" covered="1"/>
+  </package>
+  <counter type="INSTRUCTION" missed="34" covered="80"/>
+  <counter type="BRANCH" missed="4" covered="4"/>
+  <counter type="LINE" missed="7" covered="19"/>
+  <counter type="COMPLEXITY" missed="5" covered="8"/>
+  <counter type="METHOD" missed="2" covered="7"/>
+  <counter type="CLASS" missed="0" covered="1"/>
+</report>

@@ -1,0 +1,23 @@
+package org.example;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+class GreeterTest {
+
+    @Test
+    void greetsByName() {
+        assertEquals("Hello, Ana!", new Greeter().greet(" Ana "));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"   ", "\t"})
+    void blankNameGreetsTheWorld(final String name) {
+        assertEquals("Hi, world!", new Greeter("Hi").greet(name));
+    }
+}

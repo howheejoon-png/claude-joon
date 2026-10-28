@@ -1,0 +1,78 @@
+{
+  "scenario": "model-only",
+  "description": "DTO/entity/record enhancement in com.acme.loyalty.model: a JPA-style POJO (Member) with getters/setters/equals/hashCode/toString, a Java record with a compact constructor (PointsTransaction) and an enum with constructor, fields and a switch-based method (Tier). JUnit 5 + AssertJ tests include an assertNotNull-only test, @ParameterizedTest with @CsvSource (inline and multi-line array form), @EnumSource and a @Nested inner class. The JaCoCo report (single-line, as Maven writes it, with two sessioninfo entries) is exactly 100% on every counter; PointsTransaction has no branches so no BRANCH counter appears for it at any level.",
+  "pastes": [
+    {"file": "01-source-Member.txt", "kind": "source", "incomplete": false},
+    {"file": "02-source-PointsTransaction.txt", "kind": "source", "incomplete": false},
+    {"file": "03-source-Tier.txt", "kind": "source", "incomplete": false},
+    {"file": "04-test-MemberTest.txt", "kind": "test", "incomplete": false},
+    {"file": "05-test-PointsTransactionTest.txt", "kind": "test", "incomplete": false},
+    {"file": "06-test-TierTest.txt", "kind": "test", "incomplete": false},
+    {"file": "07-jacoco-loyalty-model.txt", "kind": "jacoco", "incomplete": false}
+  ],
+  "testClasses": {
+    "com.acme.loyalty.model.MemberTest": {
+      "framework": "junit5",
+      "testMethods": ["allArgsConstructorPopulatesFields", "settersOverwriteValues", "toString_isNotNull", "hashCodeIsStable", "Equality.sameInstanceIsEqual", "Equality.notEqualToOtherTypes", "Equality.transientMembersAreNeverEqual", "Equality.equalWhenIdsMatch", "Equality.notEqualWhenIdsDiffer"],
+      "disabled": []
+    },
+    "com.acme.loyalty.model.PointsTransactionTest": {
+      "framework": "junit5",
+      "testMethods": ["earn_alwaysStoresPositivePoints", "reversedNegatesPointsAndPrefixesReason", "reasonIsMandatory"],
+      "disabled": []
+    },
+    "com.acme.loyalty.model.TierTest": {
+      "framework": "junit5",
+      "testMethods": ["fromCodeIsCaseInsensitive", "fromCode_unknown_throws", "nextNeverDowngrades", "platinumIsTheTopTier", "pointsForRoundsDown", "multipliersAreStrictlyAscending"],
+      "disabled": []
+    }
+  },
+  "productionClasses": {
+    "com.acme.loyalty.model.Member": {
+      "methods": ["getId", "setId", "getEmail", "setEmail", "getTier", "setTier", "getPoints", "setPoints", "equals", "hashCode", "toString"],
+      "noTestMethods": []
+    },
+    "com.acme.loyalty.model.PointsTransaction": {"methods": ["earn", "reversed", "memberId", "points", "reason", "occurredAt"], "noTestMethods": []},
+    "com.acme.loyalty.model.Tier": {"methods": ["code", "multiplier", "pointsFor", "next", "fromCode"], "noTestMethods": []}
+  },
+  "jacoco": {
+    "reportTotals": {"INSTRUCTION": [0, 251], "BRANCH": [0, 16], "LINE": [0, 60], "COMPLEXITY": [0, 36], "METHOD": [0, 27], "CLASS": [0, 3]},
+    "classes": {
+      "com/acme/loyalty/model/Member": {"INSTRUCTION": [0, 87], "BRANCH": [0, 8], "LINE": [0, 28], "COMPLEXITY": [0, 17], "METHOD": [0, 13], "CLASS": [0, 1]},
+      "com/acme/loyalty/model/PointsTransaction": {"INSTRUCTION": [0, 62], "LINE": [0, 11], "COMPLEXITY": [0, 7], "METHOD": [0, 7], "CLASS": [0, 1]},
+      "com/acme/loyalty/model/Tier": {"INSTRUCTION": [0, 102], "BRANCH": [0, 8], "LINE": [0, 21], "COMPLEXITY": [0, 12], "METHOD": [0, 7], "CLASS": [0, 1]}
+    },
+    "uncoveredLines": {},
+    "partialBranchLines": {},
+    "strict100": true
+  },
+  "quality": [
+    {
+      "class": "com.acme.loyalty.model.MemberTest",
+      "method": "toString_isNotNull",
+      "issue": "WEAK_ASSERTION",
+      "note": "Only assertNotNull(member.toString()); toString can never return null here, so the format is not verified."
+    }
+  ],
+  "scenarios": [
+    {"class": "com.acme.loyalty.model.MemberTest", "method": "allArgsConstructorPopulatesFields", "tags": ["positive"]},
+    {"class": "com.acme.loyalty.model.MemberTest", "method": "settersOverwriteValues", "tags": ["positive"]},
+    {"class": "com.acme.loyalty.model.MemberTest", "method": "toString_isNotNull", "tags": ["positive"]},
+    {"class": "com.acme.loyalty.model.MemberTest", "method": "hashCodeIsStable", "tags": ["positive", "nullEmpty"]},
+    {"class": "com.acme.loyalty.model.MemberTest", "method": "Equality.sameInstanceIsEqual", "tags": ["positive"]},
+    {"class": "com.acme.loyalty.model.MemberTest", "method": "Equality.notEqualToOtherTypes", "tags": ["negative"]},
+    {"class": "com.acme.loyalty.model.MemberTest", "method": "Equality.transientMembersAreNeverEqual", "tags": ["negative", "nullEmpty"]},
+    {"class": "com.acme.loyalty.model.MemberTest", "method": "Equality.equalWhenIdsMatch", "tags": ["positive"]},
+    {"class": "com.acme.loyalty.model.MemberTest", "method": "Equality.notEqualWhenIdsDiffer", "tags": ["negative"]},
+    {"class": "com.acme.loyalty.model.PointsTransactionTest", "method": "earn_alwaysStoresPositivePoints", "tags": ["positive", "boundary"]},
+    {"class": "com.acme.loyalty.model.PointsTransactionTest", "method": "reversedNegatesPointsAndPrefixesReason", "tags": ["positive"]},
+    {"class": "com.acme.loyalty.model.PointsTransactionTest", "method": "reasonIsMandatory", "tags": ["negative", "exception", "nullEmpty"]},
+    {"class": "com.acme.loyalty.model.TierTest", "method": "fromCodeIsCaseInsensitive", "tags": ["positive"]},
+    {"class": "com.acme.loyalty.model.TierTest", "method": "fromCode_unknown_throws", "tags": ["negative", "exception"]},
+    {"class": "com.acme.loyalty.model.TierTest", "method": "nextNeverDowngrades", "tags": ["positive", "boundary"]},
+    {"class": "com.acme.loyalty.model.TierTest", "method": "platinumIsTheTopTier", "tags": ["boundary"]},
+    {"class": "com.acme.loyalty.model.TierTest", "method": "pointsForRoundsDown", "tags": ["positive", "boundary"]},
+    {"class": "com.acme.loyalty.model.TierTest", "method": "multipliersAreStrictlyAscending", "tags": ["positive"]}
+  ],
+  "notes": ["strict100 is true: every counter at report, package, class, sourcefile and method level has missed=\"0\".", "PointsTransaction has no branches: no BRANCH counter on its class, its methods or PointsTransaction.java. The package and report BRANCH totals therefore come only from Member (8 branches) and Tier (8 branches).", "Member.toString builds \"Member{id=...}\" - the braces are inside a string literal (source line 77). MemberTest.notEqualToOtherTypes passes the string \"Member{id=1}\". PointsTransaction Javadoc line 8 contains JSON braces and a semicolon.", "MemberTest has 4 top-level tests and 5 tests in the @Nested class Equality (9 total). The @Nested class has @DisplayName(\"equals()\") which contains parentheses.", "TierTest @CsvSource is used both inline ({\"B, BRONZE\", ...}) and as a multi-line array; @ParameterizedTest(name = \"code \\\"{0}\\\" -> {1}\") contains escaped quotes and braces.", "PointsTransaction declares its four accessors explicitly (with Javadoc and @Override, lines 33-55), so each accessor has its own line. The compiler-generated record toString/hashCode/equals sit on the header line 10 and are filtered by JaCoCo, so line 10 does not appear in the report. The // comment on line 31 is not code.", "Enum values()/valueOf() and the synthetic $values() are filtered by JaCoCo; Tier <clinit> covers the constant lines 7-10 plus line 6 (the $VALUES assignment).", "Member() is protected (not private), so JaCoCo does not filter it as an empty private constructor; it appears as <init> ()V on lines 15 and 17. The comment on line 16 is not executable."]
+}

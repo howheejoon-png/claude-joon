@@ -1,0 +1,32 @@
+package com.acme.common.text;
+
+/**
+ * Masking helpers for logs and UI; never log a full NRIC, card number or e-mail.
+ */
+public final class StringMasks {
+
+    private static final char MASK = '*';
+
+    private StringMasks() {
+    }
+
+    /** Keeps the last {@code visible} characters: maskAllButLast("S1234567D", 4) -> "*****567D". */
+    public static String maskAllButLast(final String value, final int visible) {
+        if (value == null) {
+            return null;
+        }
+        if (visible >= value.length()) {
+            return value;
+        }
+        final int hidden = value.length() - visible;
+        return String.valueOf(MASK).repeat(hidden) + value.substring(hidden);
+    }
+
+    public static String maskEmail(final String email) {
+        final int at = email.indexOf('@');
+        if (at <= 1) {
+            return MASK + email.substring(Math.max(at, 0));
+        }
+        return email.charAt(0) + String.valueOf(MASK).repeat(at - 1) + email.substring(at);
+    }
+}

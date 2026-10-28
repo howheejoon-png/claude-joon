@@ -1,0 +1,107 @@
+package com.acme.invoicing.service;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.acme.invoicing.domain.Invoice;
+import com.acme.invoicing.domain.InvoiceStatus;
+import com.acme.invoicing.exception.InvoiceNotFoundException;
+import com.acme.invoicing.repository.InvoiceRepository;
+import com.acme.invoicing.web.dto.IssueInvoiceRequest;
+import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Optional;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+/**
+ * Renamed from InvoiceServiceTest in CR-3310. Still JUnit 4 (vintage engine).
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class InvoiceServiceImplTest {
+
+    private static final ZoneId SGT = ZoneId.of("Asia/Singapore");
+    private static final String NO = "INV-202610-0001230";
+
+    @Mock
+    private InvoiceRepository invoiceRepository;
+
+    private InvoiceServiceImpl service;
+
+    @Before
+    public void setUp() {
+        Clock fixed = Clock.fixed(Instant.parse("2026-10-15T02:00:00Z"), SGT);
+        service = new InvoiceServiceImpl(invoiceRepository, fixed);
+    }
+
+    @Test
+    public void issue_assignsNextNumberAndDefaultTerms() {
+        when(invoiceRepository.currentSequence("INV")).thenReturn(122L);
+        when(invoiceRepository.save(any(Invoice.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        Invoice issued = service.issue(new IssueInvoiceRequest("C-001", new BigDecimal("250.00"), 0));
+
+        assertEquals(NO, issued.getInvoiceNo());
+        assertEquals(LocalDate.of(2026, 11, 14), issued.getDueDate());
+    }
+
+    @Test(expected = InvoiceNotFoundException.class)
+    public void findByNumber_unknown_throwsNotFound() {
+        when(invoiceRepository.findByInvoiceNo(NO)).thenReturn(Optional.empty());
+
+        service.findByNumber(NO);
+    }
+
+    @Test(expected = Exception.class)
+    public void findByNumber_malformed() {
+        service.findByNumber("not-an-invoice");
+    }
+
+    @Test
+    public void recordPayment_fullAmount_marksPaid() {
+        Invoice open = openInvoice("100.00");
+        when(invoiceRepository.findByInvoiceNo(NO)).thenReturn(Optional.of(open));
+        when(invoiceRepository.save(open)).thenReturn(open);
+
+        Invoice paid = service.recordPayment(NO, new BigDecimal("100.00"));
+
+        assertEquals(InvoiceStatus.PAID, paid.getStatus());
+        assertEquals(0, paid.getOutstanding().signum());
+        verify(invoiceRepository).save(open);
+    }
+
+    @Test
+    public void testPartialPayment() {
+        Invoice open = openInvoice("100.00");
+        when(invoiceRepository.findByInvoiceNo(NO)).thenReturn(Optional.of(open));
+        when(invoiceRepository.save(open)).thenReturn(open);
+
+        Invoice result = service.recordPayment(NO, new BigDecimal("40.00"));
+
+        assertEquals(InvoiceStatus.PARTIALLY_PAID, result.getStatus());
+        assertTrue(result.getOutstanding().compareTo(new BigDecimal("60.00")) == 0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void recordPayment_overpayment_isRejected() {
+        Invoice open = openInvoice("100.00");
+        when(invoiceRepository.findByInvoiceNo(NO)).thenReturn(Optional.of(open));
+
+        service.recordPayment(NO, new BigDecimal("100.01"));
+    }
+
+    private static Invoice openInvoice(final String amount) {
+        Invoice invoice = new Invoice(NO, "C-001", new BigDecimal(amount), LocalDate.of(2026, 11, 14));
+        invoice.setStatus(InvoiceStatus.OPEN);
+        return invoice;
+    }
+}

@@ -1,0 +1,23 @@
+package com.acme.invoicing.repository;
+
+import com.acme.invoicing.domain.Invoice;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
+
+    Optional<Invoice> findByInvoiceNo(String invoiceNo);
+
+    @Query("select i from Invoice i where i.status = com.acme.invoicing.domain.InvoiceStatus.OPEN "
+            + "and i.dueDate < :cutoff order by i.dueDate")
+    List<Invoice> findOverdue(@Param("cutoff") LocalDate cutoff);
+
+    // native: the sequence table is shared with the batch biller { see V42__invoice_sequence.sql }
+    @Query(value = "SELECT COALESCE(MAX(seq), 0) FROM invoice_sequence WHERE prefix = :prefix",
+            nativeQuery = true)
+    long currentSequence(@Param("prefix") String prefix);
+}

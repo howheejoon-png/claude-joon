@@ -1,0 +1,56 @@
+{
+  "scenario": "junit-without-jacoco",
+  "description": "Only JUnit 5 test code and the production class it tests are pasted: no JaCoCo, no test results, no scope. The production class mixes a static nested class, a nested exception class, an anonymous Comparator inside a lambda, varargs, Map<String, List<Item>> generics, method references and arrays. The test class contains several low-quality tests: a tautological assertEquals(x, x), an empty test body, a commented-out @Test and a private @Test method that JUnit 5 will never run. The tool must report actual coverage as NOT VERIFIED.",
+  "coverageStatus": "NOT_VERIFIED",
+  "pastes": [
+    {"file": "01-test-TemplateRendererTest.txt", "kind": "test", "incomplete": false},
+    {"file": "02-source-TemplateRenderer.txt", "kind": "source", "incomplete": false}
+  ],
+  "testClasses": {
+    "com.acme.notify.template.TemplateRendererTest": {
+      "framework": "junit5",
+      "testMethods": ["rendersAllPlaceholders", "lenientModeLeavesMissingValuesBlank", "strictModeThrowsForMissingValue", "groupsByChannelSortedByName", "filterResultIsConsistent", "unknownFilterIsIdentity", "trimFilterRemovesSpaces", "nullTemplateIsRejected"],
+      "disabled": []
+    }
+  },
+  "productionClasses": {
+    "com.acme.notify.template.TemplateRenderer": {"methods": ["render", "byChannel", "applyFilter", "placeholders"], "noTestMethods": ["placeholders"]}
+  },
+  "quality": [
+    {
+      "class": "com.acme.notify.template.TemplateRendererTest",
+      "method": "filterResultIsConsistent",
+      "issue": "TAUTOLOGY",
+      "note": "assertEquals(expected, expected) compares a value with itself; the filter output is never checked."
+    },
+    {
+      "class": "com.acme.notify.template.TemplateRendererTest",
+      "method": "unknownFilterIsIdentity",
+      "issue": "EMPTY_TEST",
+      "note": "Empty method body; always passes."
+    },
+    {
+      "class": "com.acme.notify.template.TemplateRendererTest",
+      "method": "placeholdersAreListedInOrder",
+      "issue": "COMMENTED_TEST",
+      "note": "Whole test including its @Test annotation is commented out with //; it is the only test that would call placeholders()."
+    },
+    {
+      "class": "com.acme.notify.template.TemplateRendererTest",
+      "method": "trimFilterRemovesSpaces",
+      "issue": "NOT_RUNNABLE",
+      "note": "@Test on a private method: JUnit Jupiter does not execute private test methods."
+    }
+  ],
+  "scenarios": [
+    {"class": "com.acme.notify.template.TemplateRendererTest", "method": "rendersAllPlaceholders", "tags": ["positive"]},
+    {"class": "com.acme.notify.template.TemplateRendererTest", "method": "lenientModeLeavesMissingValuesBlank", "tags": ["nullEmpty"]},
+    {"class": "com.acme.notify.template.TemplateRendererTest", "method": "strictModeThrowsForMissingValue", "tags": ["negative", "exception"]},
+    {"class": "com.acme.notify.template.TemplateRendererTest", "method": "groupsByChannelSortedByName", "tags": ["positive"]},
+    {"class": "com.acme.notify.template.TemplateRendererTest", "method": "filterResultIsConsistent", "tags": ["positive"]},
+    {"class": "com.acme.notify.template.TemplateRendererTest", "method": "unknownFilterIsIdentity", "tags": []},
+    {"class": "com.acme.notify.template.TemplateRendererTest", "method": "trimFilterRemovesSpaces", "tags": ["positive"]},
+    {"class": "com.acme.notify.template.TemplateRendererTest", "method": "nullTemplateIsRejected", "tags": ["negative", "exception", "nullEmpty"]}
+  ],
+  "notes": ["coverageStatus is an extension key: with no JaCoCo paste the tool must say actual coverage is NOT VERIFIED and must not estimate a percentage from the test code.", "testMethods lists the 8 methods carrying @Test, including the empty one and the private one. The commented-out placeholdersAreListedInOrder (test lines 57-60) is NOT a test method; it is only reported as COMMENTED_TEST.", "Test class uses the wildcard static import org.junit.jupiter.api.Assertions.* (assertEquals/assertThrows come from it) plus AssertJ assertThat, and @TestInstance(PER_CLASS).", "Test string literals contain \"{{name}}\", \"{{ orderId }}\" and \";\" - braces inside strings must not affect brace depth.", "Production: Javadoc lines 15 and 18 contain \"{{...}}\" and \";\"; the regex literal on line 23 contains escaped braces; Javadoc line 50 contains JSON-like braces. byChannel (line 51) contains a lambda whose body is an anonymous Comparator<Item> class with an @Override method (lines 56-61); compare() belongs to the anonymous class, not to TemplateRenderer.", "Nested types: TemplateRenderer.Item (static final nested class, line 80, methods name/channel) and TemplateRenderer.MissingPlaceholderException (static nested RuntimeException, line 99). They are reached only indirectly; productionClasses lists only the top-level class.", "placeholders() is called only from the commented-out test, so it is in noTestMethods. applyFilter() is called only by the tautological test and the never-run private test."]
+}

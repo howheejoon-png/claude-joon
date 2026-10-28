@@ -1,0 +1,26 @@
+package com.acme.order.service;
+
+import com.acme.order.domain.Order;
+import com.acme.order.domain.OrderSummary;
+import com.acme.order.service.command.PlaceOrderCommand;
+import java.util.List;
+
+/**
+ * Order use-cases. Implementations are expected to be transactional.
+ */
+public interface OrderService {
+
+    Order placeOrder(PlaceOrderCommand command);
+
+    Order getOrder(Long orderId);
+
+    Order cancelOrder(Long orderId, String reason);
+
+    /** Shipping fee in cents for a zone and parcel weight. */
+    int calculateFee(int zone, int weightGrams);
+
+    /** Discount in basis points for an order line, e.g. 250 == 2.5% */
+    int discountFor(int quantity);
+
+    List<OrderSummary> listOpenOrders(String customerId);
+}

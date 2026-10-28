@@ -1,0 +1,32 @@
+package gov.moh.platform.common.util.text;
+
+import static java.util.Locale.ROOT;
+
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+
+/**
+ * Text normalisation shared by every platform module (common-lib).
+ */
+public final class TextNormalizer {
+
+    private static final Pattern WHITESPACE = Pattern.compile("\\s+");
+    private static final Pattern DIACRITICS = Pattern.compile("\\p{M}+");
+
+    private TextNormalizer() {
+        throw new AssertionError("no instances");
+    }
+
+    /** Collapses runs of whitespace and trims; {@code null} stays {@code null}. */
+    public static String collapseWhitespace(final String input) {
+        return input == null ? null : WHITESPACE.matcher(input.trim()).replaceAll(" ");
+    }
+
+    public static String foldForSearch(final String input) {
+        if (input == null) {
+            return "";
+        }
+        final String decomposed = Normalizer.normalize(input, Normalizer.Form.NFD);
+        return collapseWhitespace(DIACRITICS.matcher(decomposed).replaceAll("")).toLowerCase(ROOT);
+    }
+}

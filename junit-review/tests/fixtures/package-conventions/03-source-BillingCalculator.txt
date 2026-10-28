@@ -1,0 +1,30 @@
+package com.acme.billing.v2.internal;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+
+/**
+ * Internal (v2) billing maths. Not part of the public API.
+ */
+public class BillingCalculator {
+
+	private static final BigDecimal GST_RATE = new BigDecimal("0.09");
+
+	public BigDecimal subtotal(final List<BigDecimal> lineAmounts) {
+		BigDecimal sum = BigDecimal.ZERO;
+		for (BigDecimal amount : lineAmounts) {
+			sum = sum.add(amount);
+		}
+		return sum;
+	}
+
+	public BigDecimal gst(final BigDecimal subtotal) {
+		return subtotal.multiply(GST_RATE).setScale(2, RoundingMode.HALF_UP);
+	}
+
+	public BigDecimal total(final BigDecimal... lineAmounts) {
+		final BigDecimal subtotal = subtotal(List.of(lineAmounts));
+		return subtotal.add(gst(subtotal));
+	}
+}

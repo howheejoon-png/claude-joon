@@ -1,0 +1,39 @@
+package com.acme.loyalty.model;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
+
+import java.time.Instant;
+import org.junit.jupiter.api.Test;
+
+class PointsTransactionTest {
+
+    private static final Instant T0 = Instant.parse("2026-10-01T08:00:00Z");
+
+    @Test
+    void earn_alwaysStoresPositivePoints() {
+        PointsTransaction tx = PointsTransaction.earn(5L, -300, "SPEND; store #12");
+
+        assertThat(tx.points()).isEqualTo(300);
+        assertThat(tx.memberId()).isEqualTo(5L);
+        assertThat(tx.occurredAt()).isNotNull();
+    }
+
+    @Test
+    void reversedNegatesPointsAndPrefixesReason() {
+        PointsTransaction tx = new PointsTransaction(5L, 250, "BIRTHDAY", T0);
+
+        PointsTransaction rev = tx.reversed();
+
+        assertThat(rev.points()).isEqualTo(-250);
+        assertThat(rev.reason()).isEqualTo("REVERSAL: BIRTHDAY");
+        assertThat(rev.occurredAt()).isEqualTo(T0);
+    }
+
+    @Test
+    void reasonIsMandatory() {
+        assertThatNullPointerException()
+                .isThrownBy(() -> new PointsTransaction(5L, 10, null, T0))
+                .withMessage("reason");
+    }
+}

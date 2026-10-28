@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.1//EN" "report.dtd">
+<report name="hr-leave-service">
+  <sessioninfo id="WIN-DEV-0417-4be2a1" start="1793084722610" dump="1793084729384"/>
+  <package name="com/acme/hr/leave">
+    <class name="com/acme/hr/leave/LeaveBalanceCalculator" sourcefilename="LeaveBalanceCalculator.java">
+      <method name="&lt;init&gt;" desc="()V" line="6">
+        <counter type="INSTRUCTION" missed="0" covered="3"/>
+        <counter type="LINE" missed="0" covered="1"/>
+        <counter type="COMPLEXITY" missed="0" covered="1"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <method name="entitlement" desc="(I)I" line="12">
+        <counter type="INSTRUCTION" missed="0" covered="13"/>
+        <counter type="BRANCH" missed="0" covered="2"/>
+        <counter type="LINE" missed="0" covered="3"/>
+        <counter type="COMPLEXITY" missed="0" covered="2"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <method name="carryForward" desc="(I)I" line="19">
+        <counter type="INSTRUCTION" missed="3" covered="6"/>
+        <counter type="BRANCH" missed="1" covered="1"/>
+        <counter type="LINE" missed="0" covered="1"/>
+        <counter type="COMPLEXITY" missed="1" covered="1"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <method name="prorate" desc="(ILjava/time/LocalDate;I)D" line="23">
+        <counter type="INSTRUCTION" missed="2" covered="36"/>
+        <counter type="BRANCH" missed="1" covered="3"/>
+        <counter type="LINE" missed="1" covered="5"/>
+        <counter type="COMPLEXITY" missed="1" covered="2"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <method name="balance" desc="(III)I" line="34">
+        <counter type="INSTRUCTION" missed="6" covered="10"/>
+        <counter type="BRANCH" missed="1" covered="1"/>
+        <counter type="LINE" missed="1" covered="3"/>
+        <counter type="COMPLEXITY" missed="1" covered="1"/>
+        <counter type="METHOD" missed="0" covered="1"/>
+      </method>
+      <counter type="INSTRUCTION" missed="11" covered="68"/>
+      <counter type="BRANCH" missed="3" covered="7"/>
+      <counter type="LINE" missed="2" covered="13"/>
+      <counter type="COMPLEXITY" missed="3" covered="7"/>
+      <counter type="METHOD" missed="0" covered="5"/>
+      <counter type="CLASS" missed="0" covered="1"/>
+    </class>
+    <sourcefile name="LeaveBalanceCalculator.java">
+      <line nr="6" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="12" mi="0" ci="2" mb="0" cb="2"/>
+      <line nr="13" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="15" mi="0" ci="6" mb="0" cb="0"/>
+      <line nr="19" mi="3" ci="6" mb="1" cb="1"/>
+      <line nr="23" mi="0" ci="4" mb="0" cb="2"/>
+      <line nr="24" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="26" mi="0" ci="4" mb="1" cb="1"/>
+      <line nr="27" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="29" mi="0" ci="10" mb="0" cb="0"/>
+      <line nr="30" mi="0" ci="15" mb="0" cb="0"/>
+      <line nr="34" mi="0" ci="6" mb="0" cb="0"/>
+      <line nr="35" mi="0" ci="2" mb="1" cb="1"/>
+      <line nr="36" mi="6" ci="0" mb="0" cb="0"/>
+      <line nr="38" mi="0" ci="2" mb="0" cb="0"/>
+      <counter type="INSTRUCTION" missed="11" covered="68"/>
+      <counter type="BRANCH" missed="3" covered="7"/>
+      <counter type="LINE" missed="2" covered="13"/>
+      <counter type="COMPLEXITY" missed="3" covered="7"/>
+      <counter type="METHOD" missed="0" covered="5"/>
+      <counter type="CLASS" missed="0" covered="1"/>
+    </sourcefile>
+    <counter type="INSTRUCTION" missed="11" covered="68"/>
+    <counter type="BRANCH" missed="3" covered="7"/>
+    <counter type="LINE" missed="2" covered="13"/>
+    <counter type="COMPLEXITY" missed="3" covered="7"/>
+    <counter type="METHOD" missed="0" covered="5"/>
+    <counter type="CLASS" missed="0" covered="1"/>
+  </package>
+  <counter type="INSTRUCTION" missed="11" covered="68"/>
+  <counter type="BRANCH" missed="3" covered="7"/>
+  <counter type="LINE" missed="2" covered="13"/>
+  <counter type="COMPLEXITY" missed="3" covered="7"/>
+  <counter type="METHOD" missed="0" covered="5"/>
+  <counter type="CLASS" missed="0" covered="1"/>
+</report>

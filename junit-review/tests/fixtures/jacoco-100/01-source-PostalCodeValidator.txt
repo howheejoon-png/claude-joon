@@ -1,0 +1,30 @@
+package com.acme.common.validation;
+
+import java.util.Map;
+import java.util.regex.Pattern;
+
+/**
+ * Postal code validation for the countries we ship to.
+ */
+public final class PostalCodeValidator {
+
+    private static final Map<String, Pattern> PATTERNS = Map.of(
+            "SG", Pattern.compile("\\d{6}"),
+            "MY", Pattern.compile("\\d{5}"),
+            "GB", Pattern.compile("[A-Z]{1,2}\\d[A-Z\\d]? ?\\d[A-Z]{2}"));
+
+    private PostalCodeValidator() {
+    }
+
+    public static boolean isValid(final String country, final String postalCode) {
+        if (country == null || postalCode == null) {
+            return false;
+        }
+        final Pattern pattern = PATTERNS.get(country.toUpperCase());
+        return pattern != null && pattern.matcher(postalCode.trim()).matches();
+    }
+
+    public static boolean isSupported(final String country) {
+        return country != null && PATTERNS.containsKey(country.toUpperCase());
+    }
+}

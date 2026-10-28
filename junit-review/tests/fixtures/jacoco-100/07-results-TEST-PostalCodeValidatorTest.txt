@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.acme.common.validation.PostalCodeValidatorTest" time="0.087" tests="12" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.version" value="21.0.4"/>
+    <property name="os.name" value="Linux"/>
+    <property name="user.dir" value="/home/vsts/work/1/s/common-lib"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+  </properties>
+  <testcase name="[1] SG, 018956, true" classname="com.acme.common.validation.PostalCodeValidatorTest" time="0.031"/>
+  <testcase name="[2] sg,  018956 , true" classname="com.acme.common.validation.PostalCodeValidatorTest" time="0.002"/>
+  <testcase name="[3] SG, 01895, false" classname="com.acme.common.validation.PostalCodeValidatorTest" time="0.002"/>
+  <testcase name="[4] MY, 50450, true" classname="com.acme.common.validation.PostalCodeValidatorTest" time="0.002"/>
+  <testcase name="[5] GB, SW1A 1AA, true" classname="com.acme.common.validation.PostalCodeValidatorTest" time="0.002"/>
+  <testcase name="[6] GB, 12345, false" classname="com.acme.common.validation.PostalCodeValidatorTest" time="0.002"/>
+  <testcase name="[7] US, 10001, false" classname="com.acme.common.validation.PostalCodeValidatorTest" time="0.002"/>
+  <testcase name="nullCountryIsInvalid()" classname="com.acme.common.validation.PostalCodeValidatorTest" time="0.001"/>
+  <testcase name="nullPostalCodeIsInvalid()" classname="com.acme.common.validation.PostalCodeValidatorTest" time="0.001"/>
+  <testcase name="[1] null" classname="com.acme.common.validation.PostalCodeValidatorTest" time="0.003"/>
+  <testcase name="[1] XX" classname="com.acme.common.validation.PostalCodeValidatorTest" time="0.001"/>
+  <testcase name="singaporeIsSupported()" classname="com.acme.common.validation.PostalCodeValidatorTest" time="0.001"/>
+</testsuite>

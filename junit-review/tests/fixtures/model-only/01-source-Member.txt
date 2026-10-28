@@ -1,0 +1,79 @@
+package com.acme.loyalty.model;
+
+/**
+ * Loyalty programme member.
+ *
+ * <p>Equality is identity-based (database id only): two transient members are never equal.
+ */
+public class Member {
+
+    private Long id;
+    private String email;
+    private Tier tier;
+    private int points;
+
+    protected Member() {
+        // for JPA / Jackson
+    }
+
+    public Member(final Long id, final String email, final Tier tier, final int points) {
+        this.id = id;
+        this.email = email;
+        this.tier = tier;
+        this.points = points;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
+    }
+
+    public Tier getTier() {
+        return tier;
+    }
+
+    public void setTier(final Tier tier) {
+        this.tier = tier;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(final int points) {
+        this.points = points;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Member)) {
+            return false;
+        }
+        Member other = (Member) o;
+        return id != null && id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Member{id=" + id + ", email='" + email + "', tier=" + tier + ", points=" + points + "}";
+    }
+}

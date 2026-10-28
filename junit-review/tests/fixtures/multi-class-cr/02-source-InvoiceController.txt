@@ -1,0 +1,45 @@
+package com.acme.invoicing.web;
+
+import com.acme.invoicing.service.InvoiceService;
+import com.acme.invoicing.web.dto.InvoiceResponse;
+import com.acme.invoicing.web.dto.IssueInvoiceRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping(path = "/invoices", produces = MediaType.APPLICATION_JSON_VALUE)
+public class InvoiceController {
+
+    private final InvoiceService invoiceService;
+
+    public InvoiceController(final InvoiceService invoiceService) {
+        this.invoiceService = invoiceService;
+    }
+
+    @GetMapping("/{invoiceNo}")
+    public InvoiceResponse get(@PathVariable final String invoiceNo) {
+        return InvoiceResponse.from(invoiceService.findByNumber(invoiceNo));
+    }
+
+    @GetMapping("/overdue")
+    public List<InvoiceResponse> overdue(@RequestParam(defaultValue = "30") @Min(1) @Max(365) final int days) {
+        return invoiceService.findOverdue(days).stream().map(InvoiceResponse::from).toList();
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public InvoiceResponse issue(@Valid @RequestBody final IssueInvoiceRequest request) {
+        return InvoiceResponse.from(invoiceService.issue(request));
+    }
+
+    @PostMapping("/{invoiceNo}/payments")
+    public InvoiceResponse pay(@PathVariable final String invoiceNo,
+                               @RequestParam final java.math.BigDecimal amount) {
+        return InvoiceResponse.from(invoiceService.recordPayment(invoiceNo, amount));
+    }
+}

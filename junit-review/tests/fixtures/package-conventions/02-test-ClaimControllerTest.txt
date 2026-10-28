@@ -1,0 +1,52 @@
+package sg.gov.agency.cpf.claims.web;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+import sg.gov.agency.cpf.claims.service.ClaimQueryService;
+import sg.gov.agency.cpf.claims.web.dto.ClaimView;
+
+@WebMvcTest(ClaimController.class)
+class ClaimControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private ClaimQueryService claimQueryService;
+
+    @Test
+    void byId_found() throws Exception {
+        when(claimQueryService.find("CLM-0001")).thenReturn(Optional.of(new ClaimView("CLM-0001", "SUBMITTED")));
+
+        mockMvc.perform(get("/api/claims/CLM-0001"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("SUBMITTED"));
+    }
+
+    @Test
+    void byId_unknown_is404() throws Exception {
+        when(claimQueryService.find("CLM-9999")).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/claims/CLM-9999"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void byMember_returnsList() throws Exception {
+        when(claimQueryService.findByMember("S****567A")).thenReturn(List.of(new ClaimView("CLM-0001", "PAID")));
+
+        mockMvc.perform(get("/api/claims/member/{nric}", "S****567A"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].claimId").value("CLM-0001"));
+    }
+}

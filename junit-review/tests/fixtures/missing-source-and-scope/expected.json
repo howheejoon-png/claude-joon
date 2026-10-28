@@ -1,0 +1,34 @@
+{
+  "scenario": "missing-source-and-scope",
+  "description": "Only a JUnit 5 test class and a pretty-printed JaCoCo XML for the class it tests are pasted. There is no production source, no scope (diff / changed-file list) and no test results. JaCoCo shows partial coverage of com.acme.hr.leave.LeaveBalanceCalculator. The tool can report coverage numbers per class and line numbers from the XML, but cannot map <line nr> values to code, cannot list production methods from source and cannot decide which classes are in scope.",
+  "pastes": [
+    {"file": "01-test-LeaveBalanceCalculatorTest.txt", "kind": "test", "incomplete": false},
+    {"file": "02-jacoco-hr-leave.txt", "kind": "jacoco", "incomplete": false}
+  ],
+  "testClasses": {
+    "com.acme.hr.leave.LeaveBalanceCalculatorTest": {
+      "framework": "junit5",
+      "testMethods": ["entitlementGrowsWithServiceAndCapsAt21", "negativeServiceIsRejected", "carryForwardIsCappedAtFive", "prorateForMidYearJoiner", "fullEntitlementForEarlierJoiner", "balance"],
+      "disabled": []
+    }
+  },
+  "jacoco": {
+    "reportTotals": {"INSTRUCTION": [11, 68], "BRANCH": [3, 7], "LINE": [2, 13], "COMPLEXITY": [3, 7], "METHOD": [0, 5], "CLASS": [0, 1]},
+    "classes": {
+      "com/acme/hr/leave/LeaveBalanceCalculator": {"INSTRUCTION": [11, 68], "BRANCH": [3, 7], "LINE": [2, 13], "COMPLEXITY": [3, 7], "METHOD": [0, 5], "CLASS": [0, 1]}
+    },
+    "uncoveredLines": {"com/acme/hr/leave/LeaveBalanceCalculator.java": [27, 36]},
+    "partialBranchLines": {"com/acme/hr/leave/LeaveBalanceCalculator.java": [19, 26, 35]},
+    "strict100": false
+  },
+  "quality": [],
+  "scenarios": [
+    {"class": "com.acme.hr.leave.LeaveBalanceCalculatorTest", "method": "entitlementGrowsWithServiceAndCapsAt21", "tags": ["positive", "boundary"]},
+    {"class": "com.acme.hr.leave.LeaveBalanceCalculatorTest", "method": "negativeServiceIsRejected", "tags": ["negative", "exception", "boundary"]},
+    {"class": "com.acme.hr.leave.LeaveBalanceCalculatorTest", "method": "carryForwardIsCappedAtFive", "tags": ["boundary"]},
+    {"class": "com.acme.hr.leave.LeaveBalanceCalculatorTest", "method": "prorateForMidYearJoiner", "tags": ["positive"]},
+    {"class": "com.acme.hr.leave.LeaveBalanceCalculatorTest", "method": "fullEntitlementForEarlierJoiner", "tags": ["positive"]},
+    {"class": "com.acme.hr.leave.LeaveBalanceCalculatorTest", "method": "balance", "tags": ["positive"]}
+  ],
+  "notes": ["No source paste: productionClasses is intentionally omitted. JaCoCo still names the class and its methods (<init>, entitlement, carryForward, prorate, balance) with descriptors and first lines; a tool may list those as \"from coverage report\" but cannot verify that a <line nr> is executable or show its code.", "No scope paste: scope is intentionally omitted. The tool must say the changed-class scope is unknown and cannot claim that every changed class is covered.", "No results paste: whether the tests passed is unknown.", "Fully uncovered lines 27 and 36 and partial-branch lines 19, 26 and 35 are only meaningful together with the source, which was not provided; they should be reported as bare line numbers only.", "The test is in the same package as the class under test, so com.acme.hr.leave.LeaveBalanceCalculatorTest -> com.acme.hr.leave.LeaveBalanceCalculator can be matched by naming convention to the JaCoCo class com/acme/hr/leave/LeaveBalanceCalculator.", "A test method is literally named \"balance\", the same as the production method it calls.", "The JaCoCo <init> at line 6 is the implicit default constructor (the class declaration line)."]
+}

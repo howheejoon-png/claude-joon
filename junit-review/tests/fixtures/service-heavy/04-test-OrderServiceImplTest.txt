@@ -1,0 +1,239 @@
+package com.acme.order.service;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
+
+import com.acme.order.domain.Order;
+import com.acme.order.domain.OrderStatus;
+import com.acme.order.exception.OrderLimitExceededException;
+import com.acme.order.exception.OrderNotFoundException;
+import com.acme.order.exception.OutOfStockException;
+import com.acme.order.notification.NotificationException;
+import com.acme.order.notification.NotificationService;
+import com.acme.order.notification.OrderEvent;
+import com.acme.order.repository.OrderRepository;
+import com.acme.order.service.command.PlaceOrderCommand;
+import java.math.BigDecimal;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+/**
+ * Unit tests for {@link OrderServiceImpl}.
+ *
+ * <p>Mockito only, no Spring context. Collaborators: repository, inventory, notifier.
+ */
+@ExtendWith(MockitoExtension.class)
+class OrderServiceImplTest {
+
+    private static final String SKU = "SKU-1001";
+
+    @Mock
+    private OrderRepository orderRepository;
+
+    @Mock
+    private InventoryService inventoryService;
+
+    @Mock
+    private NotificationService notifier;
+
+    @InjectMocks
+    private OrderServiceImpl service;
+
+    @Captor
+    private ArgumentCaptor<OrderEvent> eventCaptor;
+
+    private PlaceOrderCommand command;
+
+    @BeforeEach
+    void setUp() {
+        command = new PlaceOrderCommand("CUST-7", SKU, 3, new BigDecimal("19.90"));
+    }
+
+    @Test
+    void shouldPlaceOrderWhenStockAvailable() {
+        when(inventoryService.reserve(SKU, 3)).thenReturn(true);
+        when(orderRepository.save(any(Order.class))).thenAnswer(inv -> withId(inv.getArgument(0), 501L));
+
+        Order placed = service.placeOrder(command);
+
+        assertThat(placed.getId()).isEqualTo(501L);
+        assertThat(placed.getStatus()).isEqualTo(OrderStatus.CONFIRMED);
+        assertThat(placed.getTotal()).isEqualByComparingTo("59.70");
+        verify(inventoryService, times(1)).reserve(SKU, 3);
+        verify(notifier, times(1)).send(eventCaptor.capture());
+        assertThat(eventCaptor.getValue().orderId()).isEqualTo(501L);
+        assertThat(eventCaptor.getValue().type()).isEqualTo(OrderEvent.Type.PLACED);
+    }
+
+    @Test
+    void placeOrder_nullCommand_throwsIllegalArgument() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.placeOrder(null));
+        assertEquals("command must not be null", ex.getMessage());
+        verifyNoInteractions(orderRepository, inventoryService, notifier);
+    }
+
+    @Test
+    void given_quantityAboveLimit_when_placeOrder_then_limitExceeded() {
+        PlaceOrderCommand tooMany = new PlaceOrderCommand("CUST-7", SKU, 101, BigDecimal.ONE);
+
+        assertThrows(OrderLimitExceededException.class, () -> service.placeOrder(tooMany));
+
+        verify(inventoryService, never()).reserve(anyString(), anyInt());
+    }
+
+    @Test
+    @DisplayName("quantity == MAX_QUANTITY (100) is still accepted")
+    void quantityAtLimitIsAccepted() {
+        PlaceOrderCommand atLimit = new PlaceOrderCommand("CUST-7", SKU, 100, BigDecimal.ONE);
+        when(inventoryService.reserve(SKU, 100)).thenReturn(true);
+        when(orderRepository.save(any(Order.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        Order placed = service.placeOrder(atLimit);
+
+        assertThat(placed.getQuantity()).isEqualTo(100);
+    }
+
+    @Test
+    void shouldThrowOutOfStockWhenReservationFails() {
+        given(inventoryService.reserve(SKU, 3)).willReturn(false);
+
+        OutOfStockException ex = assertThrows(OutOfStockException.class, () -> service.placeOrder(command));
+
+        assertThat(ex.getSku()).isEqualTo(SKU);
+        verify(orderRepository, never()).save(any());
+        verifyNoInteractions(notifier);
+    }
+
+    @Test
+    void notificationFailure_doesNotFailTheOrder() {
+        when(inventoryService.reserve(SKU, 3)).thenReturn(true);
+        when(orderRepository.save(any(Order.class))).thenAnswer(inv -> withId(inv.getArgument(0), 502L));
+        doThrow(new NotificationException("smtp down")).when(notifier).send(any(OrderEvent.class));
+
+        Order placed = service.placeOrder(command);
+
+        assertThat(placed.getId()).isEqualTo(502L);
+    }
+
+    @Test
+    @Disabled
+    void shouldRequireApprovalAboveCreditLimit() {
+        PlaceOrderCommand big = new PlaceOrderCommand("CUST-9", SKU, 60, new BigDecimal("100.00"));
+        when(inventoryService.reserve(SKU, 60)).thenReturn(true);
+        when(orderRepository.save(any(Order.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        assertThat(service.placeOrder(big).getStatus()).isEqualTo(OrderStatus.PENDING_APPROVAL);
+    }
+
+    @Test
+    void test3() {
+        when(orderRepository.findById(404L)).thenReturn(Optional.empty());
+
+        assertThrows(OrderNotFoundException.class, () -> service.getOrder(404L));
+    }
+
+    @Test
+    void cancelOrder_confirmed_releasesStockAndCancels() {
+        Order order = order(7L, OrderStatus.CONFIRMED);
+        when(orderRepository.findById(7L)).thenReturn(Optional.of(order));
+        when(orderRepository.save(order)).thenReturn(order);
+
+        Order cancelled = service.cancelOrder(7L, "customer request");
+
+        assertThat(cancelled.getStatus()).isEqualTo(OrderStatus.CANCELLED);
+        verify(inventoryService).release(SKU, 3);
+    }
+
+    @Test
+    void shouldCancelConfirmedOrder() {
+        Order order = order(7L, OrderStatus.CONFIRMED);
+        when(orderRepository.findById(7L)).thenReturn(Optional.of(order));
+        when(orderRepository.save(order)).thenReturn(order);
+
+        Order cancelled = service.cancelOrder(7L, "customer request");
+
+        assertThat(cancelled.getStatus()).isEqualTo(OrderStatus.CANCELLED);
+        verify(inventoryService).release(SKU, 3);
+    }
+
+    @Test
+    void cancelOrder_pendingApproval_doesNotReleaseStock() {
+        Order order = order(8L, OrderStatus.PENDING_APPROVAL);
+        when(orderRepository.findById(8L)).thenReturn(Optional.of(order));
+        when(orderRepository.save(order)).thenReturn(order);
+
+        service.cancelOrder(8L, "duplicate");
+
+        verify(inventoryService, never()).release(anyString(), anyInt());
+        assertThat(order.getCancellationReason()).isEqualTo("duplicate");
+    }
+
+    @Test
+    void cancelOrder_shipped_throwsIllegalState() {
+        Order order = order(9L, OrderStatus.SHIPPED);
+        when(orderRepository.findById(9L)).thenReturn(Optional.of(order));
+
+        try {
+            service.cancelOrder(9L, "changed mind");
+        } catch (IllegalStateException expected) {
+            // expected: shipped orders cannot be cancelled
+        }
+    }
+
+    @Test
+    void shouldRetryNotification() throws InterruptedException {
+        when(inventoryService.reserve(SKU, 3)).thenReturn(true);
+        when(orderRepository.save(any(Order.class))).thenAnswer(inv -> withId(inv.getArgument(0), 503L));
+
+        service.placeOrder(command);
+        Thread.sleep(1500); // give the outbox relay time to retry { flaky on slow agents }
+
+        verify(notifier, times(2)).send(any(OrderEvent.class));
+    }
+
+    @ParameterizedTest(name = "zone {0}, {1} g -> {2} cents")
+    @CsvSource({
+            "50, 500, 1940",
+            "57, 1500, 2195",
+            "59, 19999, 3685"
+    })
+    void calculatesFee(final int zone, final int grams, final int expectedCents) {
+        assertThat(service.calculateFee(zone, grams)).isEqualTo(expectedCents);
+    }
+
+    @Test
+    void discountTiers() {
+        assertThat(service.discountFor(60)).isEqualTo(500);
+        assertThat(service.discountFor(10)).isEqualTo(250);
+    }
+
+    private static Order order(final long id, final OrderStatus status) {
+        Order order = Order.newOrder("CUST-7", SKU, 3, new BigDecimal("59.70"));
+        order.setId(id);
+        order.setStatus(status);
+        return order;
+    }
+
+    private static Order withId(final Order order, final long id) {
+        order.setId(id);
+        return order;
+    }
+}
