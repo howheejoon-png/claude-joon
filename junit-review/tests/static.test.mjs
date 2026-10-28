@@ -74,3 +74,7 @@ test('a visible start-up banner explains what to do if the scripts cannot run', 
   assert.match(html, /<div class="boot-warning" id="boot-warning" role="alert">/)
   assert.match(html, /\.js-ready \.boot-warning \{ display: none; \}/)
 })
+
+test('the shipped file is pure ASCII, so re-encoding it in transit cannot break the script hashes', () => {
+  assert.doesNotMatch(readFileSync(join(ROOT, 'junit-review.html'), 'latin1'), /[^\x00-\x7e]/)
+})

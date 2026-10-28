@@ -55,17 +55,25 @@ ${concatDir('ui')}
 }
 })();
 `
-const styles = readFileSync(src('styles.css'), 'utf8').trim()
-const shell = readFileSync(src('shell.html'), 'utf8')
+// The shipped file is pure ASCII. If a mail gateway, editor or file-transfer tool
+// re-saves it in another encoding, the scripts stay byte-for-byte identical, so
+// their CSP hashes still match and the page keeps working.
+const asciiJs = (s) => s.replace(/[^\x00-\x7e]/g, (c) => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'))
+const asciiCss = (s) => s.replace(/[^\x00-\x7e]/gu, (c) => '\\' + c.codePointAt(0).toString(16) + ' ')
+const asciiHtml = (s) => s.replace(/[^\x00-\x7e]/gu, (c) => '&#x' + c.codePointAt(0).toString(16) + ';')
+const engineAscii = asciiJs(engine)
+const uiAscii = asciiJs(ui)
+const styles = asciiCss(readFileSync(src('styles.css'), 'utf8').trim())
+const shell = asciiHtml(readFileSync(src('shell.html'), 'utf8'))
 
-for (const [name, body] of [['engine', engine], ['ui', ui]]) {
+for (const [name, body] of [['engine', engineAscii], ['ui', uiAscii]]) {
   if (/<\/script/i.test(body)) throw new Error(`${name} contains "</script" — it would end the inline script early`)
 }
 
 const hash = (s) => `'sha256-${createHash('sha256').update(s, 'utf8').digest('base64')}'`
 const csp = [
   "default-src 'none'",
-  `script-src ${hash(engine)} ${hash(ui)}`,
+  `script-src ${hash(engineAscii)} ${hash(uiAscii)}`,
   "style-src 'unsafe-inline'",
   'img-src data:',
   "font-src 'none'",
@@ -83,8 +91,10 @@ const csp = [
 const html = shell
   .replace('{{CSP}}', () => csp)
   .replace('{{STYLES}}', () => styles)
-  .replace('{{ENGINE}}', () => engine)
-  .replace('{{UI}}', () => ui)
+  .replace('{{ENGINE}}', () => engineAscii)
+  .replace('{{UI}}', () => uiAscii)
+
+if (/[^\x00-\x7e\n\t]/.test(html)) throw new Error('junit-review.html must be pure ASCII')
 
 if (process.argv.includes('--check')) {
   const current = existsSync(OUT) ? readFileSync(OUT, 'utf8') : ''

@@ -2,14 +2,14 @@
 <html lang="en" translate="no">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-xZZVKx4GeOF47YHsLzW6lYVPG5/Z85NtOBAmhQrojYU=' 'sha256-9lVitJseBNmSaa6PqVSv9FDzkRVVcOskAPmViB0qmeA='; style-src 'unsafe-inline'; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-KcTgL8FNA76CLoImntj0qcJn3XJTdY5orUGi5EvK19Y=' 'sha256-BbW+/2oKLmoRLkOKGyBJcJlO41tWvSYjsOrODRGGmd0='; style-src 'unsafe-inline'; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>JUnit Review — Paste-Only</title>
+<title>JUnit Review &#x2014; Paste-Only</title>
 <style>/* ==========================================================================
-   JUnit Review — styles. System fonts only (no downloads): a serif for
+   JUnit Review \2014  styles. System fonts only (no downloads): a serif for
    headings, the platform sans for text, the platform monospace for code.
    ========================================================================== */
 
@@ -601,8 +601,9 @@ dialog[open] { animation: dlg-in 260ms var(--spring); }
 <a class="skip-link" href="#main">Skip to main content</a>
 <div class="boot-warning" id="boot-warning" role="alert">
   <p class="boot-title">The review tool has not started, so its tabs and buttons will not respond.</p>
-  <p id="boot-detail">This happens when the file is shown inside a preview window (for example in a chat, email or document app), when this browser blocks the page's built-in scripts, or when the file was changed while being copied.</p>
-  <p><strong>To fix it:</strong> save <code>junit-review.html</code> to your computer, then open that saved copy directly in a current version of Microsoft Edge or Google Chrome (double-click it, or right-click &rarr; Open with). The address bar should start with <code>file:///</code>.</p>
+  <p id="boot-detail">This happens when the file is shown in a preview (inside a chat, email or file-viewer app, or on a phone or tablet), or when JavaScript is switched off in this browser.</p>
+  <p><strong>1.</strong> Save <code>junit-review.html</code> to your computer, then open that saved copy in a current Microsoft Edge or Google Chrome (right-click it &rarr; Open with). The address bar should start with <code>file:///</code>.</p>
+  <p><strong>2.</strong> If this message is still shown, JavaScript is switched off. Open <code>edge://settings/content/javascript</code> (or <code>chrome://settings/content/javascript</code>) and allow it. If it says it is managed by your organisation, ask IT to allow JavaScript for this file. The page cannot send data anywhere: its built-in security policy blocks every network connection.</p>
 </div>
 
 <header class="topbar">
@@ -611,16 +612,16 @@ dialog[open] { animation: dlg-in 260ms var(--spring); }
       <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M6 6h20v20H6z" /><path d="M10 17l4 4 8-10" /></svg>
       <div class="brand-text">
         <span class="brand-name">JUnit Review</span>
-        <span class="brand-sub">Coverage &amp; test-quality review · paste-only</span>
+        <span class="brand-sub">Coverage &amp; test-quality review &#xb7; paste-only</span>
       </div>
     </div>
     <div class="topbar-facts" aria-live="polite">
       <span class="fact" id="fact-cr" title="Enhancement / CR reference">No CR reference</span>
-      <span class="fact" id="fact-tests" title="Collected test classes and methods">0 test classes · 0 test methods</span>
+      <span class="fact" id="fact-tests" title="Collected test classes and methods">0 test classes &#xb7; 0 test methods</span>
       <span id="fact-status"></span>
     </div>
     <div class="topbar-actions">
-      <span class="offline-flag" title="This page's Content-Security-Policy blocks every network connection. Pasted text never leaves this browser tab."><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 11h12v9H6z"/><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></svg><span>Offline · nothing saved</span></span>
+      <span class="offline-flag" title="This page's Content-Security-Policy blocks every network connection. Pasted text never leaves this browser tab."><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 11h12v9H6z"/><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></svg><span>Offline &#xb7; nothing saved</span></span>
       <button type="button" class="btn btn-quiet btn-sm" id="btn-backup" title="Copy the whole workspace (including pasted code) to the clipboard as text">Copy backup</button>
       <button type="button" class="btn btn-quiet btn-sm" id="btn-restore" title="Restore a workspace from backup text you paste">Restore</button>
       <button type="button" class="btn btn-quiet btn-sm" id="btn-clear" title="Discard all pasted evidence and details">Clear session</button>
@@ -690,7 +691,7 @@ dialog[open] { animation: dlg-in 260ms var(--spring); }
           <ul>
             <li>Runs entirely in this browser tab; the page's security policy blocks all network connections.</li>
             <li>Nothing is stored: no browser storage, no cookies. Closing the tab discards the session.</li>
-            <li>Pasted Java and XML are only read as text — never executed or rendered as HTML.</li>
+            <li>Pasted Java and XML are only read as text &#x2014; never executed or rendered as HTML.</li>
             <li>The clipboard is only written when you press a copy button, and never read.</li>
           </ul>
         </div>
@@ -705,7 +706,7 @@ dialog[open] { animation: dlg-in 260ms var(--spring); }
         <div class="card-head row">
           <div>
             <h2 id="editor-title">Paste evidence</h2>
-            <p class="lede" id="editor-lede">Paste one item at a time — a test class, a production class, a JaCoCo report, test results or a change list.</p>
+            <p class="lede" id="editor-lede">Paste one item at a time &#x2014; a test class, a production class, a JaCoCo report, test results or a change list.</p>
           </div>
         </div>
         <div class="editor-controls">
@@ -724,7 +725,7 @@ dialog[open] { animation: dlg-in 260ms var(--spring); }
         </div>
         <div class="editor" id="editor">
           <pre class="gutter" id="gutter" aria-hidden="true">1</pre>
-          <textarea id="code" class="code-input" wrap="off" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" aria-label="Evidence text" aria-describedby="editor-help" placeholder="Paste here (Ctrl+V)…"></textarea>
+          <textarea id="code" class="code-input" wrap="off" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" aria-label="Evidence text" aria-describedby="editor-help" placeholder="Paste here (Ctrl+V)&#x2026;"></textarea>
         </div>
         <div class="editor-meta">
           <span id="editor-help">Tab inserts a tab character; press Esc then Tab to leave the editor.</span>
@@ -781,7 +782,7 @@ dialog[open] { animation: dlg-in 260ms var(--spring); }
       <div class="card-head row">
         <div>
           <h2>Review report</h2>
-          <p class="lede">Copy the report to the clipboard — nothing is downloaded. The table version pastes straight into Excel (select cell A1, then paste).</p>
+          <p class="lede">Copy the report to the clipboard &#x2014; nothing is downloaded. The table version pastes straight into Excel (select cell A1, then paste).</p>
         </div>
       </div>
       <div class="report-actions">
@@ -893,7 +894,7 @@ function normalizeNewlines(s) {
   return String(s == null ? '' : s).replace(/\r\n?/g, '\n');
 }
 
-// FNV-1a, 32-bit. Only used to recognise identical pastes — not security.
+// FNV-1a, 32-bit. Only used to recognise identical pastes \u2014 not security.
 function hashText(s) {
   let h = 0x811c9dc5;
   for (let i = 0; i < s.length; i++) {
@@ -947,7 +948,7 @@ function pctNumber(covered, total) {
   return Math.min(Math.floor((covered * 10000) / total), 9999) / 100;
 }
 
-// threshold is a percentage (0–100, up to 4 decimal places).
+// threshold is a percentage (0\u2013100, up to 4 decimal places).
 function meetsThreshold(covered, total, threshold) {
   if (!total) return null;
   const t = Number(threshold);
@@ -998,7 +999,7 @@ function fmtInt(n) {
 
 function truncate(s, n) {
   s = String(s || '');
-  return s.length > n ? s.slice(0, n - 1) + '…' : s;
+  return s.length > n ? s.slice(0, n - 1) + '\u2026' : s;
 }
 
 function oneLine(s) {
@@ -1051,7 +1052,7 @@ function tokenizeJava(input) {
     const ch = src[i];
 
     if (ch === '\n') { line++; i++; continue; }
-    if (ch === ' ' || ch === '\t' || ch === '\r' || ch === '\f' || ch === ' ' || ch === '﻿') { i++; continue; }
+    if (ch === ' ' || ch === '\t' || ch === '\r' || ch === '\f' || ch === '\u00a0' || ch === '\ufeff') { i++; continue; }
 
     const start = i;
     const startLine = line;
@@ -1070,7 +1071,7 @@ function tokenizeJava(input) {
       for (let k = start; k < stop; k++) if (src[k] === '\n') line++;
       i = stop;
       comments.push({ line: startLine, endLine: line, text: body, block: true, javadoc: body[0] === '*' });
-      if (e < 0) problems.push({ line: startLine, kind: 'unterminated-comment', message: 'Block comment is not closed — the paste may be cut off.' });
+      if (e < 0) problems.push({ line: startLine, kind: 'unterminated-comment', message: 'Block comment is not closed \u2014 the paste may be cut off.' });
       continue;
     }
 
@@ -1087,7 +1088,7 @@ function tokenizeJava(input) {
       i = k;
       push('str', src.slice(start, i), start, startLine);
       tokens[tokens.length - 1].textBlock = true;
-      if (!closed) problems.push({ line: startLine, kind: 'unterminated-string', message: 'Text block is not closed — the paste may be cut off.' });
+      if (!closed) problems.push({ line: startLine, kind: 'unterminated-string', message: 'Text block is not closed \u2014 the paste may be cut off.' });
       continue;
     }
 
@@ -1161,7 +1162,7 @@ function isOp(tok, v) {
 
 const PRIMITIVES = new Set(['boolean', 'byte', 'char', 'short', 'int', 'long', 'float', 'double', 'void', 'var']);
 
-// Pair every bracket with its partner in one pass. Unmatched → -1.
+// Pair every bracket with its partner in one pass. Unmatched \u2192 -1.
 function computeMatches(T) {
   const M = new Int32Array(T.length).fill(-1);
   const stack = [];
@@ -1194,8 +1195,8 @@ function parseJava(input) {
   const src = lex.src;
   const P = { src, T, M, lines: src.split('\n') };
   const issues = lex.problems.slice();
-  if (unclosed) issues.push({ kind: 'unbalanced', line: T.length ? T[T.length - 1].line : 1, message: plural(unclosed, 'bracket') + ' opened but never closed — the paste appears to be cut off.' });
-  if (stray) issues.push({ kind: 'unbalanced', line: 1, message: plural(stray, 'closing bracket') + ' with no matching opening bracket — the paste may start part-way through a block.' });
+  if (unclosed) issues.push({ kind: 'unbalanced', line: T.length ? T[T.length - 1].line : 1, message: plural(unclosed, 'bracket') + ' opened but never closed \u2014 the paste appears to be cut off.' });
+  if (stray) issues.push({ kind: 'unbalanced', line: 1, message: plural(stray, 'closing bracket') + ' with no matching opening bracket \u2014 the paste may start part-way through a block.' });
 
   const units = [];
   let unit = newUnit();
@@ -1642,7 +1643,7 @@ function annNamed(list, ...names) {
 }
 
 // Pull string literal values out of an annotation argument text, e.g.
-// @GetMapping(value = {"/a", "/b"}) → ["/a", "/b"]. Restricted to a named
+// @GetMapping(value = {"/a", "/b"}) \u2192 ["/a", "/b"]. Restricted to a named
 // attribute when one is given.
 function annStrings(ann, attr) {
   if (!ann || !ann.args) return [];
@@ -1682,7 +1683,7 @@ function annClassRefs(ann) {
  * Minimal, safe XML reader for JaCoCo and JUnit reports.
  *
  * Only the five predefined entities and numeric character references are
- * decoded. DOCTYPE declarations — including any internal subset — are skipped
+ * decoded. DOCTYPE declarations \u2014 including any internal subset \u2014 are skipped
  * and never expanded, so entity-expansion attacks have nothing to work with
  * and nothing is ever fetched. Truncated documents are reported, not fatal.
  * --------------------------------------------------------------------- */
@@ -1994,10 +1995,10 @@ function parseJacocoCsv(text) {
 
 function normaliseCaseName(name) {
   // Gradle nests display names: "Seasonal items > peakSeasonDoublesMinimum()" or
-  // "rounds(int, int) > [1] 7, 12" — the method is the first segment that looks like one.
+  // "rounds(int, int) > [1] 7, 12" \u2014 the method is the first segment that looks like one.
   for (const seg of String(name || '').split(/\s+>\s+/)) {
     const s = seg.trim();
-    if (/^\[\d+\]/.test(s)) continue;            // "[1] 10, 100" — invocation label only
+    if (/^\[\d+\]/.test(s)) continue;            // "[1] 10, 100" \u2014 invocation label only
     const m = /^([\p{L}_$][\p{L}\p{N}_$]*)\s*(?:\(|\[|$)/u.exec(s);
     if (m) return m[1];
   }
@@ -2069,7 +2070,7 @@ function parseResultsText(text) {
     if (m) out.overall = { tests: +m[1], failures: +(m[2] || 0), errors: 0, skipped: +(m[3] || 0), line: lineNo };
   });
   function addCase(cls, name, status, lineNo) {
-    // Surefire repeats each failure in its summary block with the simple class name — count it once.
+    // Surefire repeats each failure in its summary block with the simple class name \u2014 count it once.
     const key = simpleNameOf(cls) + '#' + (normaliseCaseName(name) || name) + '#' + status;
     if (seen.has(key)) return;
     seen.add(key);
@@ -2204,13 +2205,13 @@ function parseScope(text) {
       if (changeCol >= 0) change = changeLetter(cells[changeCol]);
       if (moduleCol >= 0) moduleHint = cells[moduleCol] || '';
     } else {
-      let s = cells.join(' ').replace(/^\s*(?:[-*•]|\d+[.)])\s+/, '');
+      let s = cells.join(' ').replace(/^\s*(?:[-*\u2022]|\d+[.)])\s+/, '');
       let m = /^([AMDRCTU])(\d{0,3})\s+(\S+)(?:\s+(\S+))?$/.exec(s);
       if (m && (/[/.]/.test(m[3]))) {
         change = m[1] === 'C' ? 'A' : m[1] === 'T' || m[1] === 'U' ? 'M' : m[1];
         token = m[4] && m[1] === 'R' ? m[4] : m[3];
         if (!out.kinds.includes('name-status')) out.kinds.push('name-status');
-      } else if ((m = /^(added|new|modified|changed|updated|deleted|removed|renamed)\s*[:\-–]?\s+(\S+)/i.exec(s))) {
+      } else if ((m = /^(added|new|modified|changed|updated|deleted|removed|renamed)\s*[:\-\u2013]?\s+(\S+)/i.exec(s))) {
         change = changeLetter(m[1]); token = m[2];
       } else {
         // pick the first token that looks like a path, FQCN or class name
@@ -2272,7 +2273,7 @@ function changeLetter(s) {
 function finishScope(out) {
   for (const e of out.entries) {
     e.addedLines = uniq(e.addedLines).sort((a, b) => a - b);
-    if (!e.isJava && e.path) out.warnings.push('Non-Java change "' + e.path + '" cannot be measured by JaCoCo — review it separately.');
+    if (!e.isJava && e.path) out.warnings.push('Non-Java change "' + e.path + '" cannot be measured by JaCoCo \u2014 review it separately.');
   }
   if (out.deletedOnly.length) out.warnings.push(plural(out.deletedOnly.length, 'file') + ' in the diff only removes lines; removed code has no coverage to measure.');
   return out;
@@ -2359,7 +2360,7 @@ function parseSummary(text) {
   // Free text: "Line coverage: 98.5%  Branch coverage: 100%", "Branches 45/50", "92% line coverage".
   const METRIC_WORD = '(instructions?|branch(?:es)?|decisions?|lines?|statements?|methods?|functions?|class(?:es)?|complexity|overall|total)';
   const VALUE = '(\\d{1,3}(?:\\.\\d+)?\\s*%|[\\d,]+\\s*(?:\\/|of|out of)\\s*[\\d,]+)';
-  const forward = new RegExp('\\b' + METRIC_WORD + '\\s*(?:coverage|cov\\.?)?\\s*(?:is|was|=|:|-|–)?\\s*' + VALUE, 'gi');
+  const forward = new RegExp('\\b' + METRIC_WORD + '\\s*(?:coverage|cov\\.?)?\\s*(?:is|was|=|:|-|\u2013)?\\s*' + VALUE, 'gi');
   const backward = new RegExp(VALUE + '\\s*(?:of\\s+)?' + METRIC_WORD + '\\b', 'gi');
   lines.forEach((l, idx) => {
     if (used.has(idx) || !l.trim()) return;
@@ -2464,7 +2465,7 @@ function detectType(text) {
     return { type: 'summary', format: 'text', label: 'Coverage summary (declared)', reason: 'Lines with coverage percentages.' };
   }
   const scopeLike = lines.filter((l) => {
-    const s = l.trim().replace(/^\s*(?:[-*•]|\d+[.)])\s+/, '');
+    const s = l.trim().replace(/^\s*(?:[-*\u2022]|\d+[.)])\s+/, '');
     return /^[AMDRCTU]\d{0,3}\s+\S/.test(s) || /[\w-]+\/[\w./-]+\.\w+/.test(s) || /\.java\b/.test(s) || RE_FQCN.test(s.split(/[\s,;\t]+/)[0] || '') ||
       s.split(/[\s,;]+/).every((p) => RE_SIMPLE_CLASS.test(p) || RE_FQCN.test(p));
   }).length;
@@ -2538,7 +2539,7 @@ function scanBody(P, from, to) {
     }
     if (isOp(T[k + 1], '(') && !JAVA_KEYWORDS.has(t.v)) {
       const call = { name: t.v, idx: k, open: k + 1, close: M[k + 1] < 0 ? hi : M[k + 1], line: t.line, recv: receiverOf(P, k), parent: null, chainNext: [] };
-      // `new Foo(…)` is also recorded here so that `new Foo(…).bar()` chains resolve to Foo.
+      // `new Foo(\u2026)` is also recorded here so that `new Foo(\u2026).bar()` chains resolve to Foo.
       let q = k - 1;
       while (isOp(T[q], '.') && isIdent(T[q - 1])) q -= 2;
       if (isIdent(T[q], 'new')) { call.isCtor = true; call.recv = { kind: 'none' }; }
@@ -2576,7 +2577,7 @@ function scanBody(P, from, to) {
     for (const c of calls) if (c.open < nw.idx && c.close > nw.idx && (!p || c.open > p.open)) p = c;
     nw.parent = p;
   }
-  // Chain relationships: x.a().b() → b.recv.call = a
+  // Chain relationships: x.a().b() \u2192 b.recv.call = a
   for (const c of calls) {
     if (c.recv.kind === 'call') {
       const r = byIdx.get(c.recv.callIdx);
@@ -2602,7 +2603,7 @@ function receiverOf(P, k) {
     let s = k - 2;
     while (isOp(T[s - 1], '.') && isIdent(T[s - 2])) { parts.unshift(T[s - 2].v); s -= 2; }
     if (isOp(T[s - 1], '.') && isOp(T[s - 2], ')')) {
-      // a.b().c.d( — field access on a call result; treat as chained call
+      // a.b().c.d( \u2014 field access on a call result; treat as chained call
       const open = P.M[s - 2];
       if (open > 0 && isIdent(T[open - 1])) return { kind: 'call', callIdx: open - 1, via: parts.join('.') };
       return { kind: 'expr' };
@@ -2672,7 +2673,7 @@ function within(idx, a, b) {
   return idx > a && idx < b;
 }
 
-// First string literal inside a call's first argument, joined across "+" (non-literals → {*}).
+// First string literal inside a call's first argument, joined across "+" (non-literals \u2192 {*}).
 function pathFromArg(P, call, n) {
   const parts = callArgs(P, call);
   const part = parts[n || 0];
@@ -2981,7 +2982,7 @@ function isAssertionCall(c, fieldMap) {
 }
 
 function chainMatchers(c) {
-  // assertThat(x).a().b() → ['a', 'b']
+  // assertThat(x).a().b() \u2192 ['a', 'b']
   const out = [];
   let cur = c;
   let guard = 0;
@@ -3343,7 +3344,7 @@ function analyzeTestMethod(ctx, tc, tm, fw, fieldMap, helperFacts, helperByName)
         if (/^[A-Z]/.test(r.root)) return r.root; // static call on a type
         return null;
       }
-      // a.b.c → static nested access or field chain; take last capitalised segment
+      // a.b.c \u2192 static nested access or field chain; take last capitalised segment
       const segs = r.qualified.split('.');
       const v = varInfo(segs[0]);
       if (v) return null;
@@ -3424,7 +3425,7 @@ function analyzeTestMethod(ctx, tc, tm, fw, fieldMap, helperFacts, helperByName)
   // enclosing call is an expectation: an assertion's own argument (the
   // expected value), a matcher, a Mockito stub/verify argument, a call on a
   // mock, or a MockMvc expectation. So in assertEquals(5, calc.add(2, 3)) the
-  // 2 and 3 are inputs and the 5 is not; inside assertThrows(() -> …) the
+  // 2 and 3 are inputs and the 5 is not; inside assertThrows(() -> \u2026) the
   // lambda body is input.
   const callAt = (idx) => {
     let best = null;
@@ -3468,7 +3469,7 @@ function analyzeTestMethod(ctx, tc, tm, fw, fieldMap, helperFacts, helperByName)
       if ((prev && (isOp(prev, '==') || isOp(prev, '!='))) || (next && (isOp(next, '==') || isOp(next, '!=')))) continue;
       if (prev && isOp(prev, '=') && T[k - 2] && T[k - 2].t === 'id' && isOp(next, ';')) { res.inputLiterals.nulls.push({ line: t.line, text: 'variable initialised to null' }); continue; }
       const c = containerAt(k);
-      if (c || isOp(prev, ',')) res.inputLiterals.nulls.push({ line: t.line, text: c ? (c.isNew ? 'null passed to new ' + c.type + '(…)' : truncate(callText(P, c), 80)) : 'null argument' });
+      if (c || isOp(prev, ',')) res.inputLiterals.nulls.push({ line: t.line, text: c ? (c.isNew ? 'null passed to new ' + c.type + '(\u2026)' : truncate(callText(P, c), 80)) : 'null argument' });
       continue;
     }
     if (t.t === 'str' && /^"\s*"$/.test(t.v)) {
@@ -3553,7 +3554,7 @@ function analyzeTestMethod(ctx, tc, tm, fw, fieldMap, helperFacts, helperByName)
   const ev = {
     exception: [].concat(
       res.exceptions.map((e) => e.via + ' ' + e.type + ' (line ' + e.line + ')'),
-      throwStubs.map((s) => 'collaborator stubbed to throw — exception-handling path (line ' + s.line + ')'),
+      throwStubs.map((s) => 'collaborator stubbed to throw \u2014 exception-handling path (line ' + s.line + ')'),
       res.tries.filter((tr) => tr.swallows).map((tr) => 'catches ' + (tr.catches[0].types.join(' | ') || 'an exception') + ' without fail() (line ' + tr.line + ')'),
     ),
     negative: [].concat(
@@ -3570,7 +3571,7 @@ function analyzeTestMethod(ctx, tc, tm, fw, fieldMap, helperFacts, helperByName)
   };
   ev.negative = ev.exception.concat(ev.negative);
   // A positive (happy-path) scenario is about the inputs and set-up, not about
-  // how well the outcome is checked — weak checks are reported separately.
+  // how well the outcome is checked \u2014 weak checks are reported separately.
   const exercises = res.requests.length > 0 || res.refs.some((r) => !r.viaMock) || res.unresolved.some((u) => !u.viaMock);
   // Parameter rows that mix accepted and rejected inputs cover both paths.
   const mixedRows = res.sources.some((src) => /\btrue\b/i.test(src.args || '') && /\bfalse\b/i.test(src.args || ''));
@@ -3745,7 +3746,7 @@ function analyzeSourceMethod(ctx, cls, ty, m, fieldsByName, constants, prefixes,
             } else if (isIdent(x, 'default') && (isOp(T[q + 1], ':') || isOp(T[q + 1], '->'))) hasDefault = true;
           }
         }
-        res.decisions.push({ kind: 'switch', line: t.line, text: 'switch (' + truncate(cond, 80) + ') — ' + plural(cases.length, 'case') + (hasDefault ? ' + default' : ''), cond, cases, hasDefault });
+        res.decisions.push({ kind: 'switch', line: t.line, text: 'switch (' + truncate(cond, 80) + ') \u2014 ' + plural(cases.length, 'case') + (hasDefault ? ' + default' : ''), cond, cases, hasDefault });
       } else if (t.v === 'catch' && isOp(T[k + 1], '(')) {
         const close = P.M[k + 1];
         res.decisions.push({ kind: 'catch', line: t.line, text: 'catch (' + oneLine(sliceText(P, k + 2, close - 1)) + ')', cond: '' });
@@ -3755,7 +3756,7 @@ function analyzeSourceMethod(ctx, cls, ty, m, fieldsByName, constants, prefixes,
         res.decisions.push({ kind: 'loop', line: t.line, text: t.v + ' (' + truncate(cond, 100) + ')', cond });
         if (t.v === 'while') collectComparisons(P, res, k + 2, close - 1, constants, t.line);
       } else if (t.v === 'do' && isOp(T[k + 1], '{')) {
-        res.decisions.push({ kind: 'loop', line: t.line, text: 'do … while', cond: '' });
+        res.decisions.push({ kind: 'loop', line: t.line, text: 'do \u2026 while', cond: '' });
       } else if (t.v === 'throw') {
         let type = '';
         if (isIdent(T[k + 1], 'new') && isIdent(T[k + 2])) type = simpleNameOf(readQualified(P, k + 2).name);
@@ -4046,13 +4047,13 @@ function traceMethod(pc, pm, refIndex, linked, setupExercised, allTests) {
       // e.g. a Spring Data repository method exercised through its generated implementation in a @DataJpaTest
       row.status = TRACE.TESTED;
       row.tests = uniqTests(real);
-      row.basis = uniq(real.map((e) => BASIS_LABEL[e.ref.basis] || e.ref.basis)).concat(['no body in source — runs through its runtime implementation']);
+      row.basis = uniq(real.map((e) => BASIS_LABEL[e.ref.basis] || e.ref.basis)).concat(['no body in source \u2014 runs through its runtime implementation']);
       return row;
     }
     row.status = hits.length ? TRACE.MOCKED : TRACE.NA;
     row.tests = uniqTests(hits);
-    row.note = pc.isInterface ? 'Interface method — no implementation in this type.' : 'Abstract method — no implementation.';
-    if (hits.length) row.basis = ['stubbed or verified on a mock — real code not executed'];
+    row.note = pc.isInterface ? 'Interface method \u2014 no implementation in this type.' : 'Abstract method \u2014 no implementation.';
+    if (hits.length) row.basis = ['stubbed or verified on a mock \u2014 real code not executed'];
     return row;
   }
   const entries = (refIndex.get(pc.fqcn + '#' + pm.name) || []).filter((e) => argcFits(pm, e.ref.argc));
@@ -4096,7 +4097,7 @@ function traceMethod(pc, pm, refIndex, linked, setupExercised, allTests) {
     } else if (mockEntries.length || nameEntries.length) {
       row.status = TRACE.MOCKED;
       row.tests = uniqTests(mockEntries.concat(nameEntries));
-      row.basis = ['stubbed or verified on a mock — real code not executed'];
+      row.basis = ['stubbed or verified on a mock \u2014 real code not executed'];
     }
   }
   return row;
@@ -4142,17 +4143,17 @@ function computeTraceGaps(trace, prodIndex) {
       const gaps = [];
       if (r.status === TRACE.NA) { r.gaps = gaps; continue; }
       if (r.status === TRACE.NONE) gaps.push({ kind: 'none', text: 'No test in the supplied evidence references this method.' });
-      if (r.status === TRACE.MOCKED) gaps.push({ kind: 'mocked', text: 'Only appears as a mocked or stubbed call — its real implementation is not exercised by the supplied tests.' });
+      if (r.status === TRACE.MOCKED) gaps.push({ kind: 'mocked', text: 'Only appears as a mocked or stubbed call \u2014 its real implementation is not exercised by the supplied tests.' });
       if (r.status === TRACE.NAME) gaps.push({ kind: 'name', text: 'Linked only by method name in a related test class; the receiver type could not be confirmed.' });
       if (tests.length && !validating.length && r.status !== TRACE.SETUP) gaps.push({ kind: 'unvalidated', text: 'Related tests contain no assertions or verifications.' });
       const exercised = r.status === TRACE.TESTED || r.status === TRACE.API || r.status === TRACE.INDIRECT;
       if (exercised && pm.throwsTypes.length) {
         const hasNeg = tests.some((t) => t.tm.scenario.exception === 'code' || t.tm.scenario.negative === 'code');
-        if (!hasNeg) gaps.push({ kind: 'exception', lines: pm.throwsTypes.map((x) => x.line), text: 'Throws ' + uniq(pm.throwsTypes.map((x) => x.type)).join(', ') + ' (line ' + uniq(pm.throwsTypes.map((x) => x.line)).join(', ') + ') — no related test asserts an exception or error outcome.' });
+        if (!hasNeg) gaps.push({ kind: 'exception', lines: pm.throwsTypes.map((x) => x.line), text: 'Throws ' + uniq(pm.throwsTypes.map((x) => x.type)).join(', ') + ' (line ' + uniq(pm.throwsTypes.map((x) => x.line)).join(', ') + ') \u2014 no related test asserts an exception or error outcome.' });
       }
       if (exercised && pm.nullChecks.length) {
         const hasNull = tests.some((t) => t.tm.scenario.nullEmpty === 'code');
-        if (!hasNull) gaps.push({ kind: 'null', lines: pm.nullChecks.map((x) => x.line), text: 'Null/empty handling at line ' + uniq(pm.nullChecks.map((x) => x.line)).slice(0, 6).join(', ') + ' — no related test supplies a null or empty input.' });
+        if (!hasNull) gaps.push({ kind: 'null', lines: pm.nullChecks.map((x) => x.line), text: 'Null/empty handling at line ' + uniq(pm.nullChecks.map((x) => x.line)).slice(0, 6).join(', ') + ' \u2014 no related test supplies a null or empty input.' });
       }
       if (exercised && pm.comparisons.length) {
         const nums = tests.flatMap((t) => t.tm.inputLiterals.numbers.map((n) => n.value));
@@ -4170,18 +4171,18 @@ function computeTraceGaps(trace, prodIndex) {
         }
       }
       if (exercised && pm.complexity >= 2 && tests.length < pm.complexity) {
-        gaps.push({ kind: 'branches', text: 'Static estimate: ' + pm.complexity + ' execution paths (' + plural(pm.decisions.filter((d) => d.kind !== 'else').length, 'decision point') + ') but ' + plural(tests.length, 'related test') + '. Some branches may be unexercised — confirm with JaCoCo branch coverage.' });
+        gaps.push({ kind: 'branches', text: 'Static estimate: ' + pm.complexity + ' execution paths (' + plural(pm.decisions.filter((d) => d.kind !== 'else').length, 'decision point') + ') but ' + plural(tests.length, 'related test') + '. Some branches may be unexercised \u2014 confirm with JaCoCo branch coverage.' });
       }
       if (pm.security.length) {
         const auth = tests.some((t) => t.tm.securityAuth || t.tm.scenario.security === 'code');
         const unauth = tests.some((t) => t.tm.securityUnauth);
-        if (!unauth) gaps.push({ kind: 'security', text: 'Secured by ' + pm.security.join(', ') + ' — ' + (auth ? 'tests run as an authorised user but none checks that unauthorised access is rejected (401/403).' : 'no related test exercises authorised or unauthorised access.') });
+        if (!unauth) gaps.push({ kind: 'security', text: 'Secured by ' + pm.security.join(', ') + ' \u2014 ' + (auth ? 'tests run as an authorised user but none checks that unauthorised access is rejected (401/403).' : 'no related test exercises authorised or unauthorised access.') });
       }
       for (const col of pm.collaborators.filter((c) => c.sideEffect)) {
         if (!exercised) break;
         const verified = tests.some((t) => t.tm.verifies.some((v) => (v.method === col.method || v.method === '*') && mockTypeMatches(t.tc, v.mockVar, col.type)) ||
           t.tm.assertions.some((a) => /captor|getValue\(\)|getAllValues\(\)/i.test(a.text)));
-        if (!verified) gaps.push({ kind: 'interaction', lines: [col.line], text: 'Calls ' + col.field + '.' + col.method + '() at line ' + col.line + ' (side effect) — no related test verifies this interaction.' });
+        if (!verified) gaps.push({ kind: 'interaction', lines: [col.line], text: 'Calls ' + col.field + '.' + col.method + '() at line ' + col.line + ' (side effect) \u2014 no related test verifies this interaction.' });
       }
       r.gaps = gaps;
       reconcileWithMeasurement(r);
@@ -4192,7 +4193,7 @@ function computeTraceGaps(trace, prodIndex) {
 function mockTypeMatches(tc, mockVar, type) {
   if (!mockVar) return true;
   const f = tc.fields.find((x) => x.name === mockVar);
-  if (!f) return true; // local mock — accept on method name
+  if (!f) return true; // local mock \u2014 accept on method name
   return !type || f.type === type || f.declaredType === type;
 }
 
@@ -4215,7 +4216,7 @@ function reconcileWithMeasurement(row) {
  * --------------------------------------------------------------------- */
 
 function mergeJacoco(reports) {
-  // reports: [{ rep, snippet }] — later snippets win on conflict.
+  // reports: [{ rep, snippet }] \u2014 later snippets win on conflict.
   const classes = new Map();
   const sourcefiles = new Map();
   const groups = [];
@@ -4562,7 +4563,7 @@ function testQualityFindings(A) {
         out.push(finding('NOT_RUNNABLE', Object.assign({}, base, {
           severity: 'High', observation: 'Test method signature prevents execution (' + notRun.join(', ') + ').',
           explanation: tm.framework === 'junit5'
-            ? 'JUnit 5 does not run @Test methods that are private, static or return a value — they are silently skipped.'
+            ? 'JUnit 5 does not run @Test methods that are private, static or return a value \u2014 they are silently skipped.'
             : 'JUnit 4 requires public, non-static, void test methods; otherwise the runner reports an initialisation error.',
           risk: 'The test appears in the source but never runs, so it contributes nothing to the evidence.',
           action: 'Make the method a non-private, non-static void method (public for JUnit 4).',
@@ -4598,8 +4599,8 @@ function testQualityFindings(A) {
       }
       for (const a of tm.assertions.filter((x) => x.kind === 'incomplete')) {
         out.push(finding('INCOMPLETE_ASSERTION', Object.assign({}, base, {
-          severity: 'High', observation: 'assertThat(…) at line ' + a.line + ' has no condition chained to it.',
-          explanation: 'A fluent assertThat(x) with nothing after it (e.g. .isEqualTo(…)) asserts nothing.',
+          severity: 'High', observation: 'assertThat(\u2026) at line ' + a.line + ' has no condition chained to it.',
+          explanation: 'A fluent assertThat(x) with nothing after it (e.g. .isEqualTo(\u2026)) asserts nothing.',
           risk: 'The check the author intended is not performed.',
           action: 'Complete the assertion with the expected condition.',
           evidence: at(a.line, a.text),
@@ -4648,7 +4649,7 @@ function testQualityFindings(A) {
           observation: 'Performs ' + tm.requests.map((r) => r.method + ' ' + (r.path || '?')).join(', ') + ' but no expectation on the HTTP response was found.',
           explanation: 'The test checks other things (e.g. a service call) but not the status or body returned to the client.',
           risk: 'A wrong status code or response payload would not be detected.',
-          action: 'Add andExpect(status()…) and response content checks.',
+          action: 'Add andExpect(status()\u2026) and response content checks.',
           evidence: at(tm.requests[0].line, 'request'),
         })));
       }
@@ -4659,14 +4660,14 @@ function testQualityFindings(A) {
           observation: 'try/catch at line ' + tr.line + ' catches ' + (c.types.join(' | ') || 'an exception') + (c.asserts ? ' and checks it' : '') + ', but there is no fail() after the call in the try block.',
           explanation: 'If the exception is not thrown, execution skips the catch block and the test passes anyway.',
           risk: 'A missing validation or error path would go unnoticed.',
-          action: 'Use assertThrows(…) / assertThatThrownBy(…), or add fail() as the last statement in the try block.',
+          action: 'Use assertThrows(\u2026) / assertThatThrownBy(\u2026), or add fail() as the last statement in the try block.',
           evidence: at(tr.line, 'try/catch'),
         })));
       }
       for (const b of tm.broadExceptions) {
         out.push(finding('BROAD_EXCEPTION', Object.assign({}, base, {
           severity: 'Low', observation: 'Expects the generic ' + b.type + ' (' + b.via + ', line ' + b.line + ').',
-          explanation: 'Any failure — including an unrelated NullPointerException — satisfies this check.',
+          explanation: 'Any failure \u2014 including an unrelated NullPointerException \u2014 satisfies this check.',
           risk: 'The test can pass for the wrong reason.',
           action: 'Expect the specific exception type and, ideally, its message.',
           evidence: at(b.line, b.via),
@@ -4755,7 +4756,7 @@ function testQualityFindings(A) {
       testClass: distinct[0].tc.fqcn, testMethod: distinct.map((t) => t.tm.name).join(', '), severity: 'Info', certainty: 'Possible',
       observation: plural(distinct.length, 'test') + ' share the same structure and differ only in literal values.',
       explanation: 'This is not a defect, but a @ParameterizedTest would make the input cases explicit and easier to extend.',
-      risk: 'Low — maintainability only.', action: 'Consider consolidating into a parameterized test.',
+      risk: 'Low \u2014 maintainability only.', action: 'Consider consolidating into a parameterized test.',
       evidence: distinct.slice(0, 4).map((t) => ev(t.tc.snippetSeq, t.tc.snippetId, t.tm.nameLine, t.tm.name)),
     }));
   }
@@ -4791,7 +4792,7 @@ function scenarioFindings(A, traceByClass) {
     if (!has('boundary') && !sourceComparisons) {
       out.push(finding('NO_BOUNDARY_INPUT', {
         testClass: tc.fqcn, severity: 'Info', certainty: 'Possible',
-        observation: 'No boundary-value inputs identified (e.g. 0, negative numbers, MIN/MAX values, limit ± 1).',
+        observation: 'No boundary-value inputs identified (e.g. 0, negative numbers, MIN/MAX values, limit \u00b1 1).',
         explanation: sourceComparisons ? 'The production source contains numeric comparisons (see traceability gaps), but the tests do not use values at those limits.' : 'Boundary relevance cannot be judged without production source; this is noted for completeness.',
         risk: 'Off-by-one errors at limits would not be detected.',
         action: sourceComparisons ? 'Add tests at, just below and just above each limit.' : 'Supply the production source to assess, or confirm boundaries are not applicable.',
@@ -4867,7 +4868,7 @@ function traceFindings(A) {
           boundary: ['A numeric limit exists in the source but tests do not probe it.', 'Off-by-one defects at the limit would pass.', 'Add tests at the limit and either side of it.'],
           branches: ['This is a static estimate, not a measurement.', 'Some branches may be unexercised.', 'Check JaCoCo branch coverage for this method.'],
           security: ['Access control is declared on the method.', 'Unauthorised access may not be prevented.', 'Add tests for authorised and unauthorised callers.'],
-          interaction: ['The method performs a side effect that no related test verifies.', 'The side effect could be missing or wrong without any test failing.', 'Verify the interaction (verify(mock).method(…)) or assert its effect.'],
+          interaction: ['The method performs a side effect that no related test verifies.', 'The side effect could be missing or wrong without any test failing.', 'Verify the interaction (verify(mock).method(\u2026)) or assert its effect.'],
         }[g.kind];
         out.push(finding(rule, {
           category: 'Traceability', sourceClass: pc.fqcn, testMethod: r.tests.slice(0, 3).map((t) => t.tc.simpleName + '.' + t.tm.name).join(', '),
@@ -4892,7 +4893,7 @@ function coverageFindings(A) {
   const jEv = (seq, id, what) => [ev(seq, id, null, what)];
   const firstJ = A.jacocoSnippets[0] || {};
 
-  // Threshold check on the assessed population — one finding listing every metric that falls short.
+  // Threshold check on the assessed population \u2014 one finding listing every metric that falls short.
   const assessed = A.coverage.assessed;
   const below = assessed.metrics.filter((m) => gated.includes(m.type) && !m.na && !m.meets);
   if (below.length) {
@@ -4911,7 +4912,7 @@ function coverageFindings(A) {
       if (!f.uncovered.length && !(threshold >= 100 && (f.partial.length || f.branchMisses.length))) continue;
       out.push(finding('CHANGED_CODE_UNCOVERED', {
         category: 'Coverage', severity: 'High', certainty: 'Definite', status: STATUS.FAIL, sourceClass: f.path,
-        observation: 'Changed lines not fully covered: ' + [f.uncovered.length ? 'not executed — line ' + compactRanges(f.uncovered) : '', f.partial.length ? 'partly executed — line ' + compactRanges(f.partial) : '', f.branchMisses.length ? 'missed branches — line ' + compactRanges(f.branchMisses.map((b) => b.nr)) : ''].filter(Boolean).join('; ') + '.',
+        observation: 'Changed lines not fully covered: ' + [f.uncovered.length ? 'not executed \u2014 line ' + compactRanges(f.uncovered) : '', f.partial.length ? 'partly executed \u2014 line ' + compactRanges(f.partial) : '', f.branchMisses.length ? 'missed branches \u2014 line ' + compactRanges(f.branchMisses.map((b) => b.nr)) : ''].filter(Boolean).join('; ') + '.',
         explanation: 'These lines were added or modified in the supplied diff and JaCoCo shows missed instructions or branches on them.',
         risk: 'New or changed behaviour is not exercised by tests.', action: 'Add tests that execute these lines and branches.',
         evidence: jEv(f.sourcefile.snippetSeq, f.sourcefile.snippetId, f.sourcefile.name + ' line data'),
@@ -4928,7 +4929,7 @@ function coverageFindings(A) {
       observation: g.classNotExecuted
         ? g.simpleName + ' was never executed during the test run (JaCoCo CLASS counter 0 covered).'
         : g.simpleName + ': ' + missed.map((c) => fmtInt(c.missed) + ' ' + COUNTER_NOUN[c.type][c.missed === 1 ? 0 : 1] + ' missed').join(', ') +
-          (g.ranges.length ? '; uncovered line' + (g.ranges.length > 1 || g.ranges[0].count > 1 ? 's ' : ' ') + g.ranges.slice(0, 8).map((r) => (r.from === r.to ? r.from : r.from + '–' + r.to)).join(', ') : '') +
+          (g.ranges.length ? '; uncovered line' + (g.ranges.length > 1 || g.ranges[0].count > 1 ? 's ' : ' ') + g.ranges.slice(0, 8).map((r) => (r.from === r.to ? r.from : r.from + '\u2013' + r.to)).join(', ') : '') +
           (g.methods.length ? '; methods not fully executed: ' + uniq(g.methods.map((m) => (m.name === '<init>' ? 'constructor' : m.name + '()'))).slice(0, 6).join(', ') : '') + '.',
       explanation: 'Measured execution evidence (JaCoCo).' + (g.sourceAvailable ? ' Source lines are shown under Uncovered Code Findings.' : ' Paste the production source to see the uncovered statements.'),
       risk: 'Untested code paths in ' + (g.inScope ? 'the enhancement scope' : 'the measured code') + '.',
@@ -4997,10 +4998,10 @@ function compactRanges(nums) {
   for (let i = 0; i < s.length; i++) {
     let j = i;
     while (j + 1 < s.length && s[j + 1] === s[j] + 1) j++;
-    parts.push(i === j ? String(s[i]) : s[i] + '–' + s[j]);
+    parts.push(i === j ? String(s[i]) : s[i] + '\u2013' + s[j]);
     i = j;
   }
-  return parts.slice(0, 12).join(', ') + (parts.length > 12 ? ', …' : '');
+  return parts.slice(0, 12).join(', ') + (parts.length > 12 ? ', \u2026' : '');
 }
 
 function executionFindings(A) {
@@ -5126,7 +5127,7 @@ function scopeAndEvidenceFindings(A) {
   }
   for (const d of A.duplicateClasses) {
     const parts = d.details.map((x) => {
-      if (x.kind === 'no-package') return 'snippet #' + x.seq + ' has no package line and ' + (x.sameBody ? 'is otherwise identical — treated as a copy' : 'shares most test names — treated as a copy (contents differ)');
+      if (x.kind === 'no-package') return 'snippet #' + x.seq + ' has no package line and ' + (x.sameBody ? 'is otherwise identical \u2014 treated as a copy' : 'shares most test names \u2014 treated as a copy (contents differ)');
       if (x.kind === 'identical') return 'snippet #' + x.seq + ' is identical';
       return 'snippet #' + x.seq + ' is an earlier, different version (superseded)';
     });
@@ -5257,7 +5258,7 @@ function analyze(state, opts) {
         }
         for (const ty of tops) {
           n++;
-          if (ty.kind !== 'fragment' && !ty.complete) { info.incomplete = true; info.incompleteReasons.push('Class ' + ty.name + ' is not closed — the copy appears to be cut off.'); }
+          if (ty.kind !== 'fragment' && !ty.complete) { info.incomplete = true; info.incompleteReasons.push('Class ' + ty.name + ' is not closed \u2014 the copy appears to be cut off.'); }
           for (const m of ty.methods) if (m.hasBody && !m.complete) { info.incomplete = true; info.incompleteReasons.push('Method ' + m.name + '() is cut off.'); break; }
           const isTest = hasTestMethods(ty);
           let role = isTest ? 'test' : declared === 'test' ? 'test-support' : 'source';
@@ -5278,7 +5279,7 @@ function analyze(state, opts) {
       if (!rep.classes.length) info.unrecognised = 'No JaCoCo <class> entries were found.';
       jacocoReports.push({ rep, snippet: sn });
       A.jacocoSnippets.push({ seq: sn.seq, id: sn.id });
-      info.label = 'JaCoCo ' + (rep.format === 'csv' ? 'CSV' : 'XML') + (rep.name ? ' · ' + rep.name : '');
+      info.label = 'JaCoCo ' + (rep.format === 'csv' ? 'CSV' : 'XML') + (rep.name ? ' \u00b7 ' + rep.name : '');
       info.summary = plural(rep.classes.filter((c) => !c.innerPart).length, 'class', 'classes');
     } else if (info.type === 'results') {
       const rs = /^\s*</.test(text) ? parseJunitXml(text) : parseResultsText(text);
@@ -5470,7 +5471,7 @@ function analyze(state, opts) {
   }
   assessed.pass = J.present ? review.gatedMetrics.every((t) => { const m = assessed.metrics.find((x) => x.type === t); return m.na || m.meets; }) : null;
   assessed.reportMetrics = J.present ? METRICS.concat(['COMPLEXITY']).map((t) => metricRow(J.totals, t, review.threshold)) : [];
-  A.coverage = { assessed, scope, notVerifiedText: 'Actual Code Coverage: NOT VERIFIED — JaCoCo execution evidence required.' };
+  A.coverage = { assessed, scope, notVerifiedText: 'Actual Code Coverage: NOT VERIFIED \u2014 JaCoCo execution evidence required.' };
 
   // Declared summaries vs measured
   for (const d of A.declared.entries) {
@@ -5587,7 +5588,7 @@ function matchExecution(resultSets, testClasses) {
       else if (suites.length && !cases.some((c) => c.status === 'passed') && !tm.disabled) status = suites.some((s) => s.tests > 0) ? 'inferred' : 'not-found';
       tm.execution = { status, runs: mine.length };
       if (status === 'not-found' && !tm.disabled && (cases.length || suites.length)) {
-        // Parameterized invocations reported only as "[1] …" cannot be attributed to a method name.
+        // Parameterized invocations reported only as "[1] \u2026" cannot be attributed to a method name.
         const unattributed = cases.filter((c) => !c.normName);
         if (!(tm.parameterized && unattributed.length)) R.notExecuted.push({ tc, tm });
         else tm.execution = { status: 'unattributed', runs: unattributed.length };
@@ -5652,28 +5653,28 @@ function evidenceCompleteness(A) {
   const add = (key, label, status, detail, required) => items.push({ key, label, status, detail, required: !!required });
   const R = A.review;
   add('details', 'Enhancement details', R.crRef && R.appName ? STATUS.PASS : STATUS.REVIEW,
-    R.crRef && R.appName ? 'CR ' + R.crRef + ' · ' + R.appName + (R.moduleName ? ' · ' + R.moduleName : '') : 'Enter the CR reference and application name.', false);
+    R.crRef && R.appName ? 'CR ' + R.crRef + ' \u00b7 ' + R.appName + (R.moduleName ? ' \u00b7 ' + R.moduleName : '') : 'Enter the CR reference and application name.', false);
   const inv = A.inventory;
   add('tests', 'JUnit test code', inv.testClasses ? STATUS.PASS : STATUS.INSUFFICIENT,
     inv.testClasses ? plural(inv.testClasses, 'test class', 'test classes') + ', ' + plural(inv.testMethods, 'test method') : 'No test classes collected.', true);
   const scope = A.coverage.scope;
   const inScopeSrc = scope ? scope.classes.filter((r) => r.source).length : 0;
   add('source', 'Production source code', A.prodClasses.length ? (scope && scope.classes.length && inScopeSrc < scope.classes.length ? STATUS.REVIEW : STATUS.PASS) : STATUS.REVIEW,
-    A.prodClasses.length ? plural(inv.prodClasses, 'class', 'classes') + (scope && scope.classes.length ? '; source for ' + inScopeSrc + ' of ' + scope.classes.length + ' in-scope classes' : '') : 'Not supplied — source-to-test traceability is not possible.', false);
+    A.prodClasses.length ? plural(inv.prodClasses, 'class', 'classes') + (scope && scope.classes.length ? '; source for ' + inScopeSrc + ' of ' + scope.classes.length + ' in-scope classes' : '') : 'Not supplied \u2014 source-to-test traceability is not possible.', false);
   const J = A.jacoco;
   add('jacoco', 'JaCoCo coverage report', !J.present ? STATUS.INSUFFICIENT : (J.warnings.length || !J.hasLineData) ? STATUS.REVIEW : STATUS.PASS,
-    !J.present ? 'Not supplied — actual coverage is NOT VERIFIED.' : plural(J.classes.size, 'class entry', 'class entries') + ' from ' + plural(J.count, 'report') + (J.hasLineData ? ', with line-level data' : ', without line-level data') + (J.warnings.length ? '; ' + plural(J.warnings.length, 'integrity warning') : ''), true);
+    !J.present ? 'Not supplied \u2014 actual coverage is NOT VERIFIED.' : plural(J.classes.size, 'class entry', 'class entries') + ' from ' + plural(J.count, 'report') + (J.hasLineData ? ', with line-level data' : ', without line-level data') + (J.warnings.length ? '; ' + plural(J.warnings.length, 'integrity warning') : ''), true);
   add('scope', 'Enhancement change scope', !scope ? STATUS.INSUFFICIENT : STATUS.PASS,
-    !scope ? 'Not supplied — measured coverage cannot be tied to the changed code.' : plural(scope.productionEntries.length, 'production file/class', 'production files/classes') + (scope.changed ? ', with changed line numbers (git diff)' : ', without line numbers') + (scope.otherEntries.length ? '; ' + scope.otherEntries.length + ' other' : ''), true);
+    !scope ? 'Not supplied \u2014 measured coverage cannot be tied to the changed code.' : plural(scope.productionEntries.length, 'production file/class', 'production files/classes') + (scope.changed ? ', with changed line numbers (git diff)' : ', without line numbers') + (scope.otherEntries.length ? '; ' + scope.otherEntries.length + ' other' : ''), true);
   if (scope && J.present) {
     add('scopeCoverage', 'JaCoCo covers declared scope', scope.missingFromJacoco.length ? STATUS.INSUFFICIENT : STATUS.PASS,
       scope.missingFromJacoco.length ? plural(scope.missingFromJacoco.length, 'in-scope class has', 'in-scope classes have') + ' no JaCoCo data: ' + scope.missingFromJacoco.map((r) => simpleNameOf(r.name)).slice(0, 5).join(', ') : 'Every in-scope production class appears in the report.', true);
   }
   const E = A.execution;
   add('results', 'JUnit execution results', !E.present ? STATUS.REVIEW : (E.totals.failed + E.totals.errors) ? STATUS.FAIL : E.notExecuted.length || E.totals.skipped ? STATUS.REVIEW : STATUS.PASS,
-    !E.present ? 'Not supplied — passing test runs are not evidenced.' : E.totals.tests + ' executions: ' + E.totals.passed + ' passed, ' + E.totals.failed + ' failed, ' + E.totals.errors + ' errors, ' + E.totals.skipped + ' skipped' + (E.notExecuted.length ? '; ' + plural(E.notExecuted.length, 'test') + ' with no execution record' : ''), false);
+    !E.present ? 'Not supplied \u2014 passing test runs are not evidenced.' : E.totals.tests + ' executions: ' + E.totals.passed + ' passed, ' + E.totals.failed + ' failed, ' + E.totals.errors + ' errors, ' + E.totals.skipped + ' skipped' + (E.notExecuted.length ? '; ' + plural(E.notExecuted.length, 'test') + ' with no execution record' : ''), false);
   add('declared', 'Declared coverage summaries', A.declared.entries.length ? (A.declared.conflicts.length ? STATUS.REVIEW : STATUS.NA) : STATUS.NA,
-    A.declared.entries.length ? plural(A.declared.entries.length, 'declared figure') + ' — user-entered / vendor-declared, not independently verified' + (A.declared.conflicts.length ? '; ' + plural(A.declared.conflicts.length, 'conflict') + ' with JaCoCo' : '') : 'None supplied (not required).', false);
+    A.declared.entries.length ? plural(A.declared.entries.length, 'declared figure') + ' \u2014 user-entered / vendor-declared, not independently verified' + (A.declared.conflicts.length ? '; ' + plural(A.declared.conflicts.length, 'conflict') + ' with JaCoCo' : '') : 'None supplied (not required).', false);
   const partial = A.snippets.filter((s) => s.incomplete).length;
   const conflicts = A.duplicateClasses.filter((d) => !d.identical).length;
   const unrec = A.snippets.filter((s) => s.unrecognised).length;
@@ -5744,7 +5745,7 @@ function buildConclusion(A) {
     const txt = gm.map((m) => m.label + ' ' + (m.na ? 'N/A' : m.pct)).join(', ');
     const missing = scope && scope.missingFromJacoco.length;
     add('Measured coverage', assessed.pass === false ? STATUS.FAIL : missing ? STATUS.INSUFFICIENT : STATUS.PASS,
-      'JaCoCo, ' + assessed.description + ': ' + txt + ' — ' + (assessed.pass ? 'meets' : 'does not meet') + ' the ' + R.threshold + '% threshold' + (missing ? '; ' + plural(scope.missingFromJacoco.length, 'in-scope class') + ' not measured' : '') + '.');
+      'JaCoCo, ' + assessed.description + ': ' + txt + ' \u2014 ' + (assessed.pass ? 'meets' : 'does not meet') + ' the ' + R.threshold + '% threshold' + (missing ? '; ' + plural(scope.missingFromJacoco.length, 'in-scope class') + ' not measured' : '') + '.');
   }
   // Changed code
   if (!scope) add('Enhancement scope', STATUS.INSUFFICIENT, 'No change scope supplied; coverage cannot be tied to the enhancement.');
@@ -5758,7 +5759,7 @@ function buildConclusion(A) {
 
   // Execution
   const E = A.execution;
-  if (!E.present) add('Test execution', STATUS.REVIEW, 'No JUnit execution results supplied — passing runs are not evidenced.');
+  if (!E.present) add('Test execution', STATUS.REVIEW, 'No JUnit execution results supplied \u2014 passing runs are not evidenced.');
   else {
     const t = E.totals;
     const st = t.failed + t.errors || E.suiteFailures.length ? STATUS.FAIL : (t.skipped || E.notExecuted.length) ? STATUS.REVIEW : STATUS.PASS;
@@ -5784,7 +5785,7 @@ function buildConclusion(A) {
     [STATUS.PASS]: 'All assessed evidence meets the review criteria.',
     [STATUS.FAIL]: 'Verified evidence shows the review criteria are not met.',
     [STATUS.INSUFFICIENT]: 'The evidence supplied is not sufficient to verify the enhancement.',
-    [STATUS.REVIEW]: 'Verified figures are acceptable, but observations need a reviewer’s judgement.',
+    [STATUS.REVIEW]: 'Verified figures are acceptable, but observations need a reviewer\u2019s judgement.',
     [STATUS.NA]: 'Nothing to assess yet.',
   }[status];
 
@@ -5817,7 +5818,7 @@ function buildConclusion(A) {
 function summariseRules(list) {
   const counts = new Map();
   for (const f of list) counts.set(f.rule, (counts.get(f.rule) || 0) + 1);
-  return Array.from(counts.entries()).map(([r, n]) => RULE_TITLES[r] ? RULE_TITLES[r] + (n > 1 ? ' ×' + n : '') : r).slice(0, 5).join(', ');
+  return Array.from(counts.entries()).map(([r, n]) => RULE_TITLES[r] ? RULE_TITLES[r] + (n > 1 ? ' \u00d7' + n : '') : r).slice(0, 5).join(', ');
 }
 
 const RULE_TITLES = {
@@ -5864,7 +5865,7 @@ function wrapText(text, width, indent) {
 function field(label, value, width) {
   const pad = 20;
   const head = (label + ' ').padEnd(pad, '.') + ' ';
-  return head + wrapText(value || '—', (width || 100) - pad - 1, ' '.repeat(pad + 1));
+  return head + wrapText(value || '\u2014', (width || 100) - pad - 1, ' '.repeat(pad + 1));
 }
 
 function heading(n, title) {
@@ -5883,7 +5884,7 @@ function scenarioTags(tm) {
 
 function findingBlock(f) {
   return [
-    f.id + '  [' + f.status + ' · ' + f.severity + ' · ' + f.certainty + ']  ' + f.category + ' — ' + (RULE_TITLES[f.rule] || f.rule),
+    f.id + '  [' + f.status + ' \u00b7 ' + f.severity + ' \u00b7 ' + f.certainty + ']  ' + f.category + ' \u2014 ' + (RULE_TITLES[f.rule] || f.rule),
     '  ' + field('Source class', f.sourceClass),
     '  ' + field('Test class', f.testClass),
     '  ' + field('Test method', f.testMethod),
@@ -5897,7 +5898,7 @@ function findingBlock(f) {
 
 function metricLine(m, gated) {
   const res = m.na ? 'N/A (none in code)' : m.strict ? 'PASS' : m.meets ? 'Meets threshold' : 'BELOW THRESHOLD';
-  return '  ' + m.label.padEnd(12) + (m.na ? '—' : fmtInt(m.covered)).padStart(10) + (m.na ? '—' : fmtInt(m.missed)).padStart(10) + (m.na ? '—' : fmtInt(m.total)).padStart(10) + m.pct.padStart(10) + '   ' + res + (gated && !gated.includes(m.type) ? ' (not gated)' : '');
+  return '  ' + m.label.padEnd(12) + (m.na ? '\u2014' : fmtInt(m.covered)).padStart(10) + (m.na ? '\u2014' : fmtInt(m.missed)).padStart(10) + (m.na ? '\u2014' : fmtInt(m.total)).padStart(10) + m.pct.padStart(10) + '   ' + res + (gated && !gated.includes(m.type) ? ' (not gated)' : '');
 }
 
 function buildTextReport(A) {
@@ -5909,8 +5910,8 @@ function buildTextReport(A) {
   L.push(field('Application', R.appName || '(not entered)'));
   L.push(field('Module', R.moduleName || '(not entered)'));
   L.push(field('Review scope', R.scopeDesc || '(not entered)'));
-  L.push(field('Coverage threshold', R.threshold + '%' + (R.threshold >= 100 ? ' (strict — zero missed elements required)' : '') + '; metrics assessed: ' + R.gatedMetrics.map((m) => METRIC_LABEL[m]).join(', ')));
-  L.push(field('Generated', (A.generatedAt || '') + ' — offline review; no code left this computer'));
+  L.push(field('Coverage threshold', R.threshold + '%' + (R.threshold >= 100 ? ' (strict \u2014 zero missed elements required)' : '') + '; metrics assessed: ' + R.gatedMetrics.map((m) => METRIC_LABEL[m]).join(', ')));
+  L.push(field('Generated', (A.generatedAt || '') + ' \u2014 offline review; no code left this computer'));
   L.push('');
   L.push('OVERALL CONCLUSION: ' + A.conclusion.status.toUpperCase());
   L.push(wrapText(A.conclusion.headline, 100, ''));
@@ -5923,7 +5924,7 @@ function buildTextReport(A) {
     (A.jacoco.present ? plural(A.jacoco.count, 'JaCoCo report') : 'no JaCoCo report') + ', ' + (A.execution.present ? 'execution results' : 'no execution results') + ', ' + (A.scopeSnippets.length ? 'change scope' : 'no change scope') + '.'));
   for (const m of A.coverage.assessed.metrics.filter((x) => R.gatedMetrics.includes(x.type))) {
     if (!A.jacoco.present) break;
-    L.push(field(m.label + ' coverage', m.na ? 'N/A' : m.pct + ' (' + fmtInt(m.covered) + ' of ' + fmtInt(m.total) + ') — measured, ' + A.coverage.assessed.label));
+    L.push(field(m.label + ' coverage', m.na ? 'N/A' : m.pct + ' (' + fmtInt(m.covered) + ' of ' + fmtInt(m.total) + ') \u2014 measured, ' + A.coverage.assessed.label));
   }
   if (!A.jacoco.present) L.push(field('Coverage', A.coverage.notVerifiedText));
 
@@ -5931,14 +5932,14 @@ function buildTextReport(A) {
   L.push(heading(2, 'JUnit Test Inventory'));
   L.push(field('Status', A.sections[1].status));
   L.push(field('Totals', plural(inv.testClasses, 'class', 'classes') + ', ' + plural(inv.testMethods, 'test method') + ' (' + inv.disabled + ' disabled, ' + inv.parameterized + ' parameterized); ' + inv.assertions + ' assertions, ' + inv.verifies + ' verifications, ' + inv.stubs + ' stubs, ' + inv.requests + ' API requests.'));
-  L.push(field('Scenarios (code)', Object.keys(SCENARIO_LABEL).map((k) => SCENARIO_LABEL[k] + ' ' + inv.scenarios[k]).join(' · ')));
+  L.push(field('Scenarios (code)', Object.keys(SCENARIO_LABEL).map((k) => SCENARIO_LABEL[k] + ' ' + inv.scenarios[k]).join(' \u00b7 ')));
   for (const tc of A.testClasses) {
     L.push('');
-    L.push('  ' + tc.label + '  [' + frameworkLabel(tc.framework) + ' · ' + tc.styles.join(', ') + ']  — snippet #' + tc.snippetSeq);
+    L.push('  ' + tc.label + '  [' + frameworkLabel(tc.framework) + ' \u00b7 ' + tc.styles.join(', ') + ']  \u2014 snippet #' + tc.snippetSeq);
     if (tc.targetFqcns.length) L.push('    Target: ' + tc.targetFqcns.join(', '));
     for (const tm of tc.methods) {
       const bits = [tm.annotation, tm.disabled ? 'DISABLED' : '', tm.assertions.length + ' assert', tm.verifies.length + ' verify', tm.stubs.length ? tm.stubs.length + ' stub' : '', tm.requests.length ? tm.requests.map((r) => r.method + ' ' + (r.path || '?')).join(', ') : ''].filter(Boolean);
-      L.push('    - ' + tm.name + (tm.displayName ? ' "' + truncate(tm.displayName, 60) + '"' : '') + '  (' + bits.join(' · ') + ')');
+      L.push('    - ' + tm.name + (tm.displayName ? ' "' + truncate(tm.displayName, 60) + '"' : '') + '  (' + bits.join(' \u00b7 ') + ')');
       const tags = scenarioTags(tm);
       if (tags.length) L.push('        scenarios: ' + tags.join(', '));
     }
@@ -5952,15 +5953,15 @@ function buildTextReport(A) {
   for (const f of q) L.push('', findingBlock(f));
 
   // 4
-  L.push(heading(4, 'Source-to-Test Traceability (static, apparent — not measured coverage)'));
+  L.push(heading(4, 'Source-to-Test Traceability (static, apparent \u2014 not measured coverage)'));
   L.push(field('Status', A.sections[3].status));
-  if (!A.trace) L.push(field('Note', A.prodClasses.length ? 'No test code to map against.' : 'Production source not supplied — static mapping not performed.'));
+  if (!A.trace) L.push(field('Note', A.prodClasses.length ? 'No test code to map against.' : 'Production source not supplied \u2014 static mapping not performed.'));
   else {
     for (const cr of A.trace.classRows) {
       L.push('');
-      L.push('  ' + cr.cls.label + (cr.linkedTests.length ? '  ← ' + cr.linkedTests.map(simpleNameOf).join(', ') : '  ← no linked test class'));
+      L.push('  ' + cr.cls.label + (cr.linkedTests.length ? '  \u2190 ' + cr.linkedTests.map(simpleNameOf).join(', ') : '  \u2190 no linked test class'));
       for (const r of cr.methods) {
-        L.push('    ' + r.display + ' [line ' + r.line + '–' + r.endLine + ']: ' + r.status.toUpperCase() + (r.measured ? '  | JaCoCo: ' + r.measured.state + ' (' + r.measured.summary + ')' : ''));
+        L.push('    ' + r.display + ' [line ' + r.line + '\u2013' + r.endLine + ']: ' + r.status.toUpperCase() + (r.measured ? '  | JaCoCo: ' + r.measured.state + ' (' + r.measured.summary + ')' : ''));
         if (r.tests.length) L.push('      tests: ' + r.tests.slice(0, 6).map((t) => t.tc.simpleName + '.' + t.tm.name).join(', ') + (r.tests.length > 6 ? ' +' + (r.tests.length - 6) : ''));
         if (r.decisions.length) L.push('      conditions: ' + r.decisions.filter((d) => d.kind !== 'else').slice(0, 6).map((d) => 'L' + d.line + ' ' + truncate(d.text, 60)).join('; '));
         for (const g of r.gaps) L.push('      gap: ' + wrapText(g.text + (g.superseded ? ' [superseded: ' + g.superseded + ']' : ''), 90, '           '));
@@ -5979,7 +5980,7 @@ function buildTextReport(A) {
     const S = A.coverage.scope;
     if (S && S.changed && S.changed.assessable) {
       L.push('');
-      L.push('  Changed-code coverage (diff lines × JaCoCo line data):');
+      L.push('  Changed-code coverage (diff lines \u00d7 JaCoCo line data):');
       for (const m of S.changed.metrics) L.push(metricLine(m));
       L.push('    ' + S.changed.nonExecutable + ' changed lines are not executable (comments, declarations, blank).');
     }
@@ -5994,19 +5995,19 @@ function buildTextReport(A) {
     if (S && S.modules.length) {
       L.push('');
       L.push('  Affected-module coverage:');
-      for (const mo of S.modules) L.push('    ' + mo.name + ': ' + (mo.metrics ? mo.metrics.filter((m) => R.gatedMetrics.includes(m.type)).map((m) => m.label + ' ' + m.pct).join(', ') + ' (' + mo.source + ')' : 'no module-level total in the supplied report — not inferred from class figures'));
+      for (const mo of S.modules) L.push('    ' + mo.name + ': ' + (mo.metrics ? mo.metrics.filter((m) => R.gatedMetrics.includes(m.type)).map((m) => m.label + ' ' + m.pct).join(', ') + ' (' + mo.source + ')' : 'no module-level total in the supplied report \u2014 not inferred from class figures'));
     }
     if (A.jacoco.sessions.length) L.push(field('JaCoCo sessions', A.jacoco.sessions.slice(0, 3).map((s) => s.id + (s.dump ? ' @ ' + new Date(s.dump).toISOString() : '')).join('; ')));
   }
   if (A.declared.entries.length) {
     L.push('');
-    L.push('  Declared coverage — USER-ENTERED / VENDOR-DECLARED, NOT INDEPENDENTLY VERIFIED:');
-    for (const d of A.declared.entries) L.push('    ' + d.scope + ' · ' + (METRIC_LABEL[d.metric] || 'Overall') + ': ' + d.pct + ' (' + d.provenance + ', snippet #' + d.snippetSeq + ')' + (d.measured ? ' — JaCoCo: ' + d.measured + (d.conflict ? ' CONFLICT' : '') : ''));
+    L.push('  Declared coverage \u2014 USER-ENTERED / VENDOR-DECLARED, NOT INDEPENDENTLY VERIFIED:');
+    for (const d of A.declared.entries) L.push('    ' + d.scope + ' \u00b7 ' + (METRIC_LABEL[d.metric] || 'Overall') + ': ' + d.pct + ' (' + d.provenance + ', snippet #' + d.snippetSeq + ')' + (d.measured ? ' \u2014 JaCoCo: ' + d.measured + (d.conflict ? ' CONFLICT' : '') : ''));
   }
   if (A.execution.present) {
     const t = A.execution.totals;
     L.push('');
-    L.push(field('Test execution', t.tests + ' executions — ' + t.passed + ' passed, ' + t.failed + ' failed, ' + t.errors + ' errors, ' + t.skipped + ' skipped'));
+    L.push(field('Test execution', t.tests + ' executions \u2014 ' + t.passed + ' passed, ' + t.failed + ' failed, ' + t.errors + ' errors, ' + t.skipped + ' skipped'));
   }
 
   // 6
@@ -6016,10 +6017,10 @@ function buildTextReport(A) {
   else if (!A.uncovered.length) L.push('  No missed lines, branches or methods in the supplied JaCoCo report.');
   for (const g of A.uncovered) {
     L.push('');
-    L.push('  ' + g.fqcn + (g.inScope ? ' [IN SCOPE]' : '') + (g.classNotExecuted ? ' — CLASS NEVER EXECUTED' : ''));
-    for (const m of g.methods.slice(0, 15)) L.push('    method not fully executed: ' + (m.name === '<init>' ? 'constructor' : m.name + '()') + (m.line ? ' (line ' + m.line + ')' : '') + ' — instructions ' + pctText(m.instr.covered, m.instr.total));
+    L.push('  ' + g.fqcn + (g.inScope ? ' [IN SCOPE]' : '') + (g.classNotExecuted ? ' \u2014 CLASS NEVER EXECUTED' : ''));
+    for (const m of g.methods.slice(0, 15)) L.push('    method not fully executed: ' + (m.name === '<init>' ? 'constructor' : m.name + '()') + (m.line ? ' (line ' + m.line + ')' : '') + ' \u2014 instructions ' + pctText(m.instr.covered, m.instr.total));
     for (const l of g.lines.slice(0, 60)) L.push('    line ' + String(l.nr).padStart(4) + ' ' + (l.kind === 'missed' ? 'NOT EXECUTED  ' : 'PARTLY        ') + (l.text ? truncate(l.text, 80) : ''));
-    if (g.lines.length > 60) L.push('    … ' + (g.lines.length - 60) + ' more lines');
+    if (g.lines.length > 60) L.push('    \u2026 ' + (g.lines.length - 60) + ' more lines');
     for (const b of g.branches.slice(0, 30)) L.push('    line ' + String(b.nr).padStart(4) + ' BRANCHES ' + b.cb + '/' + (b.mb + b.cb) + ' covered  ' + (b.text ? truncate(b.text, 70) : ''));
   }
 
@@ -6030,7 +6031,7 @@ function buildTextReport(A) {
 
   // 8
   L.push(heading(8, 'Final Review Conclusion'));
-  L.push('OVERALL: ' + A.conclusion.status.toUpperCase() + ' — ' + A.conclusion.headline);
+  L.push('OVERALL: ' + A.conclusion.status.toUpperCase() + ' \u2014 ' + A.conclusion.headline);
   L.push('');
   for (const c of A.conclusion.components) L.push('  ' + ('[' + c.status + ']').padEnd(24) + c.name.padEnd(26) + wrapText(c.text, 70, ' '.repeat(52)));
   if (A.conclusion.actions.length) {
@@ -6043,10 +6044,10 @@ function buildTextReport(A) {
   // Appendix
   const rest = A.findings.filter((f) => f.category !== 'Test Quality');
   if (rest.length) {
-    L.push(heading('', 'Appendix — other findings (coverage, traceability, execution, scope, evidence)'));
+    L.push(heading('', 'Appendix \u2014 other findings (coverage, traceability, execution, scope, evidence)'));
     for (const f of rest) L.push('', findingBlock(f));
   }
-  L.push('', '— End of report —');
+  L.push('', '\u2014 End of report \u2014');
   return L.join('\n');
 }
 
@@ -6055,7 +6056,7 @@ function countBySeverity(list) {
   const c = { High: 0, Medium: 0, Low: 0, Info: 0 };
   for (const f of list) c[f.severity]++;
   const d = list.filter((f) => f.certainty === 'Definite').length;
-  return list.length + ' total — ' + c.High + ' high, ' + c.Medium + ' medium, ' + c.Low + ' low, ' + c.Info + ' info; ' + d + ' definite, ' + (list.length - d) + ' possible.';
+  return list.length + ' total \u2014 ' + c.High + ' high, ' + c.Medium + ' medium, ' + c.Low + ' low, ' + c.Info + ' info; ' + d + ' definite, ' + (list.length - d) + ' possible.';
 }
 
 function frameworkLabel(fw) {
@@ -6097,7 +6098,7 @@ function tsvInventory(A) {
 
 function tsvTraceability(A) {
   const rows = [['Production Class', 'Production Method', 'Lines', 'Kind', 'Visibility', 'Decision Points', 'Related Test Class', 'Related Test Methods', 'Link Basis', 'Apparent Status (static)', 'JaCoCo Measured', 'Potential Gaps']];
-  if (!A.trace) return tsvRows(rows.concat([['(production source not supplied — static mapping not performed)']]));
+  if (!A.trace) return tsvRows(rows.concat([['(production source not supplied \u2014 static mapping not performed)']]));
   for (const cr of A.trace.classRows) {
     for (const r of cr.methods) {
       rows.push([cr.cls.label, r.display, r.line + '-' + r.endLine, r.kind, r.visibility, r.decisions.filter((d) => d.kind !== 'else').map((d) => 'L' + d.line + ' ' + d.kind).join('; '),
@@ -6116,7 +6117,7 @@ function tsvCoverage(A) {
   } else {
     for (const m of A.coverage.assessed.metrics) rows.push([A.coverage.assessed.basis === 'scope' ? 'Affected classes (total)' : 'JaCoCo report total', A.coverage.assessed.label, m.label, m.na ? '' : m.covered, m.na ? '' : m.missed, m.na ? '' : m.total, m.pct, metricResult(m), 'JaCoCo (verified)']);
     const S = A.coverage.scope;
-    if (S && S.changed && S.changed.assessable) for (const m of S.changed.metrics) rows.push(['Changed code', 'Changed lines in diff', m.label, m.na ? '' : m.covered, m.na ? '' : m.missed, m.na ? '' : m.total, m.pct, metricResult(m), 'JaCoCo line data × git diff']);
+    if (S && S.changed && S.changed.assessable) for (const m of S.changed.metrics) rows.push(['Changed code', 'Changed lines in diff', m.label, m.na ? '' : m.covered, m.na ? '' : m.missed, m.na ? '' : m.total, m.pct, metricResult(m), 'JaCoCo line data \u00d7 git diff']);
     if (S) for (const r of S.classes) {
       if (!r.family.length) { rows.push(['Affected class', r.name, '', '', '', '', '', 'NOT IN JACOCO REPORT', 'Scope snippet #' + r.entry.snippetSeq]); continue; }
       for (const m of r.metrics) rows.push(['Affected class', r.name, m.label, m.na ? '' : m.covered, m.na ? '' : m.missed, m.na ? '' : m.total, m.pct, metricResult(m), 'JaCoCo (verified)']);
@@ -6162,7 +6163,7 @@ function buildTsvReport(A, which) {
   const parts = {
     findings: ['FINDINGS', tsvFindings(A)],
     inventory: ['JUNIT TEST INVENTORY', tsvInventory(A)],
-    traceability: ['SOURCE-TO-TEST TRACEABILITY (static, apparent — not measured)', tsvTraceability(A)],
+    traceability: ['SOURCE-TO-TEST TRACEABILITY (static, apparent \u2014 not measured)', tsvTraceability(A)],
     coverage: ['COVERAGE METRICS', tsvCoverage(A)],
     uncovered: ['UNCOVERED CODE', tsvUncovered(A)],
     evidence: ['EVIDENCE COMPLETENESS & CONCLUSION', tsvEvidence(A)],
@@ -6204,8 +6205,8 @@ try {
 /* ---- ui/00-dom.js ---- */
 /* ------------------------------------------------------------------------
  * DOM helpers. All pasted text reaches the page through textContent or
- * setAttribute on attributes chosen here in code — never through HTML
- * parsing — so pasted <script> or onerror= text is inert.
+ * setAttribute on attributes chosen here in code \u2014 never through HTML
+ * parsing \u2014 so pasted <script> or onerror= text is inert.
  * --------------------------------------------------------------------- */
 
 const $ = (sel, root) => (root || document).querySelector(sel);
@@ -6317,7 +6318,7 @@ function sevChip(sev) {
 }
 
 function certChip(c) {
-  return chip(c, 'cert cert-' + String(c).toLowerCase(), c === 'Definite' ? 'Directly observed in the evidence' : 'Heuristic — needs a reviewer to confirm');
+  return chip(c, 'cert cert-' + String(c).toLowerCase(), c === 'Definite' ? 'Directly observed in the evidence' : 'Heuristic \u2014 needs a reviewer to confirm');
 }
 
 function button(label, attrs, icon) {
@@ -6368,7 +6369,7 @@ function debounce(fn, ms) {
 
 /* ---- ui/10-state.js ---- */
 /* ------------------------------------------------------------------------
- * Workspace state — held in memory only. Nothing is written to
+ * Workspace state \u2014 held in memory only. Nothing is written to
  * localStorage, sessionStorage, IndexedDB or cookies; closing the tab
  * discards everything.
  * --------------------------------------------------------------------- */
@@ -6461,7 +6462,7 @@ function changed(kind) {
 function setBusy(on) {
   const el = $('#analysis-status');
   if (!el) return;
-  el.textContent = on ? 'Analysing…' : '';
+  el.textContent = on ? 'Analysing\u2026' : '';
 }
 
 /* ---- ui/20-evidence.js ---- */
@@ -6489,7 +6490,7 @@ function initEditor() {
       for (let i = 1; i <= n; i++) s += i + '\n';
       gutter.textContent = s;
     }
-    $('#editor-size').textContent = text ? plural(n, 'line') + ' · ' + fmt(text.length) + ' characters' : '';
+    $('#editor-size').textContent = text ? plural(n, 'line') + ' \u00b7 ' + fmt(text.length) + ' characters' : '';
     gutter.scrollTop = code.scrollTop;
     liveDetect();
     $('#dup-warning').hidden = true;
@@ -6529,11 +6530,11 @@ const liveDetect = debounce(() => {
   const text = $('#code').value;
   const host = clear($('#detected'));
   syncProvenanceField();
-  if (!text.trim()) { host.appendChild(h('span', { class: 'muted', text: 'Waiting for pasted text…' })); return; }
+  if (!text.trim()) { host.appendChild(h('span', { class: 'muted', text: 'Waiting for pasted text\u2026' })); return; }
   const det = JR.detectType(text);
   const chosen = $('#input-type').value;
   const kids = [];
-  if (!det.type) kids.push(h('span', { class: 'det det-unknown' }, svg('info'), ' Not recognised — choose the input type'));
+  if (!det.type) kids.push(h('span', { class: 'det det-unknown' }, svg('info'), ' Not recognised \u2014 choose the input type'));
   else {
     kids.push(h('span', { class: 'det' }, svg(TYPE_ICON[det.type] || 'doc'), ' Detected: ', h('strong', { text: det.label })));
     if (det.type === 'test' || det.type === 'source') {
@@ -6616,7 +6617,7 @@ function endEdit() {
   $('#code').value = '';
   $('#input-type').value = 'auto';
   $('#editor-title').textContent = 'Paste evidence';
-  $('#editor-lede').textContent = 'Paste one item at a time — a test class, a production class, a JaCoCo report, test results or a change list.';
+  $('#editor-lede').textContent = 'Paste one item at a time \u2014 a test class, a production class, a JaCoCo report, test results or a change list.';
   $('#btn-add').lastChild.textContent = 'Add to review';
   $('#btn-cancel-edit').hidden = true;
   $('#editor-card').classList.remove('is-editing');
@@ -6635,7 +6636,7 @@ function addManualFigure() {
   let value = '';
   if (cov !== '' && tot !== '') {
     const c = Number(cov), t = Number(tot);
-    if (!Number.isInteger(c) || !Number.isInteger(t) || c < 0 || t <= 0 || c > t) { err.textContent = 'Covered and total must be whole numbers with covered ≤ total.'; return; }
+    if (!Number.isInteger(c) || !Number.isInteger(t) || c < 0 || t <= 0 || c > t) { err.textContent = 'Covered and total must be whole numbers with covered \u2264 total.'; return; }
     value = c + ' of ' + t;
   } else if (pct !== '') {
     const p = Number(pct);
@@ -6672,7 +6673,7 @@ function renderSnippetList() {
   if (!S.snippets.length) {
     host.appendChild(h('div', { class: 'empty' },
       h('p', { class: 'empty-title', text: 'No evidence yet' }),
-      h('p', { text: 'Paste a test class on the left and choose “Add to review”. Repeat for every test class, production class, JaCoCo report, result file and change list in this enhancement.' })));
+      h('p', { text: 'Paste a test class on the left and choose \u201cAdd to review\u201d. Repeat for every test class, production class, JaCoCo report, result file and change list in this enhancement.' })));
     return;
   }
   const infoById = new Map((S.result ? S.result.snippets : []).map((s) => [s.id, s]));
@@ -6702,9 +6703,9 @@ function renderSnippetList() {
       h('div', { class: 'snippet-head' },
         h('span', { class: 'snippet-n', text: '#' + sn.seq }),
         h('span', { class: 'type-tag type-' + (eff || 'unknown') }, svg(TYPE_ICON[eff] || 'doc'), h('span', { text: eff ? TYPE_SHORT[eff] : 'Unknown' })),
-        h('span', { class: 'snippet-label', title: info ? info.label : '', text: info ? info.label : 'Analysing…' })),
+        h('span', { class: 'snippet-label', title: info ? info.label : '', text: info ? info.label : 'Analysing\u2026' })),
       h('div', { class: 'snippet-meta' },
-        h('span', { text: (info && info.summary ? info.summary + ' · ' : '') + plural(sn.text.split('\n').length, 'line') }),
+        h('span', { text: (info && info.summary ? info.summary + ' \u00b7 ' : '') + plural(sn.text.split('\n').length, 'line') }),
         classes.length > 1 ? h('span', { class: 'muted', text: classes.map((c) => c.name.split('.').pop()).join(', ') }) : null),
       warn.length ? h('div', { class: 'snippet-warn' }, warn) : null,
       h('div', { class: 'snippet-actions' },
@@ -6735,7 +6736,7 @@ function renderDashboard() {
   const A = S.result;
   const nav = clear($('#dash-nav'));
   const body = clear($('#dash-body'));
-  if (!A) { body.appendChild(h('p', { class: 'muted', text: 'Analysing…' })); return; }
+  if (!A) { body.appendChild(h('p', { class: 'muted', text: 'Analysing\u2026' })); return; }
   for (const k of Object.keys(JR.TRACE)) TRACE_CLASS[JR.TRACE[k]] = 'trace-' + k.toLowerCase();
 
   const list = h('ol', { class: 'dash-nav-list' });
@@ -6747,7 +6748,7 @@ function renderDashboard() {
     list.appendChild(h('li', {}, a));
   });
   nav.appendChild(list);
-  nav.appendChild(h('p', { class: 'dash-nav-note' }, plural(A.findings.length, 'finding'), ' · analysed in ', String(S.analysisMs || 0), ' ms'));
+  nav.appendChild(h('p', { class: 'dash-nav-note' }, plural(A.findings.length, 'finding'), ' \u00b7 analysed in ', String(S.analysisMs || 0), ' ms'));
 
   const renderers = { summary: secSummary, inventory: secInventory, quality: secQuality, trace: secTrace, coverage: secCoverage, uncovered: secUncovered, evidence: secEvidence, conclusion: secConclusion };
   A.sections.forEach((sec, i) => {
@@ -6755,7 +6756,7 @@ function renderDashboard() {
     body.appendChild(h('section', { class: 'dsec card', id: 'sec-' + sec.key, 'aria-labelledby': 'sec-h-' + sec.key },
       h('header', { class: 'dsec-head' },
         h('h2', { id: 'sec-h-' + sec.key }, h('span', { class: 'dsec-n', text: String(i + 1) }), sec.title),
-        statusBadge(sec.status, { suffix: sec.staticOnly && sec.status === JR.STATUS.PASS ? ' · static checks' : '' })),
+        statusBadge(sec.status, { suffix: sec.staticOnly && sec.status === JR.STATUS.PASS ? ' \u00b7 static checks' : '' })),
       content));
   });
 }
@@ -6796,7 +6797,7 @@ function findingCard(f) {
       statusBadge(f.status),
       sevChip(f.severity),
       certChip(f.certainty),
-      h('span', { class: 'finding-rule', text: f.category + ' · ' + (JR.RULE_TITLES[f.rule] || f.rule) })),
+      h('span', { class: 'finding-rule', text: f.category + ' \u00b7 ' + (JR.RULE_TITLES[f.rule] || f.rule) })),
     h('p', { class: 'finding-obs', text: f.observation }),
     h('dl', { class: 'finding-fields' },
       field('Source class', f.sourceClass), field('Test class', f.testClass), field('Test method', f.testMethod),
@@ -6820,8 +6821,8 @@ function metricCard(m, gated, threshold) {
     h('div', { class: 'metric-top' }, h('span', { class: 'metric-label', text: m.label }), isGated ? null : chip('not gated', 'chip-muted')),
     h('div', { class: 'metric-pct', text: m.na ? 'N/A' : m.pct }),
     bar,
-    h('div', { class: 'metric-sub', text: m.na ? 'No ' + m.label.toLowerCase() + ' elements in the measured code' : fmt(m.covered) + ' of ' + fmt(m.total) + ' covered · ' + fmt(m.missed) + ' missed' }),
-    h('div', { class: 'metric-res', text: m.na ? 'Not applicable' : m.strict ? 'Pass — zero missed' : m.meets ? 'Meets ' + threshold + '% threshold' : 'Below ' + threshold + '% threshold' }));
+    h('div', { class: 'metric-sub', text: m.na ? 'No ' + m.label.toLowerCase() + ' elements in the measured code' : fmt(m.covered) + ' of ' + fmt(m.total) + ' covered \u00b7 ' + fmt(m.missed) + ' missed' }),
+    h('div', { class: 'metric-res', text: m.na ? 'Not applicable' : m.strict ? 'Pass \u2014 zero missed' : m.meets ? 'Meets ' + threshold + '% threshold' : 'Below ' + threshold + '% threshold' }));
 }
 
 function notVerifiedPanel(A) {
@@ -6831,11 +6832,11 @@ function notVerifiedPanel(A) {
 }
 
 function tagCells(tm) {
-  return SCEN_KEYS.map((k) => (tm.scenario[k] === 'code' ? chip(JR.SCENARIO_LABEL[k], 'tag tag-' + k, (tm.evidence[k] || []).join('; ')) : tm.scenario[k] === 'name' ? chip(JR.SCENARIO_LABEL[k] + '?', 'tag tag-name', 'Suggested by the test name only — no code evidence') : null));
+  return SCEN_KEYS.map((k) => (tm.scenario[k] === 'code' ? chip(JR.SCENARIO_LABEL[k], 'tag tag-' + k, (tm.evidence[k] || []).join('; ')) : tm.scenario[k] === 'name' ? chip(JR.SCENARIO_LABEL[k] + '?', 'tag tag-name', 'Suggested by the test name only \u2014 no code evidence') : null));
 }
 
 function execChip(tm) {
-  if (!tm.execution) return h('span', { class: 'muted', text: '—' });
+  if (!tm.execution) return h('span', { class: 'muted', text: '\u2014' });
   const map = { passed: ['Passed', 'pass'], failed: ['Failed', 'fail'], error: ['Error', 'fail'], skipped: ['Skipped', 'review'], 'not-found': ['No record', 'review'], inferred: ['Ran (summary)', 'pass'], unattributed: ['Ran (param.)', 'pass'] };
   const [t, c] = map[tm.execution.status] || [tm.execution.status, 'na'];
   return chip(t, 'chip-' + c);
@@ -6849,14 +6850,14 @@ function secSummary(A) {
   const facts = h('dl', { class: 'facts' },
     h('dt', { text: 'Enhancement / CR' }), h('dd', { text: R.crRef || 'Not entered' }),
     h('dt', { text: 'Application' }), h('dd', { text: R.appName || 'Not entered' }),
-    h('dt', { text: 'Module' }), h('dd', { text: R.moduleName || '—' }),
-    h('dt', { text: 'Threshold' }), h('dd', { text: R.threshold + '%' + (R.threshold >= 100 ? ' (strict)' : '') + ' · ' + R.gatedMetrics.map((m) => JR.METRIC_LABEL[m]).join(', ') }),
-    h('dt', { text: 'Scope description' }), h('dd', { class: 'pre-line', text: R.scopeDesc || '—' }),
+    h('dt', { text: 'Module' }), h('dd', { text: R.moduleName || '\u2014' }),
+    h('dt', { text: 'Threshold' }), h('dd', { text: R.threshold + '%' + (R.threshold >= 100 ? ' (strict)' : '') + ' \u00b7 ' + R.gatedMetrics.map((m) => JR.METRIC_LABEL[m]).join(', ') }),
+    h('dt', { text: 'Scope description' }), h('dd', { class: 'pre-line', text: R.scopeDesc || '\u2014' }),
     h('dt', { text: 'Analysed' }), h('dd', { text: A.generatedAt }));
   const tiles = h('div', { class: 'tiles' },
-    tile('Test classes', inv.testClasses, inv.frameworks.map(JR.frameworkLabel).join(', ') || '—'),
+    tile('Test classes', inv.testClasses, inv.frameworks.map(JR.frameworkLabel).join(', ') || '\u2014'),
     tile('Test methods', inv.testMethods, inv.disabled ? inv.disabled + ' disabled' : inv.parameterized ? inv.parameterized + ' parameterized' : 'all enabled'),
-    tile('Checks', inv.checks, 'assertions & expectations · ' + inv.verifies + ' verifications'),
+    tile('Checks', inv.checks, 'assertions & expectations \u00b7 ' + inv.verifies + ' verifications'),
     tile('Production classes', inv.prodClasses, inv.prodMethods + ' methods'),
     coverageTile(A, 'LINE'), coverageTile(A, 'BRANCH'));
   return h('div', { class: 'summary' },
@@ -6876,7 +6877,7 @@ function coverageTile(A, type) {
   const label = JR.METRIC_LABEL[type] + ' coverage';
   if (!A.jacoco.present) return h('div', { class: 'tile tile-unverified' }, h('div', { class: 'tile-n', text: 'NOT VERIFIED' }), h('div', { class: 'tile-l', text: label }), h('div', { class: 'tile-s', text: 'JaCoCo evidence required' }));
   const m = A.coverage.assessed.metrics.find((x) => x.type === type);
-  return h('div', { class: 'tile tile-' + (m.na ? 'na' : m.meets ? 'pass' : 'fail') }, h('div', { class: 'tile-n', text: m.na ? 'N/A' : m.pct }), h('div', { class: 'tile-l', text: label + ' (measured)' }), h('div', { class: 'tile-s', text: m.na ? 'none in code' : fmt(m.covered) + ' / ' + fmt(m.total) + ' · ' + A.coverage.assessed.label }));
+  return h('div', { class: 'tile tile-' + (m.na ? 'na' : m.meets ? 'pass' : 'fail') }, h('div', { class: 'tile-n', text: m.na ? 'N/A' : m.pct }), h('div', { class: 'tile-l', text: label + ' (measured)' }), h('div', { class: 'tile-s', text: m.na ? 'none in code' : fmt(m.covered) + ' / ' + fmt(m.total) + ' \u00b7 ' + A.coverage.assessed.label }));
 }
 
 /* ---------- 2. Inventory ---------- */
@@ -6884,7 +6885,7 @@ function coverageTile(A, type) {
 function secInventory(A) {
   const inv = A.inventory;
   if (!A.testClasses.length) return h('div', { class: 'callout callout-insufficient' }, h('p', { text: 'No JUnit test classes have been collected. Paste test classes in step 2.' }));
-  const filter = h('input', { type: 'search', class: 'search', placeholder: 'Filter by class or method name…', 'aria-label': 'Filter test inventory', value: dashState.invFilter, spellcheck: 'false' });
+  const filter = h('input', { type: 'search', class: 'search', placeholder: 'Filter by class or method name\u2026', 'aria-label': 'Filter test inventory', value: dashState.invFilter, spellcheck: 'false' });
   const listHost = h('div', { class: 'inv-list' });
   const draw = () => {
     clear(listHost);
@@ -6896,11 +6897,11 @@ function secInventory(A) {
       const counts = { a: 0, v: 0, s: 0, r: 0 };
       for (const m of tc.methods) { counts.a += m.checkCount || 0; counts.v += m.verifies.length; counts.s += m.stubs.length; counts.r += m.requests.length; }
       const rows = methods.map((m) => h('tr', { class: m.disabled ? 'is-disabled' : null },
-        td(h('div', {}, h('span', { class: 'mono', text: m.name }), m.displayName ? h('div', { class: 'muted small', text: '“' + m.displayName + '”' }) : null, m.disabled ? chip('Disabled', 'chip-review') : null)),
+        td(h('div', {}, h('span', { class: 'mono', text: m.name }), m.displayName ? h('div', { class: 'muted small', text: '\u201c' + m.displayName + '\u201d' }) : null, m.disabled ? chip('Disabled', 'chip-review') : null)),
         td(h('span', { class: 'mono small', text: m.annotation })),
         td(h('div', { class: 'tags' }, tagCells(m))),
         td(String(m.checkCount || 0), 'num'), td(String(m.verifies.length), 'num'), td(String(m.stubs.length), 'num'),
-        td(m.requests.length ? h('div', { class: 'small mono' }, m.requests.map((r) => h('div', { text: r.method + ' ' + (r.path || '?') }))) : h('span', { class: 'muted', text: '—' })),
+        td(m.requests.length ? h('div', { class: 'small mono' }, m.requests.map((r) => h('div', { text: r.method + ' ' + (r.path || '?') }))) : h('span', { class: 'muted', text: '\u2014' })),
         td(execChip(m)),
         td(h('button', { type: 'button', class: 'ev-link', onclick: () => openViewer(tc.snippetId, m.nameLine), title: 'View in snippet #' + tc.snippetSeq }, 'L' + m.nameLine))));
       listHost.appendChild(h('details', { class: 'inv-class', open: A.testClasses.length <= 4 || !!q },
@@ -6908,9 +6909,9 @@ function secInventory(A) {
           h('span', { class: 'inv-name mono', text: tc.label }),
           chip(JR.frameworkLabel(tc.framework), tc.framework === 'mixed' ? 'chip-warn' : 'chip-soft'),
           tc.styles.map((s) => chip(s, 'chip-outline')),
-          h('span', { class: 'inv-counts', text: plural(tc.methods.length, 'test') + ' · ' + counts.a + ' checks · ' + counts.v + ' verify · ' + counts.s + ' stub' + (counts.r ? ' · ' + counts.r + ' API' : '') })),
+          h('span', { class: 'inv-counts', text: plural(tc.methods.length, 'test') + ' \u00b7 ' + counts.a + ' checks \u00b7 ' + counts.v + ' verify \u00b7 ' + counts.s + ' stub' + (counts.r ? ' \u00b7 ' + counts.r + ' API' : '') })),
         tc.targetFqcns.length ? h('p', { class: 'small muted', text: 'Target: ' + tc.targetFqcns.join(', ') + ' (' + tc.targets.map((t) => t.basis).filter((v, i, a) => a.indexOf(v) === i).join(', ') + ')' }) : null,
-        table(['Test method', 'Type', 'Scenarios (code evidence; “?” = name only)', 'Checks', 'Verify', 'Stub', 'API requests', 'Execution', 'Line'], rows, 'tbl-inv')));
+        table(['Test method', 'Type', 'Scenarios (code evidence; \u201c?\u201d = name only)', 'Checks', 'Verify', 'Stub', 'API requests', 'Execution', 'Line'], rows, 'tbl-inv')));
     }
     if (!listHost.children.length) listHost.appendChild(h('p', { class: 'muted', text: 'No tests match the filter.' }));
   };
@@ -6942,7 +6943,7 @@ function secQuality(A) {
       SCEN_KEYS.map((k) => {
         const code = enabled.filter((m) => m.scenario[k] === 'code').length;
         const name = enabled.filter((m) => m.scenario[k] === 'name').length;
-        return td(code ? h('span', { class: 'mx mx-yes', title: enabled.filter((m) => m.scenario[k] === 'code').map((m) => m.name).join(', ') }, svg('pass'), String(code)) : name ? h('span', { class: 'mx mx-name', title: 'Name suggests this scenario but no code evidence: ' + enabled.filter((m) => m.scenario[k] === 'name').map((m) => m.name).join(', ') }, '? ' + name) : h('span', { class: 'mx mx-no', text: '—' }), 'center');
+        return td(code ? h('span', { class: 'mx mx-yes', title: enabled.filter((m) => m.scenario[k] === 'code').map((m) => m.name).join(', ') }, svg('pass'), String(code)) : name ? h('span', { class: 'mx mx-name', title: 'Name suggests this scenario but no code evidence: ' + enabled.filter((m) => m.scenario[k] === 'name').map((m) => m.name).join(', ') }, '? ' + name) : h('span', { class: 'mx mx-no', text: '\u2014' }), 'center');
       }));
   });
   return h('div', {},
@@ -6966,7 +6967,7 @@ function filteredFindings(list, emptyText, opts) {
     extra.push(selectFilter('Category', ['all'].concat(Array.from(new Set(list.map((x) => x.category)))), f.category, (v) => { f.category = v; draw(); }));
     extra.push(selectFilter('Status', ['all'].concat(Object.values(JR.STATUS).filter((s) => list.some((x) => x.status === s))), f.status, (v) => { f.status = v; draw(); }));
   }
-  const search = h('input', { type: 'search', class: 'search', placeholder: 'Search findings…', 'aria-label': 'Search findings', value: f.q, spellcheck: 'false' });
+  const search = h('input', { type: 'search', class: 'search', placeholder: 'Search findings\u2026', 'aria-label': 'Search findings', value: f.q, spellcheck: 'false' });
   search.addEventListener('input', debounce(() => { f.q = search.value; draw(); }, 140));
   const listHost = h('div', {});
   const countEl = h('span', { class: 'muted small' });
@@ -6977,7 +6978,7 @@ function filteredFindings(list, emptyText, opts) {
       (!q || [x.observation, x.sourceClass, x.testClass, x.testMethod, x.id, JR.RULE_TITLES[x.rule]].join(' ').toLowerCase().includes(q)));
     countEl.textContent = 'Showing ' + shown.length + ' of ' + list.length;
     clear(listHost).appendChild(findingList(shown.slice(0, 300), list.length ? 'No findings match the filters.' : emptyText));
-    if (shown.length > 300) listHost.appendChild(h('p', { class: 'muted', text: (shown.length - 300) + ' more — narrow the filters, or use the Report step for the full list.' }));
+    if (shown.length > 300) listHost.appendChild(h('p', { class: 'muted', text: (shown.length - 300) + ' more \u2014 narrow the filters, or use the Report step for the full list.' }));
   }
   draw();
   if (!list.length) return h('p', { class: 'muted', text: emptyText });
@@ -7007,11 +7008,11 @@ function secTrace(A) {
       const conds = r.decisions.filter((d) => d.kind !== 'else');
       const measured = r.measured ? chip(r.measured.state === 'covered' ? 'JaCoCo: covered' : r.measured.state === 'partial' ? 'JaCoCo: partly covered' : 'JaCoCo: not covered', r.measured.state === 'covered' ? 'chip-pass' : r.measured.state === 'partial' ? 'chip-review' : 'chip-fail', r.measured.summary) : h('span', { class: 'muted small', text: A.jacoco.present ? 'JaCoCo: no match' : 'JaCoCo: not verified' });
       return h('tr', {},
-        td(h('div', {}, h('span', { class: 'mono', text: r.display }), h('div', { class: 'small muted' }, r.visibility + ' · ' + r.kind + ' · ', h('button', { type: 'button', class: 'ev-link', onclick: () => openViewer(cr.cls.snippetId, r.line), text: 'L' + r.line + '–' + r.endLine })), r.changed === true ? chip('changed', 'chip-warn', 'Contains lines changed in the supplied diff') : null)),
+        td(h('div', {}, h('span', { class: 'mono', text: r.display }), h('div', { class: 'small muted' }, r.visibility + ' \u00b7 ' + r.kind + ' \u00b7 ', h('button', { type: 'button', class: 'ev-link', onclick: () => openViewer(cr.cls.snippetId, r.line), text: 'L' + r.line + '\u2013' + r.endLine })), r.changed === true ? chip('changed', 'chip-warn', 'Contains lines changed in the supplied diff') : null)),
         td(conds.length ? h('details', { class: 'conds' }, h('summary', { text: plural(conds.length, 'condition') }), h('ul', {}, conds.map((d) => h('li', {}, h('button', { type: 'button', class: 'ev-link', onclick: () => openViewer(cr.cls.snippetId, d.line), text: 'L' + d.line }), ' ', h('code', { text: d.text }))))) : h('span', { class: 'muted', text: 'none' })),
-        td(r.tests.length ? h('div', {}, h('ul', { class: 'plain small' }, r.tests.slice(0, 6).map((t) => h('li', {}, h('button', { type: 'button', class: 'ev-link mono', onclick: () => openViewer(t.tc.snippetId, t.tm.nameLine), text: t.tc.simpleName + '.' + t.tm.name }), t.request ? h('span', { class: 'muted', text: ' · ' + t.request }) : null)), r.tests.length > 6 ? h('li', { class: 'muted', text: '+' + (r.tests.length - 6) + ' more' }) : null), r.basis.length ? h('div', { class: 'basis', text: 'Link: ' + r.basis.join('; ') }) : null) : h('span', { class: 'muted', text: '—' })),
+        td(r.tests.length ? h('div', {}, h('ul', { class: 'plain small' }, r.tests.slice(0, 6).map((t) => h('li', {}, h('button', { type: 'button', class: 'ev-link mono', onclick: () => openViewer(t.tc.snippetId, t.tm.nameLine), text: t.tc.simpleName + '.' + t.tm.name }), t.request ? h('span', { class: 'muted', text: ' \u00b7 ' + t.request }) : null)), r.tests.length > 6 ? h('li', { class: 'muted', text: '+' + (r.tests.length - 6) + ' more' }) : null), r.basis.length ? h('div', { class: 'basis', text: 'Link: ' + r.basis.join('; ') }) : null) : h('span', { class: 'muted', text: '\u2014' })),
         td(h('div', { class: 'status-stack' }, chip(r.status, 'trace ' + TRACE_CLASS[r.status]), measured, r.executedPerJacoco ? h('div', { class: 'small muted', text: 'JaCoCo shows it executed' }) : null)),
-        td(r.gaps.length ? h('ul', { class: 'gaps' }, r.gaps.map((g) => h('li', { class: g.superseded ? 'superseded' : null, title: g.superseded || '' }, g.text, g.superseded ? h('span', { class: 'small muted', text: ' — superseded: ' + g.superseded }) : null))) : h('span', { class: 'muted', text: r.status === JR.TRACE.NA ? (r.note || 'n/a') : 'none identified' })));
+        td(r.gaps.length ? h('ul', { class: 'gaps' }, r.gaps.map((g) => h('li', { class: g.superseded ? 'superseded' : null, title: g.superseded || '' }, g.text, g.superseded ? h('span', { class: 'small muted', text: ' \u2014 superseded: ' + g.superseded }) : null))) : h('span', { class: 'muted', text: r.status === JR.TRACE.NA ? (r.note || 'n/a') : 'none identified' })));
     });
     const jc = cr.jacocoClass;
     return h('div', { class: 'trace-class' },
@@ -7022,11 +7023,11 @@ function secTrace(A) {
         cr.cls.stereotype ? chip('@' + cr.cls.stereotype, 'chip-outline') : null,
         cr.cls.lombok.length ? chip('Lombok ' + cr.cls.lombok.join(' '), 'chip-warn', 'Lombok-generated members are not visible to static analysis') : null,
         h('span', { class: 'small muted', text: cr.linkedTests.length ? 'Linked tests: ' + cr.linkedTests.map((x) => x.split('.').pop()).join(', ') : 'No linked test class' }),
-        jc ? h('span', { class: 'small muted', text: ' · JaCoCo: ' + (cr.alignment && !cr.alignment.ok ? 'present (line numbers do not align)' : 'present') }) : null),
-      table(['Production method', 'Conditions', 'Related tests', 'Status (static · measured)', 'Potential gaps'], rows, 'tbl-trace'));
+        jc ? h('span', { class: 'small muted', text: ' \u00b7 JaCoCo: ' + (cr.alignment && !cr.alignment.ok ? 'present (line numbers do not align)' : 'present') }) : null),
+      table(['Production method', 'Conditions', 'Related tests', 'Status (static \u00b7 measured)', 'Potential gaps'], rows, 'tbl-trace'));
   });
   return h('div', {},
-    note(['Static, apparent mapping only — this is ', h('strong', { text: 'not' }), ' measured execution coverage. ', A.jacoco.present ? 'Where JaCoCo data is available it is shown alongside, and it takes precedence.' : 'No JaCoCo evidence is available to confirm it.'], true),
+    note(['Static, apparent mapping only \u2014 this is ', h('strong', { text: 'not' }), ' measured execution coverage. ', A.jacoco.present ? 'Where JaCoCo data is available it is shown alongside, and it takes precedence.' : 'No JaCoCo evidence is available to confirm it.'], true),
     legend, cards);
 }
 
@@ -7044,18 +7045,18 @@ function secCoverage(A) {
     if (S2) {
       parts.push(h('h3', { text: 'Coverage against the declared scope' }));
       const gm = R.gatedMetrics;
-      const cells = (metrics) => gm.map((t) => { const m = metrics.find((x) => x.type === t); return td(m ? h('span', { class: 'pct ' + (m.na ? 'pct-na' : m.meets ? 'pct-ok' : 'pct-bad'), title: m.na ? 'none in code' : fmt(m.covered) + ' / ' + fmt(m.total), text: m.pct }) : h('span', { class: 'muted', text: '—' }), 'num'); });
+      const cells = (metrics) => gm.map((t) => { const m = metrics.find((x) => x.type === t); return td(m ? h('span', { class: 'pct ' + (m.na ? 'pct-na' : m.meets ? 'pct-ok' : 'pct-bad'), title: m.na ? 'none in code' : fmt(m.covered) + ' / ' + fmt(m.total), text: m.pct }) : h('span', { class: 'muted', text: '\u2014' }), 'num'); });
       const verdict = (metrics) => statusBadge(metrics.every((m) => m.na || m.meets) ? JR.STATUS.PASS : JR.STATUS.FAIL);
       const rows = [];
       if (S2.changed && S2.changed.assessable) {
         const ch = S2.changed;
-        rows.push(h('tr', {}, td(h('strong', { text: 'Changed code' })), td(plural(ch.lines.total, 'changed executable line') + (ch.lines.partial ? ' (' + ch.lines.partial + ' partly covered)' : '') + ' · ' + ch.nonExecutable + ' non-executable'),
+        rows.push(h('tr', {}, td(h('strong', { text: 'Changed code' })), td(plural(ch.lines.total, 'changed executable line') + (ch.lines.partial ? ' (' + ch.lines.partial + ' partly covered)' : '') + ' \u00b7 ' + ch.nonExecutable + ' non-executable'),
           gm.map((t) => { const m = ch.metrics.find((x) => x.type === t); return td(m ? h('span', { class: 'pct ' + (m.na ? 'pct-na' : m.meets ? 'pct-ok' : 'pct-bad'), title: m.na ? 'none' : fmt(m.covered) + ' / ' + fmt(m.total), text: m.pct }) : h('span', { class: 'muted small', text: 'n/a' }), 'num'); }),
           td(statusBadge(ch.pass ? JR.STATUS.PASS : JR.STATUS.FAIL))));
-      } else rows.push(h('tr', {}, td(h('strong', { text: 'Changed code' })), td(h('span', { class: 'muted', text: S2.changed ? 'Diff supplied, but no JaCoCo line data for the changed files' : 'No git diff supplied — changed-line coverage not assessed' })), gm.map(() => td('')), td(statusBadge(S2.changed ? JR.STATUS.INSUFFICIENT : JR.STATUS.NA))));
+      } else rows.push(h('tr', {}, td(h('strong', { text: 'Changed code' })), td(h('span', { class: 'muted', text: S2.changed ? 'Diff supplied, but no JaCoCo line data for the changed files' : 'No git diff supplied \u2014 changed-line coverage not assessed' })), gm.map(() => td('')), td(statusBadge(S2.changed ? JR.STATUS.INSUFFICIENT : JR.STATUS.NA))));
       if (S2.affected) rows.push(h('tr', {}, td(h('strong', { text: 'Affected classes' })), td(S2.affected.measuredClasses + ' of ' + S2.affected.declaredClasses + ' in-scope classes measured'), cells(S2.affected.metrics), td(verdict(S2.affected.metrics.filter((m) => gm.includes(m.type))))));
       for (const mo of S2.modules) {
-        if (!mo.metrics) rows.push(h('tr', {}, td(h('strong', { text: 'Affected module' })), td(h('span', {}, mo.name + ' — ', h('span', { class: 'muted', text: 'no module-level total in the supplied report; not inferred from class figures' }))), gm.map(() => td('')), td(statusBadge(JR.STATUS.INSUFFICIENT))));
+        if (!mo.metrics) rows.push(h('tr', {}, td(h('strong', { text: 'Affected module' })), td(h('span', {}, mo.name + ' \u2014 ', h('span', { class: 'muted', text: 'no module-level total in the supplied report; not inferred from class figures' }))), gm.map(() => td('')), td(statusBadge(JR.STATUS.INSUFFICIENT))));
         else rows.push(h('tr', {}, td(h('strong', { text: 'Affected module' })), td(mo.name + ' (' + mo.source + ')'), cells(mo.metrics), td(verdict(mo.metrics.filter((m) => gm.includes(m.type))))));
       }
       parts.push(table(['Level', 'Population'].concat(gm.map((m) => JR.METRIC_LABEL[m]), ['Result']), rows, 'tbl-scope'));
@@ -7068,14 +7069,14 @@ function secCoverage(A) {
             td(r.tests.length ? r.tests.map((t) => t.simpleName).join(', ') : h('span', { class: 'muted', text: 'none linked' })))), 'tbl-classes')));
       }
       if (as.basis === 'scope') {
-        parts.push(h('details', { class: 'sub' }, h('summary', { text: 'Whole JaCoCo report totals (reference only — not used for the verdict)' }),
+        parts.push(h('details', { class: 'sub' }, h('summary', { text: 'Whole JaCoCo report totals (reference only \u2014 not used for the verdict)' }),
           h('div', { class: 'metrics compact' }, as.reportMetrics.map((m) => metricCard(m, m.type === 'COMPLEXITY' ? [] : R.gatedMetrics, R.threshold)))));
       }
     } else {
       parts.push(h('div', { class: 'callout callout-insufficient' }, h('p', { class: 'callout-title', text: 'Scope evidence missing.' }),
-        h('p', { text: 'These figures cover only the classes in the supplied JaCoCo report. Without a git diff or changed-class list it cannot be shown that this is the enhancement’s changed code, and whole-project coverage is not inferred.' })));
+        h('p', { text: 'These figures cover only the classes in the supplied JaCoCo report. Without a git diff or changed-class list it cannot be shown that this is the enhancement\u2019s changed code, and whole-project coverage is not inferred.' })));
     }
-    if (A.jacoco.sessions.length) parts.push(h('p', { class: 'small muted', text: 'JaCoCo session(s): ' + A.jacoco.sessions.slice(0, 4).map((s) => (s.id || 'session') + (s.dump ? ' — dumped ' + new Date(s.dump).toLocaleString() : '')).join('; ') }));
+    if (A.jacoco.sessions.length) parts.push(h('p', { class: 'small muted', text: 'JaCoCo session(s): ' + A.jacoco.sessions.slice(0, 4).map((s) => (s.id || 'session') + (s.dump ? ' \u2014 dumped ' + new Date(s.dump).toLocaleString() : '')).join('; ') }));
   }
   // Declared
   parts.push(h('h3', { text: 'Declared coverage (not verified)' }));
@@ -7085,7 +7086,7 @@ function secCoverage(A) {
     table(['Scope', 'Metric', 'Declared', 'Source', 'JaCoCo measured', 'Agreement', 'Snippet'], A.declared.entries.map((d) => h('tr', {},
       td(d.scope), td(JR.METRIC_LABEL[d.metric] || 'Overall'), td(h('strong', { text: d.pct })), td(chip(d.provenance, 'chip-outline')),
       td(d.measured || h('span', { class: 'muted', text: A.jacoco.present ? 'no match' : 'not available' })),
-      td(d.measured ? (d.conflict ? chip('Conflict', 'chip-fail') : chip('Consistent', 'chip-pass')) : h('span', { class: 'muted', text: '—' })),
+      td(d.measured ? (d.conflict ? chip('Conflict', 'chip-fail') : chip('Consistent', 'chip-pass')) : h('span', { class: 'muted', text: '\u2014' })),
       td(h('button', { type: 'button', class: 'ev-link', onclick: () => openViewer(d.snippetId, d.line), text: '#' + d.snippetSeq }))))))) ;
   // Execution
   parts.push(h('h3', { text: 'Test execution results' }));
@@ -7122,7 +7123,7 @@ function secUncovered(A) {
         rows.push(h('tr', { class: 'unc-' + e.kind },
           td(srcInfo && g.sourceAvailable ? h('button', { type: 'button', class: 'ev-link', onclick: () => openViewer(srcInfo.snippetId, e.nr), text: String(e.nr) }) : String(e.nr), 'num'),
           td(chip(e.kind === 'missed' ? 'Not executed' : e.kind === 'partial' ? 'Partly executed' : 'Branches missed', e.kind === 'missed' ? 'chip-fail' : 'chip-review')),
-          td(e.br ? e.br.cb + ' / ' + (e.br.mb + e.br.cb) : '—', 'num'),
+          td(e.br ? e.br.cb + ' / ' + (e.br.mb + e.br.cb) : '\u2014', 'num'),
           td(e.text ? h('code', { class: 'src-line', text: e.text }) : h('span', { class: 'muted small', text: g.sourceAvailable ? '' : 'paste the source to see this line' })),
           td(h('span', { class: 'mono small', text: g.methodOf(e.nr) }))));
       }
@@ -7132,7 +7133,7 @@ function secUncovered(A) {
           h('span', { class: 'mono', text: g.fqcn }),
           g.inScope ? chip('in scope', 'chip-soft') : scoped ? chip('outside scope', 'chip-muted') : null,
           g.classNotExecuted ? chip('never executed', 'chip-fail') : null,
-          h('span', { class: 'small muted', text: missed.map((x) => plural(x.c.missed, COUNTER_WORD[x.t][0], COUNTER_WORD[x.t][1])).join(' · ') + ' missed' })),
+          h('span', { class: 'small muted', text: missed.map((x) => plural(x.c.missed, COUNTER_WORD[x.t][0], COUNTER_WORD[x.t][1])).join(' \u00b7 ') + ' missed' })),
         g.methods.length ? h('p', { class: 'small' }, h('strong', { text: 'Methods not fully executed: ' }), g.methods.slice(0, 20).map((m) => (m.name === '<init>' ? 'constructor' : m.name + '()') + (m.line ? ' L' + m.line : '') + ' (' + JR.pctText(m.instr.covered, m.instr.total) + ')').join(', ')) : null,
         g.alignment && !g.alignment.ok ? h('p', { class: 'small muted', text: 'The pasted source does not line up with the measured line numbers, so source text is not shown.' }) : null,
         rows.length ? table(['Line', 'Status', 'Branches covered', 'Source', 'Method'], rows, 'tbl-unc') : h('p', { class: 'small muted', text: 'No line-level data (e.g. JaCoCo CSV); see the method list above.' }));
@@ -7187,7 +7188,7 @@ function secConclusion(A) {
 /* ------------------------------------------------------------------------
  * Snippet viewer: line-numbered, lightly syntax-tinted, read-only view of
  * a pasted snippet, opened at the line an evidence reference points to.
- * Highlighting builds text nodes inside spans — the text is never parsed
+ * Highlighting builds text nodes inside spans \u2014 the text is never parsed
  * as HTML.
  * --------------------------------------------------------------------- */
 
@@ -7256,7 +7257,7 @@ function openViewer(snippetId, line) {
   if (!sn) { toast('That snippet is no longer in the workspace.', { kind: 'warn' }); return; }
   const info = S.result ? S.result.snippets.find((s) => s.id === snippetId) : null;
   const kind = info ? info.type : sn.type;
-  $('#viewer-title').textContent = 'Snippet #' + sn.seq + (info ? ' — ' + info.label : '');
+  $('#viewer-title').textContent = 'Snippet #' + sn.seq + (info ? ' \u2014 ' + info.label : '');
   const sub = clear($('#viewer-sub'));
   append(sub, [
     chip(info && info.type ? JR.INPUT_TYPES[info.type] : 'Unrecognised', 'chip-outline'),
@@ -7384,7 +7385,7 @@ function initSession() {
     ta.value = text;
     ta.addEventListener('focus', () => ta.select());
     openModal('Copy workspace backup', [
-      h('p', {}, 'This text contains everything in the workspace, ', h('strong', { text: 'including all pasted source code' }), '. Keep it only where that code is permitted. Paste it back with “Restore” to continue later.'),
+      h('p', {}, 'This text contains everything in the workspace, ', h('strong', { text: 'including all pasted source code' }), '. Keep it only where that code is permitted. Paste it back with \u201cRestore\u201d to continue later.'),
       ta,
     ], [
       { label: 'Copy to clipboard', cls: 'btn-primary', run: () => { copyText(text, 'Workspace backup'); } },
@@ -7393,10 +7394,10 @@ function initSession() {
   });
 
   $('#btn-restore').addEventListener('click', () => {
-    const ta = h('textarea', { class: 'modal-text', rows: 8, spellcheck: 'false', placeholder: 'Paste backup text here…', 'aria-label': 'Backup text to restore', 'data-gramm': 'false' });
+    const ta = h('textarea', { class: 'modal-text', rows: 8, spellcheck: 'false', placeholder: 'Paste backup text here\u2026', 'aria-label': 'Backup text to restore', 'data-gramm': 'false' });
     const err = h('p', { class: 'form-error', role: 'alert' });
     openModal('Restore a workspace', [
-      h('p', { text: 'Paste the text produced by “Copy backup”. It replaces the current workspace.' }), ta, err,
+      h('p', { text: 'Paste the text produced by \u201cCopy backup\u201d. It replaces the current workspace.' }), ta, err,
     ], [
       { label: 'Restore', cls: 'btn-primary', run: () => {
         const res = parseBackup(ta.value);
@@ -7550,9 +7551,9 @@ function syncFormFromState() {
 
 function updateHeader() {
   const A = S.result;
-  $('#fact-cr').textContent = S.review.crRef ? S.review.crRef + (S.review.appName ? ' · ' + S.review.appName : '') : 'No CR reference';
+  $('#fact-cr').textContent = S.review.crRef ? S.review.crRef + (S.review.appName ? ' \u00b7 ' + S.review.appName : '') : 'No CR reference';
   const inv = A ? A.inventory : { testClasses: 0, testMethods: 0 };
-  $('#fact-tests').textContent = plural(inv.testClasses, 'test class', 'test classes') + ' · ' + plural(inv.testMethods, 'test method');
+  $('#fact-tests').textContent = plural(inv.testClasses, 'test class', 'test classes') + ' \u00b7 ' + plural(inv.testMethods, 'test method');
   const st = clear($('#fact-status'));
   if (A && S.snippets.length) st.appendChild(statusBadge(A.conclusion.status));
   $('#step-count-evidence').textContent = S.snippets.length ? String(S.snippets.length) : '';

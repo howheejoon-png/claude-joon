@@ -223,10 +223,32 @@ await step('works when opened directly from disk (file://)', async () => {
   await c.close()
 })
 
+await step('still works after Windows line endings, a byte-order mark or a UTF-16 re-save', async () => {
+  const { tmpdir } = await import('node:os')
+  const { writeFileSync, mkdtempSync } = await import('node:fs')
+  const dir = mkdtempSync(join(tmpdir(), 'junit-review-'))
+  const bytes = readFileSync(FILE)
+  const variants = [
+    Buffer.from(bytes.toString('latin1').replace(/\n/g, '\r\n'), 'latin1'),
+    Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), bytes]),
+    Buffer.concat([Buffer.from([0xff, 0xfe]), Buffer.from(bytes.toString('utf8'), 'utf16le')]),
+  ]
+  for (let i = 0; i < variants.length; i++) {
+    const f = join(dir, 'variant' + i + '.html')
+    writeFileSync(f, variants[i])
+    const { page: p, context: c } = await openPage({ url: pathToFileURL(f).href })
+    await p.waitForTimeout(300)
+    await p.click('#tab-evidence')
+    assert.equal(await p.isVisible('#panel-evidence'), true, 'variant ' + i)
+    assert.equal(await p.isVisible('#boot-warning'), false, 'variant ' + i)
+    await c.close()
+  }
+})
+
 await step('if scripts cannot run (preview window, blocked scripts), the page says so instead of doing nothing', async () => {
   const { page: p, context: c } = await openPage({ url: pathToFileURL(FILE).href, ctx: { javaScriptEnabled: false } })
   assert.equal(await p.isVisible('#boot-warning'), true)
-  assert.match(await p.textContent('#boot-warning'), /open that saved copy directly in a current version of Microsoft Edge or Google Chrome/)
+  assert.match(await p.textContent('#boot-warning'), /open that saved copy in a current Microsoft Edge or Google Chrome/)
   await c.close()
 })
 
