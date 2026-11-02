@@ -14,6 +14,7 @@ const BONUS_KINDS: readonly BonusKind[] = [
   'winner_bonus_per_payer',
   'payout_multiplier',
   'collect_from_each',
+  'collect_from_one',
   'penalty_pay_each',
 ];
 
@@ -25,7 +26,10 @@ export const WIN_ONLY_BONUS_KINDS: readonly BonusKind[] = [
 ];
 
 /** Bonus kinds that require choosing a player (collector / offender). */
-export const PLAYER_BONUS_KINDS: readonly BonusKind[] = ['collect_from_each', 'penalty_pay_each'];
+export const PLAYER_BONUS_KINDS: readonly BonusKind[] = ['collect_from_each', 'collect_from_one', 'penalty_pay_each'];
+
+/** Bonus kinds paid immediately during a hand (kongs, flowers, penalties), whoever wins. */
+export const INSTANT_BONUS_KINDS: readonly BonusKind[] = PLAYER_BONUS_KINDS;
 
 const MAX_SANE_CENTS = 100_000_00; // $100,000 — guards against typos like 600000
 const MAX_MULTIPLIER_PERCENT = 10_000;
@@ -327,7 +331,7 @@ export function validateRoundInput(
       return;
     }
     const playerScoped = PLAYER_BONUS_KINDS.includes(rule.kind);
-    const key = playerScoped ? `${b.ruleId}:${b.playerId ?? ''}` : b.ruleId;
+    const key = playerScoped ? `${b.ruleId}:${b.playerId ?? ''}:${b.fromPlayerId ?? ''}` : b.ruleId;
     if (seenRules.has(key)) {
       issues.push(err('BONUS_DUPLICATE', `“${rule.name}” was added twice. Use the count instead.`, p));
     }
@@ -340,6 +344,15 @@ export function validateRoundInput(
     }
     if (playerScoped && !known(b.playerId)) {
       issues.push(err('BONUS_PLAYER', `Choose which player “${rule.name}” applies to.`, `${p}.playerId`));
+    }
+    if (rule.kind === 'collect_from_one') {
+      if (!known(b.fromPlayerId)) {
+        issues.push(err('BONUS_FROM_PLAYER', `Choose who pays for “${rule.name}”.`, `${p}.fromPlayerId`));
+      } else if (b.fromPlayerId === b.playerId) {
+        issues.push(err('BONUS_SELF', `“${rule.name}”: a player cannot pay themselves.`, `${p}.fromPlayerId`));
+      }
+    } else if (b.fromPlayerId !== undefined) {
+      issues.push(err('BONUS_FROM_UNEXPECTED', `“${rule.name}” is paid by everyone, not one player.`, `${p}.fromPlayerId`));
     }
   });
 

@@ -128,3 +128,35 @@ test('installable manifest is served', async ({ request }) => {
   expect(manifest.display).toBe('standalone');
   expect(manifest.icons.length).toBeGreaterThanOrEqual(3);
 });
+
+test('kongs, flowers and animals are paid during the hand, whoever wins', async ({ page }) => {
+  await startDefaultGame(page);
+  // South wins 1 tai off West's discard: West $0.60, East & North $0.30 each.
+  await page.goto('/#/record');
+  await fillWin(page, { winner: 'south', method: 'discard', discarder: 'west', tai: 1 });
+  // South konged East's discard: East pays South $0.30.
+  await page.getByTestId('instant-sg-kong-discard').click();
+  await page.getByTestId('pick-south').click();
+  await page.getByTestId('pick-east').click();
+  // North self-drew a concealed kong: everyone pays North $0.60.
+  await page.getByTestId('instant-sg-kong-concealed').click();
+  await page.getByTestId('pick-north').click();
+  // West drew an animal: everyone pays West $0.30.
+  await page.getByTestId('instant-sg-animal').click();
+  await page.getByTestId('pick-west').click();
+  await expect(page.getByTestId('instant-event')).toHaveCount(3);
+  await page.getByTestId('review-round').click();
+  await expect(page.getByTestId('balance-verification')).toContainText('PASSED');
+  await page.getByTestId('confirm-round').click();
+  await expectScores(page, { east: '-$1.50', south: '+$0.60', west: '-$0.30', north: '+$1.20' });
+
+  // Drawn hand, but East bit both of South's flowers: South pays East $0.30.
+  await page.goto('/#/record');
+  await page.getByRole('radio', { name: 'Draw 流局' }).click();
+  await page.getByTestId('instant-sg-flower-bite').click();
+  await page.getByTestId('pick-east').click();
+  await page.getByTestId('pick-south').click();
+  await page.getByTestId('review-round').click();
+  await page.getByTestId('confirm-round').click();
+  await expectScores(page, { east: '-$1.20', south: '+$0.30', west: '-$0.30', north: '+$1.20' });
+});

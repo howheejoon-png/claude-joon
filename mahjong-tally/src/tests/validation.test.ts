@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { exampleConfiguration, generatePayoutTable, resizePayoutTable } from '../config/defaults';
-import { hasErrors, validateConfig, validatePlayers, validateRoundInput } from '../engine/validation';
+import { INSTANT_BONUS_KINDS, hasErrors, validateConfig, validatePlayers, validateRoundInput } from '../engine/validation';
 import type { ScoringConfiguration } from '../models/types';
 import { PLAYERS, config, discard, selfDraw } from './helpers';
 
@@ -24,8 +24,13 @@ describe('validateConfig', () => {
       [4, 480, 240, 480],
       [5, 960, 480, 960],
     ]);
-    // Example adjustment rules never affect payouts until enabled.
-    expect(cfg.bonusRules.every((r) => !r.enabled && r.isExample)).toBe(true);
+    // Every bundled adjustment is labelled as an example.
+    expect(cfg.bonusRules.every((r) => r.isExample)).toBe(true);
+    // Only instant payouts (kongs, flowers, animals) start switched on; they move money
+    // solely when that event is recorded for a round. Hand-changing examples start off.
+    expect(cfg.bonusRules.filter((r) => r.enabled).every((r) => INSTANT_BONUS_KINDS.includes(r.kind))).toBe(true);
+    expect(cfg.bonusRules.find((r) => r.id === 'example-special-hand')?.enabled).toBe(false);
+    expect(cfg.bonusRules.find((r) => r.id === 'example-false-win')?.enabled).toBe(false);
   });
 
   it('rejects fractional cents in the payout table', () => {

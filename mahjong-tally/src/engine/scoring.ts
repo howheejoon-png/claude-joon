@@ -115,10 +115,20 @@ export function scoreRound(input: RoundInput, ctx: ScoreContext): Result<ScoredR
 
   // Instant adjustments (any round, including draws).
   for (const { bonus, rule } of applied) {
-    if (rule.kind !== 'collect_from_each' && rule.kind !== 'penalty_pay_each') continue;
+    if (rule.kind !== 'collect_from_each' && rule.kind !== 'collect_from_one' && rule.kind !== 'penalty_pay_each') continue;
     const subject = bonus.playerId!;
     const amount = rule.value * bonus.count;
     const countText = bonus.count > 1 ? ` ×${bonus.count}` : '';
+    if (rule.kind === 'collect_from_one') {
+      transfers.push({
+        payerId: bonus.fromPlayerId!,
+        receiverId: subject,
+        amountCents: amount,
+        kind: 'bonus',
+        description: `${rule.name}${countText}`,
+      });
+      continue;
+    }
     for (const other of players) {
       if (other.id === subject) continue;
       if (rule.kind === 'collect_from_each') {

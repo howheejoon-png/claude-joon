@@ -25,6 +25,7 @@ export function RulesPage({ target }: { target: Target }) {
   }, [target, game?.id]);
   const [config, setConfig] = useState<ScoringConfiguration>(initial);
   const [confirmed, setConfirmed] = useState(target !== 'setup');
+  const [alsoDefault, setAlsoDefault] = useState(false);
   const [errors, setErrors] = useState<ValidationIssue[]>([]);
   const [rescoreOpen, setRescoreOpen] = useState(false);
   const [rescoreConfirm, setRescoreConfirm] = useState(false);
@@ -41,7 +42,8 @@ export function RulesPage({ target }: { target: Target }) {
     if (target === 'game') {
       const r = store.updateGameConfig(config);
       if (!r.ok) return setErrors(r.errors);
-      toast({ message: 'Rules saved for new rounds.', tone: 'success' });
+      if (alsoDefault) await store.saveHouseRules(config);
+      toast({ message: alsoDefault ? 'Saved for new rounds and as your default rules.' : 'Rules saved for new rounds.', tone: 'success' });
       navigate('/settings');
       return;
     }
@@ -103,6 +105,18 @@ export function RulesPage({ target }: { target: Target }) {
       <div className="glass fixed inset-x-0 bottom-0 z-30 border-t border-line px-4 pb-[max(env(safe-area-inset-bottom),16px)] pt-3">
         <div className="mx-auto max-w-lg space-y-3">
           <ErrorList errors={errors} />
+          {target === 'game' ? (
+            <label className="flex cursor-pointer items-start gap-3 text-[14px] leading-snug text-ink-2">
+              <input
+                type="checkbox"
+                checked={alsoDefault}
+                onChange={(e) => setAlsoDefault(e.target.checked)}
+                className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--emerald)]"
+                data-testid="also-default"
+              />
+              Also make these my default rules for new games
+            </label>
+          ) : null}
           {target === 'setup' ? (
             <label className="flex cursor-pointer items-start gap-3 text-[14px] leading-snug text-ink-2">
               <input

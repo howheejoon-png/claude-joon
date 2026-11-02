@@ -62,27 +62,40 @@ export function stakeLabelFor(baseUnitCents: Cents): string {
 }
 
 /**
- * EXAMPLE adjustment rules. All are disabled by default and clearly marked as
- * examples; they never affect payouts unless a group enables them.
+ * Common Singapore "instant payouts" settled during a hand — kongs, flower
+ * bites, animals — whoever ends up winning (also in drawn rounds).
+ * Amounts are EXAMPLES in multiples of the base unit and are labelled as
+ * such in the UI; every group should check them against its own rules.
+ * They only move money when a player records the event in a round.
  */
-export function exampleBonusRules(): BonusRule[] {
+export function instantPayoutTemplates(baseUnitCents: Cents): BonusRule[] {
+  const u = baseUnitCents;
+  const t = (id: string, name: string, kind: BonusRule['kind'], value: number): BonusRule => ({
+    id,
+    name,
+    kind,
+    value,
+    enabled: true,
+    isExample: true,
+  });
   return [
-    {
-      id: 'example-flower-animal',
-      name: 'Flower / animal bonus',
-      kind: 'collect_from_each',
-      value: 30,
-      enabled: false,
-      isExample: true,
-    },
-    {
-      id: 'example-kong',
-      name: 'Kong payment',
-      kind: 'collect_from_each',
-      value: 30,
-      enabled: false,
-      isExample: true,
-    },
+    t('sg-kong-discard', 'Kong from a discard (明杠)', 'collect_from_one', u),
+    t('sg-kong-pong', 'Kong added to own pong (加杠)', 'collect_from_each', u),
+    t('sg-kong-concealed', 'Concealed kong (暗杠)', 'collect_from_each', u * 2),
+    t('sg-flower-bite', 'Flower bite — both of a player’s flowers (咬花)', 'collect_from_one', u),
+    t('sg-flower-set', 'Complete flower set (4 of a kind)', 'collect_from_each', u * 2),
+    t('sg-animal', 'Animal drawn (動物)', 'collect_from_each', u),
+    t('sg-animal-pair', 'Animal pair (cat & mouse / rooster & centipede)', 'collect_from_each', u),
+  ];
+}
+
+/**
+ * EXAMPLE adjustment rules: the instant-payout templates above, plus two
+ * switched-off examples (a special-hand tai bonus and a false-win penalty).
+ */
+export function exampleBonusRules(baseUnitCents: Cents = 30): BonusRule[] {
+  return [
+    ...instantPayoutTemplates(baseUnitCents),
     {
       id: 'example-special-hand',
       name: 'Special hand bonus',
@@ -100,6 +113,13 @@ export function exampleBonusRules(): BonusRule[] {
       isExample: true,
     },
   ];
+}
+
+/** Append any instant-payout templates the rules don't already have (matched by id). */
+export function withInstantPayoutTemplates(bonusRules: readonly BonusRule[], baseUnitCents: Cents): { rules: BonusRule[]; added: number } {
+  const existing = new Set(bonusRules.map((r) => r.id));
+  const missing = instantPayoutTemplates(baseUnitCents).filter((r) => !existing.has(r.id));
+  return { rules: [...bonusRules, ...missing], added: missing.length };
 }
 
 export const EXAMPLE_TABLE_OPTIONS: TableGeneratorOptions = {
@@ -137,7 +157,7 @@ export function exampleConfiguration(): ScoringConfiguration {
       extraCentsPerPayerWhenDealerWins: 0,
       extraCentsWhenDealerPays: 0,
     },
-    bonusRules: exampleBonusRules(),
+    bonusRules: exampleBonusRules(EXAMPLE_TABLE_OPTIONS.baseUnitCents),
   };
 }
 
