@@ -6,7 +6,9 @@ import {
   generatePayoutTable,
   resizePayoutTable,
   stakeLabelFor,
-  withInstantPayoutTemplates,
+  INSTANT_RULE_PROMPTS,
+  applyInstantPayoutTemplates,
+  instantTemplateStatus,
   type TableGeneratorOptions,
 } from '../config/defaults';
 import { validateConfig } from '../engine/validation';
@@ -84,7 +86,9 @@ export function RulesEditor({
   };
 
   const shared = value.discardLiability === 'shared';
-  const missingTemplates = withInstantPayoutTemplates(value.bonusRules, value.baseUnitCents).added;
+  const templateStatus = instantTemplateStatus(value.bonusRules);
+  const [replaceOpen, setReplaceOpen] = useState(false);
+  const installTemplates = () => set('bonusRules', applyInstantPayoutTemplates(value.bonusRules, value.baseUnitCents).rules);
 
   return (
     <div className="space-y-1">
@@ -359,18 +363,48 @@ export function RulesEditor({
       <p className="mb-2 px-1 text-[13px] leading-relaxed text-ink-3">
         Money only moves when a rule is switched on here <em>and</em> recorded in a round. Amounts marked “Example” are suggestions: change them to match your table.
       </p>
-      {missingTemplates > 0 ? (
+      {templateStatus !== 'current' ? (
         <Button
           className="mb-3"
           block
           variant="gold"
           icon={<Sparkles size={16} />}
           data-testid="add-instant-templates"
-          onClick={() => set('bonusRules', withInstantPayoutTemplates(value.bonusRules, value.baseUnitCents).rules)}
+          onClick={() => (templateStatus === 'missing' ? installTemplates() : setReplaceOpen(true))}
         >
-          Add kong, flower & animal payouts ({missingTemplates})
+          {templateStatus === 'missing' ? 'Add kong, flower & animal payouts' : 'Update kong, flower & animal payouts'}
         </Button>
       ) : null}
+      <ConfirmDialog
+        open={replaceOpen}
+        title="Update kong, flower & animal payouts?"
+        tone="primary"
+        confirmLabel="Update payouts"
+        body={
+          <div className="space-y-2">
+            <p>These older rules will be replaced:</p>
+            <ul className="text-[14px] text-ink-3">
+              {applyInstantPayoutTemplates(value.bonusRules, value.baseUnitCents).removed.map((r) => (
+                <li key={r.id}>• {r.name}</li>
+              ))}
+            </ul>
+            <p>With:</p>
+            <ul className="num text-[14px] text-ink-3">
+              {applyInstantPayoutTemplates(value.bonusRules, value.baseUnitCents).added.map((r) => (
+                <li key={r.id}>
+                  • {r.name}: {formatCents(r.value)} {r.kind === 'collect_from_one' ? (INSTANT_RULE_PROMPTS[r.id]?.payerShort ?? 'from one player') : 'from each player'}
+                </li>
+              ))}
+            </ul>
+            <p className="text-[13px]">Rounds already recorded keep the rules they were scored with. Your other rules stay as they are.</p>
+          </div>
+        }
+        onCancel={() => setReplaceOpen(false)}
+        onConfirm={() => {
+          installTemplates();
+          setReplaceOpen(false);
+        }}
+      />
       <div className="space-y-3">
         {value.bonusRules.length === 0 ? (
           <Card className="p-4 text-[14px] text-ink-3">No adjustments configured.</Card>
@@ -387,7 +421,7 @@ export function RulesEditor({
               </div>
               {rule.isExample ? (
                 <Badge tone="gold">
-                  <Sparkles size={11} /> Example — not an official rule
+                  <Sparkles size={11} /> Suggested amount — edit to match your table
                 </Badge>
               ) : null}
               <label className="block">
