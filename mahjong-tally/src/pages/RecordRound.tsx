@@ -9,6 +9,7 @@ import { previewEdit, previewRound, roundNet, roundNumbers, suggestNextDealer } 
 import { INSTANT_BONUS_KINDS, WIN_ONLY_BONUS_KINDS } from '../engine/validation';
 import type { AppliedBonus, BonusRule, GameSession, Player, PlayerId, RoundInput, ScoringConfiguration } from '../models/types';
 import { formatCents } from '../utils/money';
+import { INSTANT_RULE_PROMPTS } from '../config/defaults';
 import { newId } from '../utils/id';
 import { NoGame } from './Dashboard';
 import { describeInput, methodLabel } from './describe';
@@ -764,7 +765,7 @@ function ManualForm({
 /** How an instant-payout rule moves money, in words, for buttons and the event list. */
 function instantAmountText(rule: BonusRule): string {
   const amt = formatCents(rule.value);
-  if (rule.kind === 'collect_from_one') return `${amt} from one player`;
+  if (rule.kind === 'collect_from_one') return `${amt} ${INSTANT_RULE_PROMPTS[rule.id]?.payerShort ?? 'from one player'}`;
   if (rule.kind === 'penalty_pay_each') return `${amt} to each player`;
   return `${amt} from each player`;
 }
@@ -818,16 +819,23 @@ function DuringHand({
     return `${who} collects ${amt} from each player`;
   };
 
+  const prompts = picking ? INSTANT_RULE_PROMPTS[picking.rule.id] : undefined;
   const pickTitle = !picking
     ? ''
     : picking.rule.kind === 'penalty_pay_each'
       ? 'Who pays everyone?'
       : picking.rule.kind === 'collect_from_one' && picking.collectorId
-        ? `Who pays ${byId.get(picking.collectorId)?.name}?`
-        : 'Who gets paid?';
+        ? (prompts?.payer ?? `Who pays ${byId.get(picking.collectorId)?.name}?`)
+        : (prompts?.collector ?? 'Who gets paid?');
   const pickHint = !picking
     ? ''
-    : picking.rule.kind === 'collect_from_one'
+    : prompts
+      ? picking.rule.kind === 'collect_from_one'
+        ? picking.collectorId
+          ? `They pay ${byId.get(picking.collectorId)?.name}.`
+          : 'Next you’ll pick who pays them.'
+        : 'The other three players each pay them.'
+      : picking.rule.kind === 'collect_from_one'
       ? picking.collectorId
         ? 'E.g. the player who discarded the tile, or whose flowers were taken.'
         : 'E.g. the player who made the kong, or who holds the flowers.'

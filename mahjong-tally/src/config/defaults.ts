@@ -1,5 +1,5 @@
 import type { BonusRule, Cents, PayoutRow, ScoringConfiguration, Seat } from '../models/types';
-import { formatCents } from '../utils/money';
+import { formatCents, roundRational } from '../utils/money';
 
 export const SEAT_LABEL: Record<Seat, string> = {
   east: 'East',
@@ -62,14 +62,18 @@ export function stakeLabelFor(baseUnitCents: Cents): string {
 }
 
 /**
- * Common Singapore "instant payouts" settled during a hand — kongs, flower
- * bites, animals — whoever ends up winning (also in drawn rounds).
- * Amounts are EXAMPLES in multiples of the base unit and are labelled as
- * such in the UI; every group should check them against its own rules.
- * They only move money when a player records the event in a round.
+ * Kong, flower and animal payouts settled during a hand, whoever ends up
+ * winning (also in drawn rounds). They only move money when a player records
+ * the event in a round.
+ *
+ * Amounts scale with the base unit so they stay in proportion to the stake;
+ * at a $3 / $6 game they are $6 for a kong from a discard and $2 for
+ * everything else. Groups can edit every amount.
  */
 export function instantPayoutTemplates(baseUnitCents: Cents): BonusRule[] {
   const u = baseUnitCents;
+  // Two thirds of the base unit, rounded to the nearest cent ($3 base -> $2).
+  const small = roundRational(2 * u, 3, 'nearest', 1).cents ?? u;
   const t = (id: string, name: string, kind: BonusRule['kind'], value: number): BonusRule => ({
     id,
     name,
@@ -79,14 +83,66 @@ export function instantPayoutTemplates(baseUnitCents: Cents): BonusRule[] {
     isExample: true,
   });
   return [
-    t('sg-kong-discard', 'Kong from a discard (明杠)', 'collect_from_one', u),
-    t('sg-kong-pong', 'Kong added to own pong (加杠)', 'collect_from_each', u),
-    t('sg-kong-concealed', 'Concealed kong (暗杠)', 'collect_from_each', u * 2),
-    t('sg-flower-bite', 'Flower bite — both of a player’s flowers (咬花)', 'collect_from_one', u),
-    t('sg-flower-set', 'Complete flower set (4 of a kind)', 'collect_from_each', u * 2),
-    t('sg-animal', 'Animal drawn (動物)', 'collect_from_each', u),
-    t('sg-animal-pair', 'Animal pair (cat & mouse / rooster & centipede)', 'collect_from_each', u),
+    t('sg-kong-discard', 'Kong from a discard (明杠)', 'collect_from_one', u * 2),
+    t('sg-kong-self', 'Self-drawn kong (自摸杠)', 'collect_from_each', small),
+    t('sg-flower-own', 'Own flower', 'collect_from_each', small),
+    t('sg-flower-other', 'Someone else’s flower', 'collect_from_one', small),
+    t('sg-animal-own', 'Own spirit animal', 'collect_from_each', small),
+    t('sg-animal-cat-mouse', 'Cat & mouse pair (貓鼠)', 'collect_from_each', small),
+    t('sg-animal-chicken-centipede', 'Chicken & centipede pair (雞蜈蚣)', 'collect_from_each', small),
   ];
+}
+
+/**
+ * Wording for the Record screen's player pickers, by template id. Rules the
+ * group adds themselves fall back to generic wording.
+ */
+export const INSTANT_RULE_PROMPTS: Record<string, { collector: string; payer?: string; payerShort?: string }> = {
+  'sg-kong-discard': { collector: 'Who made the kong?', payer: 'Who discarded the tile?', payerShort: 'from the discarder' },
+  'sg-kong-self': { collector: 'Who made the kong?' },
+  'sg-flower-own': { collector: 'Who drew their own flower?' },
+  'sg-flower-other': { collector: 'Who drew the flower?', payer: 'Whose flower is it?', payerShort: 'from the flower’s owner' },
+  'sg-animal-own': { collector: 'Who drew their own animal?' },
+  'sg-animal-cat-mouse': { collector: 'Who has the cat and the mouse?' },
+  'sg-animal-chicken-centipede': { collector: 'Who has the chicken and the centipede?' },
+};
+
+/** Ids of earlier template versions, replaced by the current set. */
+const LEGACY_INSTANT_IDS = [
+  'example-flower-animal',
+  'example-kong',
+  'sg-kong-pong',
+  'sg-kong-concealed',
+  'sg-flower-bite',
+  'sg-flower-set',
+  'sg-animal',
+  'sg-animal-pair',
+];
+
+/** Whether a rules list has the current kong/flower/animal set. */
+export function instantTemplateStatus(bonusRules: readonly BonusRule[]): 'current' | 'missing' | 'outdated' {
+  const ids = new Set(bonusRules.map((r) => r.id));
+  const current = instantPayoutTemplates(0).map((r) => r.id);
+  const hasLegacy = LEGACY_INSTANT_IDS.some((id) => ids.has(id));
+  if (current.every((id) => ids.has(id)) && !hasLegacy) return 'current';
+  if (!hasLegacy && current.every((id) => !ids.has(id))) return 'missing';
+  return 'outdated';
+}
+
+/**
+ * Install the current kong/flower/animal set: removes older template
+ * versions and any previous copies of the current ones, then appends fresh
+ * templates priced from the base unit. The group's other rules are kept.
+ */
+export function applyInstantPayoutTemplates(
+  bonusRules: readonly BonusRule[],
+  baseUnitCents: Cents,
+): { rules: BonusRule[]; removed: BonusRule[]; added: BonusRule[] } {
+  const fresh = instantPayoutTemplates(baseUnitCents);
+  const replaceIds = new Set([...LEGACY_INSTANT_IDS, ...fresh.map((r) => r.id)]);
+  const removed = bonusRules.filter((r) => replaceIds.has(r.id));
+  const kept = bonusRules.filter((r) => !replaceIds.has(r.id));
+  return { rules: [...kept, ...fresh], removed, added: fresh };
 }
 
 /**
@@ -115,12 +171,6 @@ export function exampleBonusRules(baseUnitCents: Cents = 30): BonusRule[] {
   ];
 }
 
-/** Append any instant-payout templates the rules don't already have (matched by id). */
-export function withInstantPayoutTemplates(bonusRules: readonly BonusRule[], baseUnitCents: Cents): { rules: BonusRule[]; added: number } {
-  const existing = new Set(bonusRules.map((r) => r.id));
-  const missing = instantPayoutTemplates(baseUnitCents).filter((r) => !existing.has(r.id));
-  return { rules: [...bonusRules, ...missing], added: missing.length };
-}
 
 export const EXAMPLE_TABLE_OPTIONS: TableGeneratorOptions = {
   baseUnitCents: 30,

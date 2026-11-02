@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { generatePayoutTable } from '../config/defaults';
+import { generatePayoutTable, instantPayoutTemplates } from '../config/defaults';
 import { netByPlayer } from '../engine/ledger';
 import { scoreRound, toTransactions, type TransferDraft } from '../engine/scoring';
 import type { BonusRule, RoundInput, ScoringConfiguration } from '../models/types';
@@ -421,18 +421,30 @@ describe('instant adjustments and manual transfers', () => {
     expect(r2.ok ? [] : r2.errors.map((e) => e.code)).toContain('BONUS_FROM_UNEXPECTED');
   });
 
-  it('Singapore templates: self-drawn kong and own animal are paid by all three opponents', () => {
-    const cfg = config();
+  it('table rules at $3 / $6: kongs, flowers and animals', () => {
+    const cfg = withRules(instantPayoutTemplates(300));
     const r = ok(
       draw([
-        { ruleId: 'sg-kong-concealed', count: 1, playerId: 'a' },
-        { ruleId: 'sg-animal', count: 1, playerId: 'a' },
-        { ruleId: 'sg-kong-discard', count: 1, playerId: 'c', fromPlayerId: 'd' },
+        // A konged B's discard: B pays A $6.
+        { ruleId: 'sg-kong-discard', count: 1, playerId: 'a', fromPlayerId: 'b' },
+        // C self-drew a kong: everyone pays C $2.
+        { ruleId: 'sg-kong-self', count: 1, playerId: 'c' },
+        // D drew own flower twice: everyone pays D $2 each time.
+        { ruleId: 'sg-flower-own', count: 2, playerId: 'd' },
+        // A drew C's flower: C pays A $2.
+        { ruleId: 'sg-flower-other', count: 1, playerId: 'a', fromPlayerId: 'c' },
+        // B drew own spirit animal, and C has the cat & mouse: everyone pays each $2.
+        { ruleId: 'sg-animal-own', count: 1, playerId: 'b' },
+        { ruleId: 'sg-animal-cat-mouse', count: 1, playerId: 'c' },
       ]),
       cfg,
     );
-    // Concealed kong $0.60 x3 + animal $0.30 x3 to A; D pays C $0.30 for the discard kong.
-    expect(net(r.transfers)).toEqual({ a: 270, b: -90, c: -90 + 30, d: -90 - 30 });
+    expect(net(r.transfers)).toEqual({
+      a: 600 - 200 - 400 + 200 - 200 - 200, // -200
+      b: -600 - 200 - 400 + 600 - 200, // -800
+      c: 600 - 400 - 200 - 200 + 600, // +400
+      d: -200 + 1200 - 200 - 200, // +600
+    });
     expect(sumNet(r.transfers)).toBe(0);
   });
 
