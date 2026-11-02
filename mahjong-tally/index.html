@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Mahjong Tally</title>
+    <meta name="description" content="Every point accounted for. Exact, offline Singapore Mahjong scoring and settlement for four players." />
+    <meta name="theme-color" content="#0d0f0e" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Mahjong" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180" />
+    <script>
+      // Apply the saved theme before first paint to avoid a flash (reads a tiny cached hint only).
+      try {
+        var t = localStorage.getItem('mt-theme');
+        var light = t === 'light' || (t !== 'dark' && window.matchMedia('(prefers-color-scheme: light)').matches);
+        document.documentElement.dataset.theme = light ? 'light' : 'dark';
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <noscript>Mahjong Tally needs JavaScript enabled.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
