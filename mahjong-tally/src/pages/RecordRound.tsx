@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import { CheckCircle2, ChevronDown, CircleSlash, Hand, Plus, ShieldAlert, Sparkles, Trash2, X } from 'lucide-react';
+import { CheckCircle2, ChevronDown, CircleSlash, Hand, Minus, Plus, Settings2, ShieldAlert, Sparkles, Trash2, X } from 'lucide-react';
 import { navigate } from '../app/router';
 import { useStore, type RoundInputDraft } from '../app/store';
 import { Amount, PageHeader, RoundNetLines, SeatBadge, TransactionList, playerMap } from '../components/domain';
 import { Sheet, useToast } from '../components/overlay';
 import { Badge, Button, Card, ErrorList, IconButton, MoneyInput, Segmented, Stepper, TextInput, Toggle, cx } from '../components/ui';
 import { previewEdit, previewRound, roundNet, roundNumbers, suggestNextDealer } from '../engine/game';
-import { PLAYER_BONUS_KINDS, WIN_ONLY_BONUS_KINDS } from '../engine/validation';
-import type { AppliedBonus, GameSession, Player, PlayerId, RoundInput, ScoringConfiguration } from '../models/types';
+import { INSTANT_BONUS_KINDS, WIN_ONLY_BONUS_KINDS } from '../engine/validation';
+import type { AppliedBonus, BonusRule, GameSession, Player, PlayerId, RoundInput, ScoringConfiguration } from '../models/types';
 import { formatCents } from '../utils/money';
 import { newId } from '../utils/id';
 import { NoGame } from './Dashboard';
@@ -117,7 +117,9 @@ function RecordRoundForm({ game, editId }: { game: GameSession; editId?: string 
   }, [game, editing, input && JSON.stringify(input), useCurrentRules]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [reviewOpen, setReviewOpen] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(() => Boolean((draft.bonuses?.length ?? 0) + (draft.manualAdjustments?.length ?? 0)));
+  const instantRuleIds = new Set(config.bonusRules.filter((r) => INSTANT_BONUS_KINDS.includes(r.kind)).map((r) => r.id));
+  const extraCount = (draft.bonuses ?? []).filter((b) => !instantRuleIds.has(b.ruleId)).length + (draft.manualAdjustments?.length ?? 0);
+  const [moreOpen, setMoreOpen] = useState(() => extraCount > 0);
   const [submitErrors, setSubmitErrors] = useState<{ message: string }[]>([]);
 
   const kind = draft.kind ?? 'win';
@@ -309,9 +311,11 @@ function RecordRoundForm({ game, editId }: { game: GameSession; editId?: string 
       ) : (
         <Card className="mt-4 flex items-center gap-3 p-4 text-[14px] text-ink-2">
           <CircleSlash size={20} className="shrink-0 text-ink-3" />
-          No one won this hand. No hand payment is made. You can still record instant bonuses or penalties below.
+          No one won this hand. No hand payment is made. Kongs, flowers and animals below are still paid.
         </Card>
       )}
+
+      <DuringHand game={game} config={config} draft={draft} setDraft={setDraft} step={kind === 'win' ? 4 : 1} />
 
       <button
         type="button"
@@ -320,12 +324,10 @@ function RecordRoundForm({ game, editId }: { game: GameSession; editId?: string 
         className="pressable mt-6 flex w-full items-center justify-between rounded-2xl px-1 py-2 text-left"
       >
         <span className="text-[13px] font-semibold uppercase tracking-[0.08em] text-ink-3">
-          {kind === 'win' ? '4 · ' : ''}Additional conditions
+          {kind === 'win' ? '5 · ' : '2 · '}Dealer, special hands & manual
         </span>
         <span className="flex items-center gap-2 text-[13px] text-ink-3">
-          {(draft.bonuses?.length ?? 0) + (draft.manualAdjustments?.length ?? 0) > 0 ? (
-            <Badge tone="gold">{(draft.bonuses?.length ?? 0) + (draft.manualAdjustments?.length ?? 0)} applied</Badge>
-          ) : null}
+          {extraCount > 0 ? <Badge tone="gold">{extraCount} applied</Badge> : null}
           <ChevronDown size={18} className={cx('transition-transform', moreOpen && 'rotate-180')} />
         </span>
       </button>
@@ -617,14 +619,14 @@ function AdditionalConditions({
 }) {
   const bonuses = draft.bonuses ?? [];
   const manual = draft.manualAdjustments ?? [];
-  const enabledRules = config.bonusRules.filter((r) => r.enabled && (kind === 'win' || !WIN_ONLY_BONUS_KINDS.includes(r.kind)));
+  // Kongs/flowers/animals live in <DuringHand>; here only rules that change the winning hand.
+  const enabledRules = kind === 'win' ? config.bonusRules.filter((r) => r.enabled && WIN_ONLY_BONUS_KINDS.includes(r.kind)) : [];
   const [adding, setAdding] = useState(false);
 
-  const countFor = (ruleId: string, playerId?: string) =>
-    bonuses.find((b) => b.ruleId === ruleId && (playerId === undefined || b.playerId === playerId))?.count ?? 0;
-  const setCount = (ruleId: string, count: number, playerId?: string) => {
-    const others = bonuses.filter((b) => !(b.ruleId === ruleId && (playerId === undefined || b.playerId === playerId)));
-    const next: AppliedBonus[] = count > 0 ? [...others, { ruleId, count, ...(playerId ? { playerId } : {}) }] : others;
+  const countFor = (ruleId: string) => bonuses.find((b) => b.ruleId === ruleId)?.count ?? 0;
+  const setCount = (ruleId: string, count: number) => {
+    const others = bonuses.filter((b) => b.ruleId !== ruleId);
+    const next: AppliedBonus[] = count > 0 ? [...others, { ruleId, count }] : others;
     setDraft({ bonuses: next });
   };
 
@@ -644,12 +646,11 @@ function AdditionalConditions({
       </Card>
 
       {enabledRules.length === 0 ? (
-        <Card className="p-4 text-[14px] text-ink-3">
-          No special hands, flower or penalty rules are switched on. Configure them in Settings → Scoring rules.
-        </Card>
+        kind === 'win' ? (
+          <Card className="p-4 text-[14px] text-ink-3">No special-hand bonuses are switched on. You can add them in Settings → Scoring rules.</Card>
+        ) : null
       ) : (
         enabledRules.map((rule) => {
-          const playerScoped = PLAYER_BONUS_KINDS.includes(rule.kind);
           const valueText =
             rule.kind === 'extra_tai' ? `+${rule.value} tai` : rule.kind === 'payout_multiplier' ? `${rule.value}%` : formatCents(rule.value);
           return (
@@ -661,22 +662,10 @@ function AdditionalConditions({
                 </div>
                 <span className="num text-[13px] text-ink-3">
                   {valueText}
-                  {rule.kind === 'collect_from_each' ? ' from each' : rule.kind === 'penalty_pay_each' ? ' to each' : rule.kind === 'winner_bonus_per_payer' ? ' per payer' : ''}
+                  {rule.kind === 'winner_bonus_per_payer' ? ' per payer' : ''}
                 </span>
               </div>
-              {playerScoped ? (
-                <div className="space-y-2">
-                  {game.players.map((p) => (
-                    <div key={p.id} className="flex items-center justify-between gap-2">
-                      <span className="flex min-w-0 items-center gap-2 text-[14px]">
-                        <SeatBadge seat={p.seat} size="sm" />
-                        <span className="truncate">{p.name}</span>
-                      </span>
-                      <Stepper label={`${rule.name} for ${p.name}`} value={countFor(rule.id, p.id)} min={0} max={99} onChange={(v) => setCount(rule.id, v, p.id)} />
-                    </div>
-                  ))}
-                </div>
-              ) : rule.kind === 'payout_multiplier' ? (
+              {rule.kind === 'payout_multiplier' ? (
                 <Toggle label="Apply to this hand" checked={countFor(rule.id) > 0} onChange={(v) => setCount(rule.id, v ? 1 : 0)} />
               ) : (
                 <div className="flex items-center justify-between">
@@ -769,5 +758,186 @@ function ManualForm({
         </Button>
       </div>
     </div>
+  );
+}
+
+/** How an instant-payout rule moves money, in words, for buttons and the event list. */
+function instantAmountText(rule: BonusRule): string {
+  const amt = formatCents(rule.value);
+  if (rule.kind === 'collect_from_one') return `${amt} from one player`;
+  if (rule.kind === 'penalty_pay_each') return `${amt} to each player`;
+  return `${amt} from each player`;
+}
+
+/**
+ * Kongs, flowers and animals: paid immediately during the hand, whoever wins
+ * (also in drawn rounds). Each tap records one event; repeats add to its count.
+ */
+function DuringHand({
+  game,
+  config,
+  draft,
+  setDraft,
+  step,
+}: {
+  game: GameSession;
+  config: ScoringConfiguration;
+  draft: Draft;
+  setDraft: (patch: Draft) => void;
+  step: number;
+}) {
+  const rules = config.bonusRules.filter((r) => r.enabled && INSTANT_BONUS_KINDS.includes(r.kind));
+  const ruleById = new Map(config.bonusRules.map((r) => [r.id, r]));
+  const bonuses = draft.bonuses ?? [];
+  const byId = playerMap(game.players);
+  const [picking, setPicking] = useState<{ rule: BonusRule; collectorId?: string } | null>(null);
+
+  const events = bonuses
+    .map((b, index) => ({ b, index, rule: ruleById.get(b.ruleId) }))
+    .filter((e): e is { b: AppliedBonus; index: number; rule: BonusRule } => Boolean(e.rule && INSTANT_BONUS_KINDS.includes(e.rule.kind)));
+
+  const addEvent = (ruleId: string, playerId: string, fromPlayerId?: string) => {
+    const idx = bonuses.findIndex((b) => b.ruleId === ruleId && b.playerId === playerId && (b.fromPlayerId ?? '') === (fromPlayerId ?? ''));
+    const next: AppliedBonus[] =
+      idx >= 0
+        ? bonuses.map((b, i) => (i === idx ? { ...b, count: Math.min(99, b.count + 1) } : b))
+        : [...bonuses, { ruleId, count: 1, playerId, ...(fromPlayerId ? { fromPlayerId } : {}) }];
+    setDraft({ bonuses: next });
+    setPicking(null);
+  };
+  const removeOne = (index: number) => {
+    const next = bonuses.flatMap((b, i) => (i !== index ? [b] : b.count > 1 ? [{ ...b, count: b.count - 1 }] : []));
+    setDraft({ bonuses: next });
+  };
+
+  const describe = (b: AppliedBonus, rule: BonusRule) => {
+    const who = byId.get(b.playerId ?? '')?.name ?? '?';
+    const amt = formatCents(rule.value);
+    if (rule.kind === 'collect_from_one') return `${byId.get(b.fromPlayerId ?? '')?.name ?? '?'} pays ${who} ${amt}`;
+    if (rule.kind === 'penalty_pay_each') return `${who} pays ${amt} to each player`;
+    return `${who} collects ${amt} from each player`;
+  };
+
+  const pickTitle = !picking
+    ? ''
+    : picking.rule.kind === 'penalty_pay_each'
+      ? 'Who pays everyone?'
+      : picking.rule.kind === 'collect_from_one' && picking.collectorId
+        ? `Who pays ${byId.get(picking.collectorId)?.name}?`
+        : 'Who gets paid?';
+  const pickHint = !picking
+    ? ''
+    : picking.rule.kind === 'collect_from_one'
+      ? picking.collectorId
+        ? 'E.g. the player who discarded the tile, or whose flowers were taken.'
+        : 'E.g. the player who made the kong, or who holds the flowers.'
+      : picking.rule.kind === 'collect_from_each'
+        ? 'The other three players each pay them.'
+        : 'They pay each of the other three players.';
+  const pickPlayers = !picking ? [] : picking.collectorId ? game.players.filter((p) => p.id !== picking.collectorId) : game.players;
+
+  return (
+    <section aria-labelledby="during-hand-title">
+      <div className="mb-1 mt-6 flex items-center gap-2 px-1">
+        <span
+          className={cx(
+            'num flex h-6 w-6 items-center justify-center rounded-full text-[12px] font-bold',
+            events.length ? 'bg-emerald text-emerald-ink' : 'bg-surface-3 text-ink-3',
+          )}
+          aria-hidden="true"
+        >
+          {events.length ? '✓' : step}
+        </span>
+        <h2 id="during-hand-title" className="text-[17px] font-semibold tracking-[-0.01em] text-ink">
+          Kongs, flowers & animals
+        </h2>
+      </div>
+      <p className="mb-2.5 px-1 text-[13px] text-ink-3">Paid straight away, whoever wins. Tap one for each time it happened. Skip if none.</p>
+
+      {rules.length === 0 ? (
+        <Card className="p-4">
+          <p className="text-[14px] text-ink-2">Kong, flower and animal payouts aren’t set up for this game yet.</p>
+          <Button className="mt-3" size="sm" variant="gold" icon={<Settings2 size={14} />} onClick={() => navigate('/rules?target=game')} data-testid="setup-instant">
+            Set up payouts
+          </Button>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-2 gap-2">
+          {rules.map((rule) => (
+            <button
+              key={rule.id}
+              type="button"
+              data-testid={`instant-${rule.id}`}
+              onClick={() => setPicking({ rule })}
+              className="pressable flex min-h-[68px] flex-col items-start justify-between rounded-2xl border border-line bg-surface px-3 py-2.5 text-left elev-1 hover:border-line-strong"
+            >
+              <span className="line-clamp-2 text-[14px] font-semibold leading-snug text-ink">{rule.name}</span>
+              <span className="num mt-1 text-[12px] text-ink-3">{instantAmountText(rule)}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {events.length ? (
+        <ul className="mt-3 space-y-2" aria-label="Recorded during this hand">
+          {events.map(({ b, index, rule }) => (
+            <li key={`${b.ruleId}-${b.playerId}-${b.fromPlayerId ?? ''}`} className="flex items-center gap-2 rounded-2xl border border-gold/30 bg-gold-soft px-3 py-2" data-testid="instant-event">
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[14px] font-semibold text-ink">
+                  {rule.name}
+                  {b.count > 1 ? <span className="num ml-1.5 text-gold">×{b.count}</span> : null}
+                </span>
+                <span className="block truncate text-[12px] text-ink-2">{describe(b, rule)}</span>
+              </span>
+              <IconButton label={`Remove one ${rule.name}`} className="h-9 w-9 shrink-0" onClick={() => removeOne(index)}>
+                {b.count > 1 ? <Minus size={16} /> : <Trash2 size={16} />}
+              </IconButton>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      <Sheet open={picking !== null} onClose={() => setPicking(null)} title={picking?.rule.name ?? ''} labelledBy="instant-pick-title">
+        {picking ? (
+          <div className="space-y-3">
+            <div>
+              <div className="text-[17px] font-semibold text-ink">{pickTitle}</div>
+              <p className="text-[13px] text-ink-3">
+                {pickHint} {instantAmountText(picking.rule)}.
+              </p>
+            </div>
+            {picking.collectorId ? (
+              <button
+                type="button"
+                onClick={() => setPicking({ rule: picking.rule })}
+                className="pressable flex w-full items-center gap-2 rounded-xl bg-surface-2 px-3 py-2 text-left text-[13px] text-ink-2"
+              >
+                Gets paid: <span className="font-semibold text-positive">{byId.get(picking.collectorId)?.name}</span>
+                <span className="ml-auto text-emerald">Change</span>
+              </button>
+            ) : null}
+            <div className="grid grid-cols-2 gap-2.5" role="group" aria-label={pickTitle}>
+              {pickPlayers.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  data-testid={`pick-${p.seat}`}
+                  onClick={() => {
+                    if (picking.rule.kind === 'collect_from_one') {
+                      if (!picking.collectorId) setPicking({ rule: picking.rule, collectorId: p.id });
+                      else addEvent(picking.rule.id, picking.collectorId, p.id);
+                    } else addEvent(picking.rule.id, p.id);
+                  }}
+                  className="pressable flex min-h-[72px] flex-col items-start justify-between rounded-2xl border border-line bg-surface-2 p-3 text-left hover:border-line-strong"
+                >
+                  <SeatBadge seat={p.seat} size="sm" />
+                  <span className="mt-1.5 w-full truncate text-[15px] font-semibold text-ink">{p.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </Sheet>
+    </section>
   );
 }

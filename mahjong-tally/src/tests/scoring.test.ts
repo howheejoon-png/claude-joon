@@ -366,6 +366,82 @@ describe('instant adjustments and manual transfers', () => {
     r.transfers.forEach((t) => expect(t.kind).toBe('penalty'));
   });
 
+  it('collect_from_one: a kong from a discard is paid by the discarder only', () => {
+    const cfg = withRules([{ id: 'kong', name: 'Kong from a discard', kind: 'collect_from_one', value: 30, enabled: true }]);
+    // B konged A's discard; later C wins by self-draw at 1 tai.
+    const r = ok(selfDraw('c', 1, { bonuses: [{ ruleId: 'kong', count: 1, playerId: 'b', fromPlayerId: 'a' }] }), cfg);
+    const kong = r.transfers.filter((t) => t.kind === 'bonus');
+    expect(kong).toEqual([expect.objectContaining({ payerId: 'a', receiverId: 'b', amountCents: 30, description: 'Kong from a discard' })]);
+    expect(net(r.transfers)).toEqual({ a: -60 - 30, b: -60 + 30, c: 180, d: -60 });
+    expect(sumNet(r.transfers)).toBe(0);
+  });
+
+  it('collect_from_one: a flower bite is paid by the flowers’ owner, counted per bite, also in drawn rounds', () => {
+    const cfg = withRules([{ id: 'bite', name: 'Flower bite', kind: 'collect_from_one', value: 30, enabled: true }]);
+    const r = ok(
+      draw([
+        { ruleId: 'bite', count: 2, playerId: 'b', fromPlayerId: 'a' },
+        { ruleId: 'bite', count: 1, playerId: 'd', fromPlayerId: 'c' },
+      ]),
+      cfg,
+    );
+    expect(net(r.transfers)).toEqual({ a: -60, b: 60, c: -30, d: 30 });
+    expect(r.transfers.map((t) => t.description)).toEqual(['Flower bite ×2', 'Flower bite']);
+  });
+
+  it('collect_from_one requires a different paying player', () => {
+    const cfg = withRules([{ id: 'bite', name: 'Flower bite', kind: 'collect_from_one', value: 30, enabled: true }]);
+    const codes = (input: RoundInput) => {
+      const r = score(input, cfg);
+      return r.ok ? [] : r.errors.map((e) => e.code);
+    };
+    expect(codes(draw([{ ruleId: 'bite', count: 1, playerId: 'b' }]))).toContain('BONUS_FROM_PLAYER');
+    expect(codes(draw([{ ruleId: 'bite', count: 1, playerId: 'b', fromPlayerId: 'b' }]))).toContain('BONUS_SELF');
+    expect(codes(draw([{ ruleId: 'bite', count: 1, playerId: 'b', fromPlayerId: 'zz' }]))).toContain('BONUS_FROM_PLAYER');
+    // Same rule, same pair twice must use the count instead; different pairs are fine.
+    expect(
+      codes(
+        draw([
+          { ruleId: 'bite', count: 1, playerId: 'b', fromPlayerId: 'a' },
+          { ruleId: 'bite', count: 1, playerId: 'b', fromPlayerId: 'a' },
+        ]),
+      ),
+    ).toContain('BONUS_DUPLICATE');
+    expect(
+      codes(
+        draw([
+          { ruleId: 'bite', count: 1, playerId: 'b', fromPlayerId: 'a' },
+          { ruleId: 'bite', count: 1, playerId: 'b', fromPlayerId: 'c' },
+        ]),
+      ),
+    ).toEqual([]);
+    // A from-player on an everyone-pays rule is rejected rather than ignored.
+    const cfg2 = withRules([{ id: 'kong', name: 'Concealed kong', kind: 'collect_from_each', value: 60, enabled: true }]);
+    const r2 = score(draw([{ ruleId: 'kong', count: 1, playerId: 'b', fromPlayerId: 'a' }]), cfg2);
+    expect(r2.ok ? [] : r2.errors.map((e) => e.code)).toContain('BONUS_FROM_UNEXPECTED');
+  });
+
+  it('Singapore templates: self-drawn kong and own animal are paid by all three opponents', () => {
+    const cfg = config();
+    const r = ok(
+      draw([
+        { ruleId: 'sg-kong-concealed', count: 1, playerId: 'a' },
+        { ruleId: 'sg-animal', count: 1, playerId: 'a' },
+        { ruleId: 'sg-kong-discard', count: 1, playerId: 'c', fromPlayerId: 'd' },
+      ]),
+      cfg,
+    );
+    // Concealed kong $0.60 x3 + animal $0.30 x3 to A; D pays C $0.30 for the discard kong.
+    expect(net(r.transfers)).toEqual({ a: 270, b: -90, c: -90 + 30, d: -90 - 30 });
+    expect(sumNet(r.transfers)).toBe(0);
+  });
+
+  it('the example rules change nothing unless an event is recorded', () => {
+    const plain = ok(discard('b', 'c', 2), config());
+    expect(plain.transfers.every((t) => t.kind === 'hand')).toBe(true);
+    expect(net(plain.transfers)).toEqual({ a: -60, b: 240, c: -120, d: -60 });
+  });
+
   it('manual adjustments move an exact amount', () => {
     const r = ok(
       draw([], [{ id: 'm1', payerId: 'd', receiverId: 'a', amountCents: 450, note: 'Late fee' }]),

@@ -6,6 +6,7 @@ import {
   generatePayoutTable,
   resizePayoutTable,
   stakeLabelFor,
+  withInstantPayoutTemplates,
   type TableGeneratorOptions,
 } from '../config/defaults';
 import { validateConfig } from '../engine/validation';
@@ -28,12 +29,17 @@ const BONUS_KIND_LABEL: Record<BonusKind, { label: string; unit: 'tai' | 'cents'
     help: 'Winning hands only. 200% = double. Fractions of a cent follow the rounding rule.',
   },
   collect_from_each: {
-    label: 'Player collects from each other player',
+    label: 'Everyone else pays one player',
     unit: 'cents',
-    help: 'Any round, e.g. flower/animal or kong payments.',
+    help: 'Paid during the hand, any round. E.g. a self-drawn kong, or drawing your own animal: the other three each pay this.',
+  },
+  collect_from_one: {
+    label: 'One player pays another',
+    unit: 'cents',
+    help: 'Paid during the hand, any round. E.g. a kong from a discard (the discarder pays) or a flower bite (the flowers’ owner pays).',
   },
   penalty_pay_each: {
-    label: 'Player pays each other player',
+    label: 'One player pays everyone else',
     unit: 'cents',
     help: 'Any round, e.g. a false-win penalty.',
   },
@@ -78,6 +84,7 @@ export function RulesEditor({
   };
 
   const shared = value.discardLiability === 'shared';
+  const missingTemplates = withInstantPayoutTemplates(value.bonusRules, value.baseUnitCents).added;
 
   return (
     <div className="space-y-1">
@@ -347,11 +354,23 @@ export function RulesEditor({
           </Button>
         }
       >
-        Special hands, flowers & penalties
+        Kongs, flowers, animals & extras
       </SectionTitle>
       <p className="mb-2 px-1 text-[13px] leading-relaxed text-ink-3">
-        These only affect payouts when switched on here and selected for a round. Examples are placeholders: set your own names and values.
+        Money only moves when a rule is switched on here <em>and</em> recorded in a round. Amounts marked “Example” are suggestions: change them to match your table.
       </p>
+      {missingTemplates > 0 ? (
+        <Button
+          className="mb-3"
+          block
+          variant="gold"
+          icon={<Sparkles size={16} />}
+          data-testid="add-instant-templates"
+          onClick={() => set('bonusRules', withInstantPayoutTemplates(value.bonusRules, value.baseUnitCents).rules)}
+        >
+          Add kong, flower & animal payouts ({missingTemplates})
+        </Button>
+      ) : null}
       <div className="space-y-3">
         {value.bonusRules.length === 0 ? (
           <Card className="p-4 text-[14px] text-ink-3">No adjustments configured.</Card>

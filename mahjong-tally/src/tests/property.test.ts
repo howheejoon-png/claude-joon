@@ -42,6 +42,7 @@ const BONUS_KINDS: BonusKind[] = [
   'winner_bonus_per_payer',
   'payout_multiplier',
   'collect_from_each',
+  'collect_from_one',
   'penalty_pay_each',
 ];
 
@@ -156,8 +157,16 @@ function buildInput(game: GameSession, picks: number[]): RoundInput {
   for (const rule of cfg.bonusRules) {
     if (!rule.enabled || next() % 3 !== 0) continue;
     if (isDraw && ['extra_tai', 'winner_bonus_per_payer', 'payout_multiplier'].includes(rule.kind)) continue;
-    const playerScoped = rule.kind === 'collect_from_each' || rule.kind === 'penalty_pay_each';
-    bonuses.push({ ruleId: rule.id, count: 1 + (next() % 3), ...(playerScoped ? { playerId: pick(ids) } : {}) });
+    const playerScoped = rule.kind === 'collect_from_each' || rule.kind === 'collect_from_one' || rule.kind === 'penalty_pay_each';
+    const playerId = pick(ids);
+    const fromPlayerId = rule.kind === 'collect_from_one' ? pick(ids.filter((x) => x !== playerId)) : undefined;
+    if (bonuses.some((b) => b.ruleId === rule.id)) continue;
+    bonuses.push({
+      ruleId: rule.id,
+      count: 1 + (next() % 3),
+      ...(playerScoped ? { playerId } : {}),
+      ...(fromPlayerId ? { fromPlayerId } : {}),
+    });
   }
   const manualAdjustments: ManualAdjustment[] = [];
   if (next() % 5 === 0) {

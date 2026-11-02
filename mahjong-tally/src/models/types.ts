@@ -93,7 +93,10 @@ export interface DealerRule {
  * - `payout_multiplier`: hand payments are multiplied by `value` percent,
  *   e.g. 200 = double (win only, not countable).
  * - `collect_from_each`: a chosen player collects `value` cents per count
- *   from each other player (e.g. flower/animal or kong bonuses). Any round.
+ *   from each other player (e.g. a self-drawn kong or animal pair). Any round.
+ * - `collect_from_one`: a chosen player collects `value` cents per count
+ *   from ONE other chosen player (e.g. a kong made from someone's discard —
+ *   the discarder pays; or a flower bite — the flowers' owner pays). Any round.
  * - `penalty_pay_each`: a chosen player pays `value` cents per count to each
  *   other player (e.g. false win). Any round.
  */
@@ -102,6 +105,7 @@ export type BonusKind =
   | 'winner_bonus_per_payer'
   | 'payout_multiplier'
   | 'collect_from_each'
+  | 'collect_from_one'
   | 'penalty_pay_each';
 
 export interface BonusRule {
@@ -144,8 +148,10 @@ export interface AppliedBonus {
   ruleId: string;
   /** How many times the rule applies (ignored for multipliers). */
   count: number;
-  /** Player who collects (collect_from_each) or pays (penalty_pay_each). */
+  /** Player who collects (collect_from_each / collect_from_one) or pays (penalty_pay_each). */
   playerId?: PlayerId;
+  /** For collect_from_one: the single player who pays `playerId`. */
+  fromPlayerId?: PlayerId;
 }
 
 /** A one-off manual transfer, e.g. a custom penalty agreed at the table. */
