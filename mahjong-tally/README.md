@@ -145,6 +145,8 @@ npm run build
 
 `dist/` is a fully static site. Host it on any static host over **HTTPS**, which service workers and installation require. Netlify, Vercel, Cloudflare Pages, GitHub Pages and S3/CloudFront all work.
 
+**GitHub Pages (set up in this repo):** `.github/workflows/deploy-mahjong-tally.yml` runs the unit tests, builds the app and publishes it to **https://howheejoon-png.github.io/claude-joon/** on every push to `master` that changes `mahjong-tally/`. One-time setup: repo **Settings → Pages → Build and deployment → Source: GitHub Actions**. You can also run it manually from the **Actions** tab (*Deploy Mahjong Tally → Run workflow*).
+
 - The build uses relative paths (`base: './'`) and hash routing, so it works at a domain root or in a sub-folder (e.g. GitHub Pages project sites) without server rewrites.
 - The service worker precaches the app shell and every built asset. No third-party requests are made or cached, and no fonts are fetched.
 - When a new version is deployed, open apps show an **Update** prompt instead of reloading mid-game.
