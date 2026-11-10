@@ -23,7 +23,18 @@ export function GamesPage() {
 
   return (
     <main className="mx-auto max-w-lg px-4 pb-16 pt-safe">
-      <PageHeader title="Saved games" subtitle="Stored on this device" back={store.activeGame ? '/settings' : '/'} />
+      <PageHeader
+        title="Saved games"
+        subtitle="Stored on this device"
+        back={store.activeGame ? '/settings' : '/'}
+        right={
+          store.games.length ? (
+            <Button size="sm" variant="gold" onClick={() => navigate('/season')}>
+              Season
+            </Button>
+          ) : undefined
+        }
+      />
       {store.unreadable.length ? (
         <Card className="mb-3 border-negative/30 p-4 text-[13px] text-negative">
           {store.unreadable.length} saved game record{store.unreadable.length > 1 ? 's' : ''} could not be read and {store.unreadable.length > 1 ? 'were' : 'was'} left untouched:{' '}

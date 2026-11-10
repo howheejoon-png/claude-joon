@@ -8,7 +8,7 @@
  * carries its own timestamp and any new ids).
  */
 import * as engine from '../engine/game';
-import type { GameSession, Player, Result, RoundId, RoundInput, ScoringConfiguration } from '../models/types';
+import type { GameSession, Player, PlayerId, Result, RoundId, RoundInput, ScoringConfiguration, Seat } from '../models/types';
 import { migrateGameDocument } from '../storage/schema';
 
 export type GameOpBody =
@@ -24,7 +24,8 @@ export type GameOpBody =
   | { type: 'rescore'; config: ScoringConfiguration }
   | { type: 'finish' }
   | { type: 'reopen' }
-  | { type: 'rename'; name: string };
+  | { type: 'rename'; name: string }
+  | { type: 'table'; dealerId: PlayerId; prevailingWind: Seat; firstDealerId?: PlayerId };
 
 export interface GameOp {
   v: 1;
@@ -104,6 +105,12 @@ function applyOpUnsafe(game: GameSession | null, op: GameOp): Result<GameSession
       return { ok: true, value: engine.finishGame(game, ctx) };
     case 'reopen':
       return { ok: true, value: engine.reopenGame(game, ctx) };
+    case 'table':
+      return engine.setNextHand(
+        game,
+        { dealerId: body.dealerId, prevailingWind: body.prevailingWind, ...(body.firstDealerId ? { firstDealerId: body.firstDealerId } : {}) },
+        ctx,
+      );
     case 'rename': {
       const name = typeof body.name === 'string' ? body.name.trim() : '';
       if (!name) return fail('NAME', 'Game name cannot be empty.');

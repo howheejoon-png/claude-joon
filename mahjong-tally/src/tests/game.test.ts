@@ -340,8 +340,10 @@ describe('dealer suggestion and stats', () => {
     expect(suggestNextDealer(g)).toBe('b');
     g = unwrap(recordRound(g, selfDraw('c', 1, { dealerId: 'd' }), ctx())).game;
     expect(suggestNextDealer(g)).toBe('a'); // wraps North → East
+    // A hand recorded without a dealer is treated as dealt by the tracked dealer (a);
+    // c won, so the deal passes on to b.
     g = unwrap(recordRound(g, selfDraw('c', 1), ctx())).game;
-    expect(suggestNextDealer(g)).toBeUndefined();
+    expect(suggestNextDealer(g)).toBe('b');
   });
 
   it('reports the biggest winning round and totals', () => {

@@ -173,6 +173,17 @@ describe('live sharing: sync', () => {
     expect(activeRounds(b.game)).toHaveLength(0);
   });
 
+  it('“next hand” corrections reach every phone and replay identically', async () => {
+    const { phones } = await tableOf(2);
+    const [a, b] = phones as [Phone, Phone];
+    expect(a.act({ type: 'table', dealerId: 'c', prevailingWind: 'south', firstDealerId: 'b' }).ok).toBe(true);
+    await a.sync();
+    await b.sync();
+    expect(b.game.nextHand).toMatchObject({ dealerId: 'c', prevailingWind: 'south' });
+    expect(b.game.initialDealerId).toBe('b');
+    expect(JSON.stringify(b.game.nextHand)).toBe(JSON.stringify(a.game.nextHand));
+  });
+
   it('joining an unknown link says so', async () => {
     const r = await joinShare(newShareCode(), memoryTransport(), 'x', nextAt());
     expect(r.ok).toBe(false);

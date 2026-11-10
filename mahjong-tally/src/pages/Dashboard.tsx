@@ -4,7 +4,10 @@ import { navigate } from '../app/router';
 import { useStore } from '../app/store';
 import { Amount, BalanceIndicator, PageHeader, SeatBadge, playerMap } from '../components/domain';
 import { Badge, Button, Card, EmptyState, IconButton, SectionTitle, cx } from '../components/ui';
-import { activeRounds, gameBalances, gameStats, roundNet, roundNumbers, suggestNextDealer } from '../engine/game';
+import { activeRounds, gameBalances, gameStats, roundNet, roundNumbers } from '../engine/game';
+import { tableState, type TableState } from '../engine/table';
+import { PlayerTraits, TableStrip } from '../components/Table';
+import { FLOWERS, SEAT_LABEL } from '../config/defaults';
 import { formatCents } from '../utils/money';
 import { formatDuration, formatTime } from '../utils/time';
 import { describeRound } from './describe';
@@ -49,7 +52,8 @@ export function Dashboard() {
   const rounds = activeRounds(game);
   const numbers = roundNumbers(game);
   const total = balances.reduce((a, b) => a + b.netCents, 0);
-  const nextDealer = suggestNextDealer(game);
+  const table = tableState(game);
+  const nextDealer = table.dealerId;
   const lastRound = rounds[rounds.length - 1];
   const endTime = game.status === 'finished' && game.finishedAt ? Date.parse(game.finishedAt) : now;
   const recent = [...rounds].reverse().slice(0, 4);
@@ -81,7 +85,8 @@ export function Dashboard() {
           <IdentityPicker game={game} value={null} testPrefix="prompt-me" onChange={(id) => store.setIdentity(game.id, id)} />
         </Card>
       ) : null}
-      {me ? <YouCard game={game} me={me} /> : null}
+      {me ? <YouCard game={game} me={me} table={table} /> : null}
+      {game.status === 'active' ? <TableStrip game={game} state={table} /> : null}
 
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2 px-1">
         <span className="flex flex-wrap items-center gap-2">
@@ -112,7 +117,7 @@ export function Dashboard() {
               style={{ animationDelay: `${i * 40}ms` }}
             >
               <div className="flex items-start justify-between gap-2">
-                <SeatBadge seat={p.seat} dealer={nextDealer === p.id} />
+                <SeatBadge seat={table.winds[p.id] ?? p.seat} dealer={nextDealer === p.id} />
                 {b.wins > 0 && b.netCents === Math.max(...balances.map((x) => x.netCents)) && b.netCents > 0 ? (
                   <Crown size={16} className="text-gold" aria-label="Leader" />
                 ) : null}
@@ -121,6 +126,7 @@ export function Dashboard() {
                 <span className="truncate">{p.name}</span>
                 {isMe ? <Badge tone="gold">You</Badge> : null}
               </div>
+              <PlayerTraits player={p} wind={table.dealerId ? table.winds[p.id] : undefined} className="mt-0.5" />
               <Amount cents={b.netCents} className="mt-0.5 block text-[26px] font-bold leading-tight tracking-[-0.02em]" />
               <div className="mt-2 flex gap-3 text-[12px] text-ink-3">
                 <span>
@@ -194,11 +200,7 @@ export function Dashboard() {
           })}
         </Card>
       )}
-      {lastRound && game.status !== 'finished' ? (
-        <p className="mt-3 px-1 text-[12px] text-ink-3">
-          {nextDealer ? `Suggested dealer next round: ${byId.get(nextDealer)?.name}.` : 'No dealer tracked.'} Changes save automatically.
-        </p>
-      ) : null}
+      {lastRound && game.status !== 'finished' ? <p className="mt-3 px-1 text-[12px] text-ink-3">Changes save automatically.</p> : null}
     </div>
   );
 }
@@ -217,7 +219,7 @@ function Stat({ icon, label, value, sub }: { icon: React.ReactNode; label: strin
 }
 
 /** This phone's player: their balance, and what they'd pay or receive if the game ended now. */
-function YouCard({ game, me }: { game: GameSession; me: Player }) {
+function YouCard({ game, me, table }: { game: GameSession; me: Player; table: TableState }) {
   const balances = gameBalances(game);
   const mine = balances.find((b) => b.playerId === me.id);
   if (!mine) return null;
@@ -232,7 +234,7 @@ function YouCard({ game, me }: { game: GameSession; me: Player }) {
     >
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2.5">
-          <SeatBadge seat={me.seat} />
+          <SeatBadge seat={table.winds[me.id] ?? me.seat} dealer={table.dealerId === me.id} />
           <div className="min-w-0">
             <div className="text-[12px] font-semibold uppercase tracking-[0.08em] text-gold">You</div>
             <div className="truncate text-[17px] font-semibold text-ink">{me.name}</div>
@@ -243,6 +245,18 @@ function YouCard({ game, me }: { game: GameSession; me: Player }) {
         </div>
       </div>
       <Amount cents={mine.netCents} className="mt-3 block text-[40px] font-bold leading-none tracking-[-0.03em]" />
+      {table.dealerId || me.animal ? (
+        <p className="mt-2 text-[13px] text-ink-2" data-testid="you-hand">
+          {table.dealerId ? (
+            <>
+              This hand you’re <span className="font-semibold text-ink">{SEAT_LABEL[table.winds[me.id]!]}</span>
+              {table.dealerId === me.id ? ' (dealer)' : ''} · your flowers {FLOWERS[table.winds[me.id]!].number}{' '}
+              <span className="font-display">{FLOWERS[table.winds[me.id]!].glyphs}</span>
+            </>
+          ) : null}
+          {me.animal ? <PlayerTraits player={{ ...me }} className="mt-0.5 inline-flex" /> : null}
+        </p>
+      ) : null}
       <div className="mt-3 space-y-1 text-[14px]">
         {myTransfers.length === 0 ? (
           <p className="text-ink-3">{mine.netCents === 0 ? 'You’re square right now.' : 'Settling up…'}</p>

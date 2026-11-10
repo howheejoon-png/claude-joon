@@ -10,7 +10,7 @@
  */
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import * as ops from '../engine/game';
-import type { GameSession, Player, Result, Round, RoundId, RoundInput, ScoringConfiguration } from '../models/types';
+import type { GameSession, Player, Result, Round, RoundId, RoundInput, ScoringConfiguration, Seat } from '../models/types';
 import { TallyStorage, requestPersistentStorage } from '../storage/db';
 import { DEFAULT_SETTINGS, type AppSettings, type BackupFile, type ThemePreference } from '../storage/schema';
 import { applyOp, type GameOp, type GameOpBody } from '../sync/ops';
@@ -48,6 +48,7 @@ export interface RoundInputDraft {
   liablePlayerId: string;
   tai: number;
   dealerId: string;
+  prevailingWind: Seat;
   bonuses: RoundInput['bonuses'];
   manualAdjustments: RoundInput['manualAdjustments'];
   useCurrentRules: boolean;
@@ -77,6 +78,7 @@ export interface Store extends StoreState {
   shareActiveGame(): Promise<Result<{ code: string; link: string }>>;
   joinSharedGame(code: string): Promise<Result<GameSession>>;
   setIdentity(gameId: string, playerId: string | null): void;
+  setNextHand(next: { dealerId: string; prevailingWind: Seat; firstDealerId?: string }): Result<GameSession>;
   syncNow(): void;
   setTheme(theme: ThemePreference): void;
   saveHouseRules(config: ScoringConfiguration): Promise<void>;
@@ -441,6 +443,7 @@ export function StoreProvider({
       applyRescore: (config) => runActive({ type: 'rescore', config }),
       finishGame: () => runActive({ type: 'finish' }),
       reopenGame: () => runActive({ type: 'reopen' }),
+      setNextHand: (next) => runActive({ type: 'table', ...next }),
       shareActiveGame: async () => {
         const game = getActive();
         if (!game) return noGame();

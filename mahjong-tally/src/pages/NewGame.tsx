@@ -6,6 +6,7 @@ import { useStore } from '../app/store';
 import { PageHeader, SeatBadge } from '../components/domain';
 import { Sheet } from '../components/overlay';
 import { RulesEditor } from '../components/RulesEditor';
+import { AnimalPicker } from '../components/Table';
 import { Button, Card, ErrorList, Field, SectionTitle, TextInput, cx } from '../components/ui';
 import { hasErrors, validateConfig, validatePlayers } from '../engine/validation';
 import { SEATS, type Player, type ScoringConfiguration, type Seat, type ValidationIssue } from '../models/types';
@@ -28,7 +29,8 @@ export function NewGame() {
       name: store.settings.lastPlayerNames[i] ?? DEFAULT_PLAYER_NAMES[i]!,
     })),
   );
-  const [dealerId, setDealerId] = useState<string | undefined>(undefined);
+  // The first dealer is East by default; the app then moves the deal on after each hand.
+  const [dealerId, setDealerId] = useState<string | undefined>(() => players.find((p) => p.seat === 'east')?.id);
   const [config, setConfig] = useState<ScoringConfiguration | null>(houseRules ? cloneConfig(houseRules) : null);
   const [rulesOpen, setRulesOpen] = useState(false);
   const [draftRules, setDraftRules] = useState<ScoringConfiguration | null>(null);
@@ -117,7 +119,14 @@ export function NewGame() {
       </Card>
       <p className="mt-2 px-1 text-[12px] text-ink-3">Picking a seat that is taken swaps the two players.</p>
 
-      <SectionTitle>Dealer (optional)</SectionTitle>
+      <SectionTitle>Spirit animals (optional)</SectionTitle>
+      <Card className="p-4">
+        <AnimalPicker players={players} onChange={setPlayers} />
+        <p className="mt-3 text-[12px] text-ink-3">Each player gets one animal. Drawing your own animal is paid by everyone. Picking an animal someone else has swaps them.</p>
+      </Card>
+
+      <SectionTitle>First dealer</SectionTitle>
+      <p className="-mt-1 mb-2 px-1 text-[12px] text-ink-3">Deals the first hand as East. The app moves the deal and the round wind on after each hand. Choose None to not track them.</p>
       <div role="radiogroup" aria-label="Starting dealer" className="grid grid-cols-5 gap-1.5">
         <button
           type="button"

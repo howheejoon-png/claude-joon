@@ -6,12 +6,14 @@ import {
   generatePayoutTable,
   resizePayoutTable,
   stakeLabelFor,
+  DEFAULT_ROTATION,
   INSTANT_RULE_PROMPTS,
   applyInstantPayoutTemplates,
   instantTemplateStatus,
   type TableGeneratorOptions,
 } from '../config/defaults';
-import { validateConfig } from '../engine/validation';
+import { INSTANT_BONUS_KINDS, validateConfig } from '../engine/validation';
+import { isKongRule } from '../engine/table';
 import type { BonusKind, BonusRule, PayoutRow, ScoringConfiguration, ValidationIssue } from '../models/types';
 import { formatCents } from '../utils/money';
 import { newId } from '../utils/id';
@@ -86,6 +88,7 @@ export function RulesEditor({
   };
 
   const shared = value.discardLiability === 'shared';
+  const rotation = value.rotation ?? DEFAULT_ROTATION;
   const templateStatus = instantTemplateStatus(value.bonusRules);
   const [replaceOpen, setReplaceOpen] = useState(false);
   const installTemplates = () => set('bonusRules', applyInstantPayoutTemplates(value.bonusRules, value.baseUnitCents).rules);
@@ -319,6 +322,30 @@ export function RulesEditor({
 
       <SectionTitle>Dealer (莊家)</SectionTitle>
       <Card className="space-y-4 p-4">
+        <div className="space-y-3 border-b border-line pb-4">
+          <Toggle
+            label="Dealer keeps the deal after winning"
+            checked={rotation.dealerKeepsOnWin}
+            onChange={(dealerKeepsOnWin) => set('rotation', { ...rotation, dealerKeepsOnWin })}
+          />
+          <div>
+            <div className="mb-2 text-[15px] font-medium text-ink">After a drawn hand</div>
+            <Segmented
+              label="After a drawn hand"
+              size="sm"
+              value={rotation.onDraw}
+              onChange={(onDraw) => set('rotation', { ...rotation, onDraw })}
+              options={[
+                { value: 'keeps', label: 'Dealer keeps' },
+                { value: 'keeps_unless_kong', label: 'Keeps unless kong' },
+                { value: 'passes', label: 'Deal passes' },
+              ]}
+            />
+          </div>
+          <p className="text-[13px] leading-relaxed text-ink-3">
+            Used by the table tracker to move the deal and round wind on. It doesn’t change any payment.
+          </p>
+        </div>
         <Toggle
           label="Dealer bonuses apply"
           description="Off by default. When on, the values below are applied when the round’s dealer wins or pays."
@@ -456,6 +483,14 @@ export function RulesEditor({
                   </label>
                 )}
               </div>
+              {INSTANT_BONUS_KINDS.includes(rule.kind) ? (
+                <Toggle
+                  label="Counts as a kong"
+                  description="A drawn hand with this payout passes the deal on."
+                  checked={isKongRule(rule)}
+                  onChange={(countsAsKong) => setRule(i, { countsAsKong })}
+                />
+              ) : null}
               <Toggle label="Enabled" checked={rule.enabled} onChange={(enabled) => setRule(i, { enabled })} />
               {issuesAt(issues, `bonusRules.${i}`).map((iss, k) => (
                 <p key={k} className={cx('text-[13px]', iss.severity === 'error' ? 'text-negative' : 'text-gold')}>

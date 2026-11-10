@@ -6,7 +6,7 @@ import type {
   ScoringConfiguration,
   ValidationIssue,
 } from '../models/types';
-import { SEATS } from '../models/types';
+import { SEATS, SPIRIT_ANIMAL_IDS } from '../models/types';
 import { isCents } from '../utils/money';
 
 const BONUS_KINDS: readonly BonusKind[] = [
@@ -195,6 +195,14 @@ export function validateConfig(config: ScoringConfiguration): ValidationIssue[] 
     }
   }
 
+  // Dealer rotation (optional: rules saved before it existed use the default)
+  if (config.rotation !== undefined) {
+    const r = config.rotation;
+    if (!r || typeof r.dealerKeepsOnWin !== 'boolean' || !['keeps', 'keeps_unless_kong', 'passes'].includes(r.onDraw)) {
+      issues.push(err('ROTATION', 'Choose when the dealer keeps the deal.', 'rotation'));
+    }
+  }
+
   // Bonus rules
   if (!Array.isArray(config.bonusRules)) {
     issues.push(err('BONUS_MISSING', 'Adjustment rules are missing.', 'bonusRules'));
@@ -257,6 +265,7 @@ export function validatePlayers(players: readonly Player[]): ValidationIssue[] {
   const ids = new Set<string>();
   const names = new Set<string>();
   const seats = new Set<string>();
+  const animals = new Set<string>();
   players.forEach((p, i) => {
     if (!p.id || ids.has(p.id)) issues.push(err('PLAYER_ID', `Player ${i + 1} has a missing or duplicate id.`, `players.${i}.id`));
     ids.add(p.id);
@@ -268,6 +277,11 @@ export function validatePlayers(players: readonly Player[]): ValidationIssue[] {
     if (!SEATS.includes(p.seat)) issues.push(err('PLAYER_SEAT', `Player ${i + 1} has an invalid seat.`, `players.${i}.seat`));
     else if (seats.has(p.seat)) issues.push(err('PLAYER_SEAT_DUP', `Two players are seated ${p.seat}.`, `players.${i}.seat`));
     seats.add(p.seat);
+    if (p.animal !== undefined) {
+      if (!SPIRIT_ANIMAL_IDS.includes(p.animal)) issues.push(err('PLAYER_ANIMAL', `${name || `Player ${i + 1}`} has an unknown spirit animal.`, `players.${i}.animal`));
+      else if (animals.has(p.animal)) issues.push(err('PLAYER_ANIMAL_DUP', `Two players have the ${p.animal} as their spirit animal.`, `players.${i}.animal`));
+      animals.add(p.animal);
+    }
   });
   return issues;
 }
@@ -285,6 +299,9 @@ export function validateRoundInput(
 
   if (input.dealerId !== undefined && !known(input.dealerId)) {
     issues.push(err('DEALER_UNKNOWN', 'The selected dealer is not in this game.', 'dealerId'));
+  }
+  if (input.prevailingWind !== undefined && !SEATS.includes(input.prevailingWind)) {
+    issues.push(err('WIND_INVALID', 'The round wind is not valid.', 'prevailingWind'));
   }
 
   if (o.type === 'win') {

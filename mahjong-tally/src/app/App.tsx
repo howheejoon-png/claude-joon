@@ -12,6 +12,7 @@ import { Landing } from '../pages/Landing';
 import { NewGame } from '../pages/NewGame';
 import { RecordRound } from '../pages/RecordRound';
 import { RulesPage } from '../pages/RulesPage';
+import { SeasonPage } from '../pages/SeasonPage';
 import { Settlement } from '../pages/Settlement';
 import { SettingsPage } from '../pages/SettingsPage';
 import { navigate, useRoute } from './router';
@@ -128,6 +129,9 @@ function Shell() {
       page = <RulesPage key={target} target={target} />;
       break;
     }
+    case '/season':
+      page = <SeasonPage />;
+      break;
     case '/games':
       page = <GamesPage />;
       break;

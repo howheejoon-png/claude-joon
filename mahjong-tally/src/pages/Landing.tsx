@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, Download, Play, Plus } from 'lucide-react';
+import { ArrowRight, Download, Play, Plus, Trophy } from 'lucide-react';
 import { navigate } from '../app/router';
 import { useStore } from '../app/store';
 import { Amount, TileLogo } from '../components/domain';
@@ -87,6 +87,11 @@ export function Landing() {
           {store.games.length > 0 ? (
             <Button variant="ghost" size="sm" onClick={() => navigate('/games')} icon={<ArrowRight size={14} />}>
               Saved games ({store.games.length})
+            </Button>
+          ) : null}
+          {store.games.length > 0 ? (
+            <Button variant="ghost" size="sm" onClick={() => navigate('/season')} icon={<Trophy size={14} />} data-testid="open-season">
+              Season
             </Button>
           ) : null}
           <Button variant="ghost" size="sm" onClick={() => setInstallOpen(true)} icon={<Download size={14} />}>

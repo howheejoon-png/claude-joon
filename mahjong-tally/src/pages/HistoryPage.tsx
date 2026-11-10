@@ -6,6 +6,8 @@ import { Amount, BalanceIndicator, PageHeader, RoundNetLines, TransactionList, p
 import { ConfirmDialog, useToast } from '../components/overlay';
 import { Badge, Button, Card, EmptyState, SectionTitle, cx } from '../components/ui';
 import { activeRounds, deletedRounds, roundNet, roundNumbers } from '../engine/game';
+import { tableState } from '../engine/table';
+import { SEAT_LABEL } from '../config/defaults';
 import type { Round } from '../models/types';
 import { formatCents } from '../utils/money';
 import { formatDateTime } from '../utils/time';
@@ -25,6 +27,7 @@ export function HistoryPage({ openId }: { openId?: string | undefined }) {
   const rounds = [...activeRounds(game)].reverse();
   const deleted = deletedRounds(game);
   const numbers = roundNumbers(game);
+  const hands = tableState(game).hands;
   const byId = playerMap(game.players);
   const last = rounds[0];
 
@@ -136,6 +139,12 @@ export function HistoryPage({ openId }: { openId?: string | undefined }) {
                       <TransactionList transactions={r.transactions} players={game.players} />
                     </div>
                     <div className="text-[12px] text-ink-3">
+                      {hands[r.id] ? (
+                        <span className="mb-1 block text-ink-2" data-testid={`round-hand-${numbers.get(r.id)}`}>
+                          {SEAT_LABEL[hands[r.id]!.prevailingWind]} round
+                          {hands[r.id]!.dealerId ? ` · dealer ${byId.get(hands[r.id]!.dealerId!)?.name ?? '?'}` : ''}
+                        </span>
+                      ) : null}
                       Scored with “{r.configSnapshot.name}” ({r.configSnapshot.stakeLabel}).{' '}
                       {r.revisions.length > 1
                         ? `History: ${r.revisions.map((x) => `${x.action}${x.by ? ` by ${x.by}` : ''} ${formatDateTime(x.at)}`).join(' · ')}`

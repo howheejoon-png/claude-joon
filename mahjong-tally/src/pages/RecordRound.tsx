@@ -5,9 +5,13 @@ import { useStore, type RoundInputDraft } from '../app/store';
 import { Amount, PageHeader, RoundNetLines, SeatBadge, TransactionList, playerMap } from '../components/domain';
 import { Sheet, useToast } from '../components/overlay';
 import { Badge, Button, Card, ErrorList, IconButton, MoneyInput, Segmented, Stepper, TextInput, Toggle, cx } from '../components/ui';
-import { previewEdit, previewRound, roundNet, roundNumbers, suggestNextDealer } from '../engine/game';
+import { previewEdit, previewRound, roundNet, roundNumbers } from '../engine/game';
+import { tableState, windsFor } from '../engine/table';
+import { PlayerTraits } from '../components/Table';
+import { SEAT_GLYPH, SEAT_LABEL } from '../config/defaults';
+import { SEATS } from '../models/types';
 import { INSTANT_BONUS_KINDS, WIN_ONLY_BONUS_KINDS } from '../engine/validation';
-import type { AppliedBonus, BonusRule, GameSession, Player, PlayerId, RoundInput, ScoringConfiguration } from '../models/types';
+import type { AppliedBonus, BonusRule, GameSession, Player, PlayerId, RoundInput, ScoringConfiguration, Seat } from '../models/types';
 import { formatCents } from '../utils/money';
 import { INSTANT_RULE_PROMPTS } from '../config/defaults';
 import { newId } from '../utils/id';
@@ -30,6 +34,7 @@ function draftFromInput(input: RoundInput): Draft {
         }
       : {}),
     ...(input.dealerId ? { dealerId: input.dealerId } : { dealerId: '' }),
+    ...(input.prevailingWind ? { prevailingWind: input.prevailingWind } : {}),
     bonuses: input.bonuses.map((b) => ({ ...b })),
     manualAdjustments: input.manualAdjustments.map((m) => ({ ...m })),
   };
@@ -43,6 +48,7 @@ function buildInput(d: Draft, config: ScoringConfiguration): { input?: RoundInpu
   const bonuses = (d.bonuses ?? []).filter((b) => kind === 'win' || !WIN_ONLY_BONUS_KINDS.includes(bonusKinds.get(b.ruleId) ?? 'extra_tai'));
   const base = {
     ...(d.dealerId ? { dealerId: d.dealerId } : {}),
+    ...(d.prevailingWind ? { prevailingWind: d.prevailingWind } : {}),
     bonuses,
     manualAdjustments: d.manualAdjustments ?? [],
   };
@@ -100,8 +106,18 @@ function RecordRoundForm({ game, editId }: { game: GameSession; editId?: string 
   const draftMatches = storeDraft && (storeDraft.editingRoundId ?? undefined) === (editing?.id ?? undefined);
   const [draft, setDraftState] = useState<Draft>(() => {
     if (draftMatches) return storeDraft.input;
-    if (editing) return draftFromInput(editing.input);
-    return { kind: 'win', dealerId: suggestNextDealer(game) ?? '', bonuses: [], manualAdjustments: [] };
+    const table = tableState(game);
+    if (editing) {
+      // Older rounds may not have stored the hand's dealer/wind: fill them in from the tracker.
+      const played = table.hands[editing.id];
+      const d = draftFromInput(editing.input);
+      return {
+        ...d,
+        ...(!editing.input.dealerId && played?.dealerId ? { dealerId: played.dealerId } : {}),
+        ...(!editing.input.prevailingWind && played ? { prevailingWind: played.prevailingWind } : {}),
+      };
+    }
+    return { kind: 'win', dealerId: table.dealerId ?? '', prevailingWind: table.prevailingWind, bonuses: [], manualAdjustments: [] };
   });
   const setDraft = (patch: Draft) => setDraftState((d) => ({ ...d, ...patch }));
   useEffect(() => {
@@ -126,6 +142,8 @@ function RecordRoundForm({ game, editId }: { game: GameSession; editId?: string 
   const kind = draft.kind ?? 'win';
   const winner = draft.winnerId ? byId.get(draft.winnerId) : undefined;
   const opponents = game.players.filter((p) => p.id !== draft.winnerId);
+  // Badges show each player's wind for this hand (the dealer is East).
+  const handWinds = windsFor(game.players, draft.dealerId || undefined);
   const taiValues: number[] = [];
   for (let t = config.minTai; t <= config.maxTai; t += 1) taiValues.push(t);
   const liableAllowed = config.selfDrawPayers === 'all_opponents_or_liable';
@@ -192,6 +210,8 @@ function RecordRoundForm({ game, editId }: { game: GameSession; editId?: string 
         </Card>
       ) : null}
 
+      <HandInfo game={game} config={config} draft={draft} setDraft={setDraft} handNumber={editing ? (numbers.get(editing.id) ?? 0) : numbers.size + 1} />
+
       <Segmented
         label="Round result"
         value={kind}
@@ -214,6 +234,8 @@ function RecordRoundForm({ game, editId }: { game: GameSession; editId?: string 
                 player={p}
                 selected={draft.winnerId === p.id}
                 testId={`winner-${p.seat}`}
+                wind={handWinds[p.id]}
+                dealer={draft.dealerId === p.id}
                 onSelect={() =>
                   setDraft({
                     winnerId: p.id,
@@ -255,6 +277,7 @@ function RecordRoundForm({ game, editId }: { game: GameSession; editId?: string 
                 players={opponents}
                 value={draft.discarderId ?? ''}
                 onChange={(id) => setDraft({ discarderId: id })}
+                winds={handWinds}
                 testPrefix="discarder"
                 tone="negative"
               />
@@ -268,6 +291,7 @@ function RecordRoundForm({ game, editId }: { game: GameSession; editId?: string 
                 players={opponents}
                 value={draft.liablePlayerId ?? ''}
                 onChange={(id) => setDraft({ liablePlayerId: id })}
+                winds={handWinds}
                 allowNone="No one"
                 testPrefix="liable"
                 tone="negative"
@@ -508,7 +532,21 @@ function StepTitle({ n, done, children }: { n: number; done: boolean; children: 
   );
 }
 
-function PlayerCard({ player, selected, onSelect, testId }: { player: Player; selected: boolean; onSelect: () => void; testId: string }) {
+function PlayerCard({
+  player,
+  selected,
+  onSelect,
+  testId,
+  wind,
+  dealer,
+}: {
+  player: Player;
+  selected: boolean;
+  onSelect: () => void;
+  testId: string;
+  wind?: Seat | undefined;
+  dealer?: boolean;
+}) {
   return (
     <button
       type="button"
@@ -521,7 +559,7 @@ function PlayerCard({ player, selected, onSelect, testId }: { player: Player; se
         selected ? 'border-gold bg-gold-soft elev-gold' : 'border-line bg-surface hover:border-line-strong elev-1',
       )}
     >
-      <SeatBadge seat={player.seat} size="sm" />
+      <SeatBadge seat={wind ?? player.seat} size="sm" dealer={dealer} />
       <span className="mt-2 w-full truncate text-[16px] font-semibold text-ink">{player.name}</span>
       {selected ? <Hand size={18} className="absolute right-3 top-3 text-gold" aria-hidden="true" /> : null}
     </button>
@@ -570,6 +608,8 @@ function ChipRow({
   allowNone,
   testPrefix,
   tone = 'gold',
+  winds,
+  showSeat = true,
 }: {
   label: string;
   players: Player[];
@@ -578,6 +618,9 @@ function ChipRow({
   allowNone?: string;
   testPrefix: string;
   tone?: 'gold' | 'negative';
+  /** Each player's wind for this hand (badges show it instead of the starting seat). */
+  winds?: Record<string, Seat>;
+  showSeat?: boolean;
 }) {
   const activeCls = tone === 'negative' ? 'border-negative/60 bg-negative-soft text-negative' : 'border-gold bg-gold-soft text-gold';
   return (
@@ -606,7 +649,7 @@ function ChipRow({
             value === p.id ? activeCls : 'border-line bg-surface text-ink-2 hover:border-line-strong',
           )}
         >
-          <SeatBadge seat={p.seat} size="sm" />
+          {showSeat ? <SeatBadge seat={winds?.[p.id] ?? p.seat} size="sm" /> : null}
           {p.name}
         </button>
       ))}
@@ -642,19 +685,6 @@ function AdditionalConditions({
 
   return (
     <div className="space-y-3 animate-fade-in">
-      <Card className="p-4">
-        <div className="mb-2 flex items-center justify-between">
-          <div className="text-[15px] font-medium">Dealer this round</div>
-          {config.dealer.enabled ? <Badge tone="gold">Dealer bonus on</Badge> : <Badge>No dealer bonus</Badge>}
-        </div>
-        <ChipRow label="Dealer" players={game.players} value={draft.dealerId ?? ''} onChange={(id) => setDraft({ dealerId: id })} allowNone="None" testPrefix="dealer" />
-        <p className="mt-2 text-[12px] text-ink-3">
-          {config.dealer.enabled
-            ? 'Dealer values from your house rules apply automatically when the dealer wins or pays.'
-            : 'Recorded for reference only. Turn on dealer bonuses in the rules if your group uses them.'}
-        </p>
-      </Card>
-
       {enabledRules.length === 0 ? (
         kind === 'win' ? (
           <Card className="p-4 text-[14px] text-ink-3">No special-hand bonuses are switched on. You can add them in Settings → Scoring rules.</Card>
@@ -852,6 +882,7 @@ function DuringHand({
         ? 'The other three players each pay them.'
         : 'They pay each of the other three players.';
   const pickPlayers = !picking ? [] : picking.collectorId ? game.players.filter((p) => p.id !== picking.collectorId) : game.players;
+  const handWinds = windsFor(game.players, draft.dealerId || undefined);
 
   return (
     <section aria-labelledby="during-hand-title">
@@ -947,8 +978,13 @@ function DuringHand({
                   }}
                   className="pressable flex min-h-[72px] flex-col items-start justify-between rounded-2xl border border-line bg-surface-2 p-3 text-left hover:border-line-strong"
                 >
-                  <SeatBadge seat={p.seat} size="sm" />
+                  <SeatBadge seat={handWinds[p.id] ?? p.seat} size="sm" dealer={draft.dealerId === p.id} />
                   <span className="mt-1.5 w-full truncate text-[15px] font-semibold text-ink">{p.name}</span>
+                  {/flower/.test(picking.rule.id) && draft.dealerId ? (
+                    <PlayerTraits player={{ ...p, animal: undefined }} wind={handWinds[p.id]} />
+                  ) : /animal/.test(picking.rule.id) && p.animal ? (
+                    <PlayerTraits player={p} />
+                  ) : null}
                 </button>
               ))}
             </div>
@@ -980,4 +1016,78 @@ function findRecentSameHand(game: GameSession, input: RoundInput): { by?: string
     }
   }
   return undefined;
+}
+
+/**
+ * Round wind and dealer for the hand being recorded, prefilled by the table
+ * tracker. Shown collapsed; "Change" opens wind and dealer pickers.
+ */
+function HandInfo({
+  game,
+  config,
+  draft,
+  setDraft,
+  handNumber,
+}: {
+  game: GameSession;
+  config: ScoringConfiguration;
+  draft: Draft;
+  setDraft: (patch: Draft) => void;
+  handNumber: number;
+}) {
+  const [open, setOpen] = useState(false);
+  const wind = draft.prevailingWind;
+  const dealer = game.players.find((p) => p.id === draft.dealerId);
+  return (
+    <Card className="mb-4 p-0" data-testid="hand-info">
+      <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} className="pressable flex w-full items-center gap-3 px-4 py-3 text-left">
+        <span className="flex h-9 w-8 shrink-0 items-center justify-center rounded-[9px] border border-black/10 bg-tile font-display text-[18px] font-semibold text-tile-ink shadow-[inset_0_-2px_0_rgba(0,0,0,0.12)]">
+          {wind ? SEAT_GLYPH[wind] : '—'}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-semibold text-ink">
+            {wind ? `${SEAT_LABEL[wind]} round` : 'Round wind not set'} · Hand {handNumber}
+          </span>
+          <span className="block truncate text-[13px] text-ink-3" data-testid="hand-info-dealer">
+            {dealer ? (
+              <>
+                Dealer <span className="font-semibold text-gold">{dealer.name}</span>
+              </>
+            ) : (
+              'No dealer'
+            )}
+            {config.dealer.enabled ? ' · dealer bonus on' : ''}
+          </span>
+        </span>
+        <span className="shrink-0 text-[13px] font-semibold text-emerald">{open ? 'Done' : 'Change'}</span>
+      </button>
+      {open ? (
+        <div className="space-y-3 border-t border-line px-4 pb-4 pt-3 animate-fade-in">
+          <div role="radiogroup" aria-label="Round wind" className="grid grid-cols-4 gap-2">
+            {SEATS.map((s) => (
+              <button
+                key={s}
+                type="button"
+                role="radio"
+                aria-checked={wind === s}
+                onClick={() => setDraft({ prevailingWind: s })}
+                className={cx(
+                  'pressable min-h-10 rounded-xl border text-[13px] font-semibold',
+                  wind === s ? 'border-gold bg-gold-soft text-gold' : 'border-line bg-surface-2 text-ink-2 hover:border-line-strong',
+                )}
+              >
+                <span className="font-display">{SEAT_GLYPH[s]}</span> {SEAT_LABEL[s]}
+              </button>
+            ))}
+          </div>
+          <ChipRow label="Dealer" players={game.players} value={draft.dealerId ?? ''} onChange={(id) => setDraft({ dealerId: id })} allowNone="None" testPrefix="dealer" showSeat={false} />
+          <p className="text-[12px] text-ink-3">
+            {config.dealer.enabled
+              ? 'Dealer values from your house rules apply when the dealer wins or pays.'
+              : 'For the table tracker only. It doesn’t change any payment.'}
+          </p>
+        </div>
+      ) : null}
+    </Card>
+  );
 }

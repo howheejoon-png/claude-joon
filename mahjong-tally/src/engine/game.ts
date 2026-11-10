@@ -17,9 +17,11 @@ import type {
   RoundId,
   RoundInput,
   ScoringConfiguration,
+  Seat,
   ValidationIssue,
 } from '../models/types';
 import { SEATS } from '../models/types';
+import { tableState } from './table';
 import { computeBalances, netByPlayer, validateLedger, type LedgerValidation } from './ledger';
 import { scoreRound, toTransactions, type ScoredRound } from './scoring';
 import { hasErrors, validateConfig, validatePlayers } from './validation';
@@ -381,23 +383,35 @@ export function reopenGame(game: GameSession, ctx: OpContext): GameSession {
 }
 
 /**
- * Suggest the dealer for the next round (UI default only — no financial
- * effect unless dealer rules are configured). Assumption: the dealer keeps
- * the deal after winning or after a drawn round; otherwise the deal passes
- * to the next seat (East → South → West → North).
+ * The dealer for the next hand, from the table tracker (see engine/table.ts).
+ * A UI default only — no financial effect unless dealer bonuses are on.
  */
 export function suggestNextDealer(game: GameSession): PlayerId | undefined {
-  const rounds = activeRounds(game);
-  const last = rounds[rounds.length - 1];
-  if (!last) return game.initialDealerId;
-  const dealer = last.input.dealerId;
-  if (!dealer) return undefined;
-  const o = last.input.outcome;
-  if (o.type === 'draw' || o.winnerId === dealer) return dealer;
-  const players = sortPlayersBySeat(game.players);
-  const idx = players.findIndex((p) => p.id === dealer);
-  if (idx < 0) return undefined;
-  return players[(idx + 1) % players.length]!.id;
+  return tableState(game).dealerId;
+}
+
+/**
+ * Set who deals the next hand and the round wind (e.g. when the app is
+ * started part-way through a game). Optionally changes the first dealer,
+ * whose turn as dealer starts each new round wind.
+ */
+export function setNextHand(
+  game: GameSession,
+  next: { dealerId: PlayerId; prevailingWind: Seat; firstDealerId?: PlayerId },
+  ctx: OpContext,
+): Result<GameSession> {
+  const ids = new Set(game.players.map((p) => p.id));
+  if (!ids.has(next.dealerId)) return fail('DEALER_UNKNOWN', 'Choose who deals the next hand.');
+  if (!SEATS.includes(next.prevailingWind)) return fail('WIND_INVALID', 'Choose the round wind.');
+  if (next.firstDealerId !== undefined && !ids.has(next.firstDealerId)) return fail('DEALER_UNKNOWN', 'Choose the first dealer.');
+  return commit(
+    {
+      ...game,
+      nextHand: { dealerId: next.dealerId, prevailingWind: next.prevailingWind, setAtSeq: game.nextSeq },
+      ...(next.firstDealerId ? { initialDealerId: next.firstDealerId } : {}),
+    },
+    ctx,
+  );
 }
 
 export interface GameStats {
