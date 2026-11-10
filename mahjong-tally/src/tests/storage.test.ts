@@ -89,6 +89,8 @@ describe('TallyStorage (IndexedDB)', () => {
       houseRulesConfirmedAt: null,
       activeGameId: null,
       lastPlayerNames: [],
+      deviceId: null,
+      identities: {},
     });
     await s.saveSettings({ theme: 'light' });
     const rules = config();

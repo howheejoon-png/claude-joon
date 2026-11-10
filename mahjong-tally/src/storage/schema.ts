@@ -19,6 +19,10 @@ export interface AppSettings {
   houseRulesConfirmedAt: string | null;
   activeGameId: string | null;
   lastPlayerNames: string[];
+  /** Random id for this phone, used to recognise its own changes in shared games. */
+  deviceId: string | null;
+  /** Which player uses this phone, per game id. */
+  identities: Record<string, string>;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -27,6 +31,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   houseRulesConfirmedAt: null,
   activeGameId: null,
   lastPlayerNames: [],
+  deviceId: null,
+  identities: {},
 };
 
 export interface BackupFile {

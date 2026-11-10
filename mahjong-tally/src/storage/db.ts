@@ -1,10 +1,12 @@
 /**
  * IndexedDB persistence (via `idb`). The database schema is versioned; each
  * upgrade step runs in order so a device on any older version is migrated
- * forward. Data never leaves the device.
+ * forward. Local games never leave the device; shared games also sync
+ * through the sharing server (see src/sync).
  */
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb';
 import type { GameSession } from '../models/types';
+import type { ShareState } from '../sync/share';
 import {
   BACKUP_FORMAT,
   BACKUP_VERSION,
@@ -15,7 +17,7 @@ import {
 } from './schema';
 
 export const DB_NAME = 'mahjong-tally';
-export const DB_VERSION = 1;
+export const DB_VERSION = 2;
 
 interface TallyDB extends DBSchema {
   games: {
@@ -27,6 +29,11 @@ interface TallyDB extends DBSchema {
     key: string;
     value: unknown;
   };
+  /** Sync state for games shared live (v2+). */
+  shares: {
+    key: string;
+    value: ShareState;
+  };
 }
 
 type Migration = (db: IDBPDatabase<TallyDB>) => void;
@@ -37,6 +44,10 @@ const MIGRATIONS: Migration[] = [
     const games = db.createObjectStore('games', { keyPath: 'id' });
     games.createIndex('byUpdatedAt', 'updatedAt');
     db.createObjectStore('settings');
+  },
+  // v1 -> v2: live sharing.
+  (db) => {
+    db.createObjectStore('shares', { keyPath: 'gameId' });
   },
 ];
 
@@ -120,10 +131,25 @@ export class TallyStorage {
     await db.put('games', game);
   }
 
+  async loadShares(): Promise<ShareState[]> {
+    const db = await this.db();
+    return db.getAll('shares');
+  }
+
+  /** Save a shared game's sync state together with the game it shows (one transaction). */
+  async saveShare(share: ShareState, shown: GameSession | null): Promise<void> {
+    const db = await this.db();
+    const tx = db.transaction(['shares', 'games'], 'readwrite');
+    await tx.objectStore('shares').put(share);
+    if (shown) await tx.objectStore('games').put(shown);
+    await tx.done;
+  }
+
   async deleteGame(id: string): Promise<void> {
     const db = await this.db();
-    const tx = db.transaction(['games', 'settings'], 'readwrite');
+    const tx = db.transaction(['games', 'settings', 'shares'], 'readwrite');
     await tx.objectStore('games').delete(id);
+    await tx.objectStore('shares').delete(id);
     const settings = ((await tx.objectStore('settings').get('app')) as Partial<AppSettings> | undefined) ?? {};
     if (settings.activeGameId === id) {
       await tx.objectStore('settings').put({ ...DEFAULT_SETTINGS, ...settings, activeGameId: null }, 'app');
@@ -155,10 +181,18 @@ export class TallyStorage {
    */
   async importBackup(backup: BackupFile, mode: 'merge' | 'replace'): Promise<number> {
     const db = await this.db();
-    const tx = db.transaction(['games', 'settings'], 'readwrite');
+    const tx = db.transaction(['games', 'settings', 'shares'], 'readwrite');
     const gamesStore = tx.objectStore('games');
-    if (mode === 'replace') await gamesStore.clear();
-    for (const g of backup.games) await gamesStore.put(g);
+    const sharesStore = tx.objectStore('shares');
+    if (mode === 'replace') {
+      await gamesStore.clear();
+      await sharesStore.clear();
+    }
+    // An imported game becomes a local copy: any live link it had on this phone is dropped.
+    for (const g of backup.games) {
+      await gamesStore.put(g);
+      await sharesStore.delete(g.id);
+    }
     const settingsStore = tx.objectStore('settings');
     const current = ((await settingsStore.get('app')) as Partial<AppSettings> | undefined) ?? {};
     const next: AppSettings = {

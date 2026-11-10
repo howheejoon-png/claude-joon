@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import { ChevronRight, Database, Download, FolderOpen, Moon, RotateCcw, Scale, Smartphone, Sun, SunMoon, Upload, Users } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ChevronRight, Database, Download, FolderOpen, Moon, Radio, RotateCcw, Scale, Smartphone, Sun, SunMoon, Upload, UserRound, Users } from 'lucide-react';
 import { navigate } from '../app/router';
 import { useStore } from '../app/store';
 import { PageHeader, SeatBadge } from '../components/domain';
@@ -13,6 +13,7 @@ import { SEATS, type Player, type Seat, type ValidationIssue } from '../models/t
 import { parseBackup, type BackupFile, type ThemePreference } from '../storage/schema';
 import { downloadFile } from '../utils/report';
 import { RulesSummary } from './RulesSummary';
+import { SharePanel } from '../components/Share';
 
 function Row({ icon, label, detail, onClick, testId }: { icon: React.ReactNode; label: string; detail?: string; onClick: () => void; testId?: string }) {
   return (
@@ -34,6 +35,18 @@ export function SettingsPage() {
   const [playersOpen, setPlayersOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
   const [installOpen, setInstallOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [persisted, setPersisted] = useState<boolean | null>(null);
+  useEffect(() => {
+    let alive = true;
+    navigator.storage
+      ?.persisted?.()
+      .then((v) => alive && setPersisted(v))
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, []);
   const [importState, setImportState] = useState<{ backup?: BackupFile; errors?: ValidationIssue[] } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -89,6 +102,23 @@ export function SettingsPage() {
             <Row icon={<Scale size={17} />} label="Scoring rules for this game" detail={`${game.config.name} · applies to new rounds`} onClick={() => navigate('/rules?target=game')} testId="edit-game-rules" />
             <Row icon={<RotateCcw size={17} />} label="Reset scoresheet" detail={`${activeRounds(game).length} rounds — restorable from History`} onClick={() => setResetOpen(true)} />
           </Card>
+
+          <SectionTitle>Playing on several phones</SectionTitle>
+          <Card as="div" className="divide-y divide-line overflow-hidden p-0">
+            <Row
+              icon={<Radio size={17} />}
+              label={store.activeShare ? 'Live game link' : 'Share this game live'}
+              detail={store.activeShare ? 'On · every phone with the link sees and records' : 'Each player follows on their own phone'}
+              onClick={() => setShareOpen(true)}
+              testId="settings-share"
+            />
+            <Row
+              icon={<UserRound size={17} />}
+              label="This phone belongs to"
+              detail={store.me ? store.me.name : 'Not set — tap to choose'}
+              onClick={() => setShareOpen(true)}
+            />
+          </Card>
         </>
       ) : null}
 
@@ -133,15 +163,24 @@ export function SettingsPage() {
         <div className="flex gap-3">
           <Database size={18} className="mt-0.5 shrink-0 text-gold" />
           <p className="text-[13px] leading-relaxed text-ink-3">
-            Everything is stored only on this device (IndexedDB) and is saved after every change. Nothing is uploaded. Clearing browser data deletes your games, so export a
-            backup now and then.
+            Every game is saved on this phone after every change. Games you share live are also kept in your private Mahjong Tally database, so opening the game link
+            restores them on any phone. Games you don’t share never leave this phone: clearing browser data deletes them, so export a backup now and then.
           </p>
+          {persisted === false ? (
+            <p className="mt-2 text-[13px] leading-relaxed text-gold" data-testid="storage-warning">
+              This browser may clear saved games when it needs space, or when a private tab or in-app browser closes. Open the app from your home screen (Settings → Install
+              on your phone) so games are kept.
+            </p>
+          ) : persisted ? (
+            <p className="mt-2 text-[13px] text-positive">Saved games are kept permanently on this phone.</p>
+          ) : null}
         </div>
       </Card>
       <p className="mt-4 text-center text-[12px] text-ink-3">Mahjong Tally v1.0 · Every point accounted for.</p>
 
       {game ? <PlayersSheet open={playersOpen} onClose={() => setPlayersOpen(false)} players={game.players} /> : null}
       <InstallGuide open={installOpen} onClose={() => setInstallOpen(false)} />
+      <SharePanel open={shareOpen} onClose={() => setShareOpen(false)} />
       <ConfirmDialog
         open={resetOpen}
         title="Reset the scoresheet?"

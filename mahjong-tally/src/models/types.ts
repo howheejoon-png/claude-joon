@@ -248,6 +248,8 @@ export interface RoundRevision {
   action: 'created' | 'edited' | 'deleted' | 'restored' | 'rescored';
   /** Net per player for the round before this change (cents). */
   previousNet?: Record<PlayerId, Cents>;
+  /** Who made the change (player name), when known — shown in History. */
+  by?: string;
 }
 
 // ---------------------------------------------------------------------------

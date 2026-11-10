@@ -95,10 +95,9 @@ test('game survives a reload and reopening from the start screen', async ({ page
   await page.reload();
   await expectScores(page, expected);
 
-  // A fresh tab in the same profile, opening at the app's start URL.
+  // A fresh tab in the same profile, opening at the app's start URL, lands back in the game.
   const second = await context.newPage();
   await second.goto('/');
-  await second.getByTestId('continue-game').click();
   await expectScores(second, expected);
 });
 

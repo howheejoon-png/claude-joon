@@ -29,7 +29,11 @@ export interface OpContext {
   now: string;
   /** Generates a unique id. */
   newId: () => string;
+  /** Who is making the change (player name), recorded on round revisions. */
+  by?: string;
 }
+
+const byOf = (ctx: OpContext) => (ctx.by ? { by: ctx.by } : {});
 
 function fail<T>(code: string, message: string): Result<T> {
   return { ok: false, errors: [{ code, message, severity: 'error' }] };
@@ -172,7 +176,7 @@ export function recordRound(
     transactions: preview.value.transactions,
     ...(preview.value.scored.effectiveTai !== undefined ? { effectiveTai: preview.value.scored.effectiveTai } : {}),
     notes: preview.value.scored.notes,
-    revisions: [{ at: ctx.now, action: 'created' }],
+    revisions: [{ at: ctx.now, action: 'created', ...byOf(ctx) }],
   };
   const next = commit({ ...game, rounds: [...game.rounds, round], nextSeq: game.nextSeq + 1 }, ctx);
   if (!next.ok) return next;
@@ -218,7 +222,7 @@ export function editRound(
     transactions: preview.value.transactions,
     ...(preview.value.scored.effectiveTai !== undefined ? { effectiveTai: preview.value.scored.effectiveTai } : {}),
     notes: preview.value.scored.notes,
-    revisions: [...existing.revisions, { at: ctx.now, action: 'edited', previousNet: roundNet(game, existing) }],
+    revisions: [...existing.revisions, { at: ctx.now, action: 'edited', previousNet: roundNet(game, existing), ...byOf(ctx) }],
   };
   const next = commit({ ...game, rounds: game.rounds.map((r) => (r.id === roundId ? round : r)) }, ctx);
   if (!next.ok) return next;
@@ -233,7 +237,7 @@ export function deleteRound(game: GameSession, roundId: RoundId, ctx: OpContext)
     ...existing,
     deletedAt: ctx.now,
     updatedAt: ctx.now,
-    revisions: [...existing.revisions, { at: ctx.now, action: 'deleted', previousNet: roundNet(game, existing) }],
+    revisions: [...existing.revisions, { at: ctx.now, action: 'deleted', previousNet: roundNet(game, existing), ...byOf(ctx) }],
   };
   return commit({ ...game, rounds: game.rounds.map((r) => (r.id === roundId ? round : r)) }, ctx);
 }
@@ -246,7 +250,7 @@ export function restoreRound(game: GameSession, roundId: RoundId, ctx: OpContext
   const round: Round = {
     ...rest,
     updatedAt: ctx.now,
-    revisions: [...existing.revisions, { at: ctx.now, action: 'restored' }],
+    revisions: [...existing.revisions, { at: ctx.now, action: 'restored', ...byOf(ctx) }],
   };
   return commit({ ...game, rounds: game.rounds.map((r) => (r.id === roundId ? round : r)) }, ctx);
 }
@@ -360,7 +364,7 @@ export function applyRescore(game: GameSession, config: ScoringConfiguration, ct
       transactions: p.value.transactions,
       ...(p.value.scored.effectiveTai !== undefined ? { effectiveTai: p.value.scored.effectiveTai } : {}),
       notes: p.value.scored.notes,
-      revisions: [...round.revisions, { at: ctx.now, action: 'rescored', previousNet: roundNet(game, round) }],
+      revisions: [...round.revisions, { at: ctx.now, action: 'rescored', previousNet: roundNet(game, round), ...byOf(ctx) }],
     };
     rounds = rounds.map((r) => (r.id === round.id ? updated : r));
   }
