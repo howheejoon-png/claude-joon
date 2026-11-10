@@ -382,7 +382,7 @@ function RecordRoundForm({ game, editId }: { game: GameSession; editId?: string 
             </div>
           }
         >
-          <ReviewContent game={game} input={input} preview={preview.value} editingNet={editing ? roundNet(game, editing) : undefined} />
+          <ReviewContent game={game} input={input} preview={preview.value} editingNet={editing ? roundNet(game, editing) : undefined} shared={Boolean(store.activeShare)} />
         </Sheet>
       ) : null}
     </div>
@@ -394,9 +394,11 @@ function ReviewContent({
   input,
   preview,
   editingNet,
+  shared,
 }: {
   game: GameSession;
   input: RoundInput;
+  shared?: boolean;
   preview: NonNullable<ReturnType<typeof previewRound> & { ok: true }>['value'];
   editingNet?: Record<PlayerId, number> | undefined;
 }) {
@@ -405,9 +407,16 @@ function ReviewContent({
   const o = input.outcome;
   const total = Object.values(preview.net).reduce((a, b) => a + b, 0);
   const passed = preview.validation.ok && total === 0;
+  const duplicate = editingNet || !shared ? undefined : findRecentSameHand(game, input);
   const [showDetail, setShowDetail] = useState(false);
   return (
     <div className="space-y-4" data-testid="payment-preview">
+      {duplicate ? (
+        <div role="alert" className="rounded-2xl border border-gold/40 bg-gold-soft px-3 py-2.5 text-[14px] text-gold" data-testid="duplicate-warning">
+          {duplicate.by ?? 'Someone'} recorded the same hand {duplicate.minutes < 1 ? 'just now' : `${duplicate.minutes} min ago`} (round {duplicate.number}). Check it isn’t
+          being recorded twice.
+        </div>
+      ) : null}
       <dl className="grid grid-cols-2 gap-2 text-[14px]">
         <div className="rounded-2xl bg-surface-2 p-3">
           <dt className="text-[12px] text-ink-3">{o.type === 'win' ? 'Winner' : 'Result'}</dt>
@@ -948,4 +957,27 @@ function DuringHand({
       </Sheet>
     </section>
   );
+}
+
+/**
+ * When several phones can record, two people may enter the same hand. Find an
+ * identical winning hand recorded in the last few minutes so the review can warn.
+ */
+function findRecentSameHand(game: GameSession, input: RoundInput): { by?: string; minutes: number; number: number } | undefined {
+  const o = input.outcome;
+  if (o.type !== 'win') return undefined;
+  const now = Date.now();
+  const numbers = roundNumbers(game);
+  const rounds = game.rounds.filter((r) => !r.deletedAt);
+  for (let i = rounds.length - 1; i >= 0; i -= 1) {
+    const r = rounds[i]!;
+    const ago = now - Date.parse(r.createdAt);
+    if (!(ago >= 0 && ago < 5 * 60_000)) continue;
+    const p = r.input.outcome;
+    if (p.type === 'win' && p.winnerId === o.winnerId && p.method === o.method && p.tai === o.tai && (p.discarderId ?? '') === (o.discarderId ?? '')) {
+      const by = r.revisions[0]?.by;
+      return { ...(by ? { by } : {}), minutes: Math.floor(ago / 60_000), number: numbers.get(r.id) ?? 0 };
+    }
+  }
+  return undefined;
 }

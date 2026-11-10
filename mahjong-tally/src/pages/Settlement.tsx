@@ -115,11 +115,15 @@ export function Settlement() {
         <>
           <Card as="div" className="divide-y divide-line p-0" aria-label="Suggested settlement">
             {result.plan.transfers.map((t, i) => (
-              <div key={i} className="flex items-center gap-2 px-4 py-3.5" data-testid="settlement-transfer">
+              <div
+                key={i}
+                className={cx('flex items-center gap-2 px-4 py-3.5', store.me && (t.fromPlayerId === store.me.id || t.toPlayerId === store.me.id) && 'bg-gold-soft')}
+                data-testid="settlement-transfer"
+              >
                 <span className="min-w-0 flex-1 text-[15px]">
-                  <span className="font-semibold text-negative">{name(t.fromPlayerId)}</span>
+                  <span className="font-semibold text-negative">{t.fromPlayerId === store.me?.id ? 'You' : name(t.fromPlayerId)}</span>
                   <ArrowRight size={14} className="mx-1.5 inline text-ink-3" aria-label="pays" />
-                  <span className="font-semibold text-positive">{name(t.toPlayerId)}</span>
+                  <span className="font-semibold text-positive">{t.toPlayerId === store.me?.id ? 'You' : name(t.toPlayerId)}</span>
                 </span>
                 <span className="num text-[17px] font-bold">{formatCents(t.amountCents)}</span>
               </div>

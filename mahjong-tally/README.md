@@ -20,6 +20,7 @@ Mahjong Tally is an offline-first Progressive Web App for four friends playing S
 | **Live scoreboard** | 2×2 player cards (net, wins, losses, seat, dealer), total balance, current round, duration, biggest win, recent rounds, persistent **All Balances Tallied** indicator |
 | **History** | Expandable per-round breakdown (per-player amounts, itemised transactions with calculation steps, rules used). Undo last, edit, delete, restore from “Recently deleted” |
 | **Settlement** | Totals, net balances, verification, and a payment plan that is guaranteed to use the fewest transfers. Copy, share via the share sheet or WhatsApp (never sent automatically), export `.txt` + `.csv` |
+| **Live sharing** | One link (or QR code) for the whole table. Each phone opens it, taps **which player they are**, and sees their own balance first, with what they'd pay or receive. Anyone can record, edit or undo rounds from their own phone. Every phone updates within a few seconds, keeps working offline, and catches up when back online. History shows who recorded each round, and the app warns if two phones enter the same hand. |
 | **Settings** | Theme (auto/dark/light), players & seats, current-game rules, default house rules, explicit **re-score past rounds** with preview, reset, saved games, JSON backup export/import |
 
 ---
@@ -78,6 +79,10 @@ src/
     game.ts              pure game operations: record, edit, delete, restore, undo, rescore …
     audit.ts             game health check (ledger + re-computation audit)
   config/defaults.ts     example rules (labelled), table generator, seat labels
+  sync/
+    ops.ts               serialisable game operations + deterministic reducer
+    share.ts             push / pull / replay of a shared game's log
+    remote.ts            Supabase RPC transport (+ in-memory transport for tests)
   storage/
     db.ts                IndexedDB (idb) with versioned schema migrations, backup import/export
     schema.ts            document migrations, backup parsing & verification
@@ -164,8 +169,20 @@ The installed app opens full-screen without browser chrome, respects the iPhone 
 
 ---
 
+## Live sharing
+
+Every change to a game is a small operation (`src/sync/ops.ts`): record, edit, delete, restore, rules change, and so on. A local game just applies it. A shared game also appends it to an ordered, append-only log on the server. Every phone replays the same log through the same pure scoring engine, so every phone computes the **identical** ledger. There is no merging of balances and no "last write wins".
+
+- **Server:** the Supabase project `yxmzafodsreliuwpjoau` (free plan, Singapore). Two tables, `mt_games` and `mt_ops`, are not readable directly. Phones use only two functions: `mt_append_op`, which is idempotent per operation id so retries never double-count, and `mt_get_ops`. The schema is in `supabase/migrations/`.
+- **Access:** the game code in the link is a random 144-bit secret. There are no accounts. The publishable API key in `src/sync/remote.ts` is public by design, and you can override it with `VITE_SYNC_URL` / `VITE_SYNC_KEY` at build time.
+- **Sync:** `src/sync/share.ts` pushes this phone's queued operations, pulls new ones every 3 seconds while the app is open, and replays them. Changes made offline stay queued on the phone. If another phone's change makes yours impossible (for example, you edited a round someone else deleted), every phone skips it the same way and you get a message.
+- **Free-plan note:** Supabase pauses free projects after about a week with no activity. Scoring keeps working on each phone and changes stay queued. Sharing resumes once the project is restored in the Supabase dashboard.
+- **Tests:** `src/tests/sync.test.ts` includes a randomized test in which three phones record, edit and delete while going offline, and must always converge to one exact, balanced ledger. `e2e/sharing.spec.ts` drives two real browsers sharing one game. `LIVE_SYNC=1 npx vitest run src/tests/live.test.ts` checks the real server.
+
 ## Data & privacy
 
-- All data lives in the browser's IndexedDB on the device and is saved after every change. The app also asks the browser for persistent storage.
-- Nothing is uploaded. WhatsApp sharing only opens your share sheet or a `wa.me` link with the text pre-filled. You review and send it yourself.
+- Every game is saved in the browser's IndexedDB on the device after every change. The app also asks the browser for persistent storage.
+- Games you **don't** share never leave the phone.
+- Games you **share live** are also stored in the app's own Supabase database (see *Live sharing* below), so the other phones can follow them and a phone that lost its data gets the game back by opening the link again. Only someone with the link can read or change a shared game.
+- WhatsApp sharing only opens your share sheet or a `wa.me` link with the text pre-filled. You review and send it yourself.
 - Clearing site data deletes your games. Use **Settings → Export backup** regularly. Imports are fully verified (structure, migrations, ledger validation and audit) before anything is written, and corrupted backups are rejected with an explanation.

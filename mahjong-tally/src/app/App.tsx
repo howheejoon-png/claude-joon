@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AlertTriangle, RefreshCw, X } from 'lucide-react';
 import { registerSW } from 'virtual:pwa-register';
 import { TabBar } from '../components/domain';
@@ -7,6 +7,7 @@ import { Button, IconButton } from '../components/ui';
 import { Dashboard } from '../pages/Dashboard';
 import { GamesPage } from '../pages/GamesPage';
 import { HistoryPage } from '../pages/HistoryPage';
+import { JoinPage } from '../pages/JoinPage';
 import { Landing } from '../pages/Landing';
 import { NewGame } from '../pages/NewGame';
 import { RecordRound } from '../pages/RecordRound';
@@ -62,6 +63,25 @@ function Shell() {
   const route = useRoute();
   useTheme();
   const sw = useServiceWorker();
+  const toast = useToast();
+
+  // Opening the app (or its home-screen icon) goes straight back to the game in progress.
+  const resumed = useRef(false);
+  useEffect(() => {
+    if (store.status !== 'ready' || resumed.current) return;
+    resumed.current = true;
+    if (route.path === '/' && store.activeGame) navigate('/home', { replace: true });
+  }, [store.status, store.activeGame, route.path]);
+
+  // Messages from the sync loop (e.g. a change that another phone's edit made impossible).
+  const lastNotice = useRef(0);
+  useEffect(() => {
+    const n = store.notice;
+    if (n && n.id !== lastNotice.current) {
+      lastNotice.current = n.id;
+      toast({ message: n.message, tone: n.tone });
+    }
+  }, [store.notice, toast]);
 
   // Redirect away from pages that need house rules before they exist.
   useEffect(() => {
@@ -91,7 +111,11 @@ function Shell() {
 
   const isTab = TAB_PATHS.has(route.path);
   let page: React.ReactNode;
-  switch (route.path) {
+  const joinCode = route.path.startsWith('/join/') ? route.path.slice('/join/'.length) : null;
+  switch (joinCode !== null ? '/join' : route.path) {
+    case '/join':
+      page = <JoinPage key={joinCode} code={joinCode ?? ''} />;
+      break;
     case '/':
       page = <Landing />;
       break;

@@ -109,6 +109,7 @@ export function HistoryPage({ openId }: { openId?: string | undefined }) {
                     <span className="block truncate text-[15px] font-semibold">{d.title}</span>
                     <span className="block truncate text-[12px] text-ink-3">
                       {d.subtitle} · {formatDateTime(r.createdAt)}
+                      {r.revisions[0]?.by ? ` · by ${r.revisions[0].by}` : ''}
                     </span>
                     <span className="mt-1 flex flex-wrap gap-1">
                       {adjustments.length ? <Badge tone="gold">{adjustments.length} adjustment{adjustments.length > 1 ? 's' : ''}</Badge> : null}
@@ -137,7 +138,7 @@ export function HistoryPage({ openId }: { openId?: string | undefined }) {
                     <div className="text-[12px] text-ink-3">
                       Scored with “{r.configSnapshot.name}” ({r.configSnapshot.stakeLabel}).{' '}
                       {r.revisions.length > 1
-                        ? `History: ${r.revisions.map((x) => `${x.action} ${formatDateTime(x.at)}`).join(' · ')}`
+                        ? `History: ${r.revisions.map((x) => `${x.action}${x.by ? ` by ${x.by}` : ''} ${formatDateTime(x.at)}`).join(' · ')}`
                         : ''}
                     </div>
                     {game.status === 'active' ? (
