@@ -21,6 +21,8 @@ Mahjong Tally is an offline-first Progressive Web App for four friends playing S
 | **History** | Expandable per-round breakdown (per-player amounts, itemised transactions with calculation steps, rules used). Undo last, edit, delete, restore from “Recently deleted” |
 | **Settlement** | Totals, net balances, verification, and a payment plan that is guaranteed to use the fewest transfers. Copy, share via the share sheet or WhatsApp (never sent automatically), export `.txt` + `.csv` |
 | **Live sharing** | One link (or QR code) for the whole table. Each phone opens it, taps **which player they are**, and sees their own balance first, with what they'd pay or receive. Anyone can record, edit or undo rounds from their own phone. Every phone updates within a few seconds, keeps working offline, and catches up when back online. History shows who recorded each round, and the app warns if two phones enter the same hand. |
+| **Table tracker** | Moves the deal and round wind on automatically. The dealer keeps the deal after winning, and after a drawn hand unless a kong was made; this is configurable under Rules → Dealer. Each card shows the player's wind for this hand, the dealer, their own flowers (which follow their wind: East 1 梅春, South 2 蘭夏, West 3 菊秋, North 4 竹冬) and their spirit animal. Animals can be drawn at random when starting a game. Tap the table strip to set the next hand by hand, e.g. when you start part-way through a game. |
+| **Season leaderboard** | Totals across every night on the phone, all time or this year: rank, total, average per night, nights up/down, best night, winning streaks. Highlights: biggest hand, kong king, self-draw specialist, longest streak. Shareable as text. Players are matched by name. |
 | **Settings** | Theme (auto/dark/light), players & seats, current-game rules, default house rules, explicit **re-score past rounds** with preview, reset, saved games, JSON backup export/import |
 
 ---
@@ -79,6 +81,8 @@ src/
     game.ts              pure game operations: record, edit, delete, restore, undo, rescore …
     audit.ts             game health check (ledger + re-computation audit)
   config/defaults.ts     example rules (labelled), table generator, seat labels
+  engine/table.ts        dealer / round-wind / seat-wind / flower tracker (replays the hands)
+  engine/season.ts       season leaderboard across games
   sync/
     ops.ts               serialisable game operations + deterministic reducer
     share.ts             push / pull / replay of a shared game's log

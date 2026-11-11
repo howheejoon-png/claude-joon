@@ -1,4 +1,4 @@
-import type { BonusRule, Cents, PayoutRow, ScoringConfiguration, Seat } from '../models/types';
+import type { BonusRule, Cents, PayoutRow, RotationRule, ScoringConfiguration, Seat, SpiritAnimal } from '../models/types';
 import { formatCents, roundRational } from '../utils/money';
 
 export const SEAT_LABEL: Record<Seat, string> = {
@@ -15,6 +15,25 @@ export const SEAT_GLYPH: Record<Seat, string> = {
   west: '西',
   north: '北',
 };
+
+/** Spirit animals: label, emoji and character. */
+export const SPIRIT_ANIMALS: Record<SpiritAnimal, { label: string; emoji: string; glyph: string }> = {
+  mouse: { label: 'Mouse', emoji: '🐭', glyph: '鼠' },
+  cat: { label: 'Cat', emoji: '🐱', glyph: '貓' },
+  chicken: { label: 'Chicken', emoji: '🐔', glyph: '雞' },
+  centipede: { label: 'Centipede', emoji: '🐛', glyph: '蜈蚣' },
+};
+
+/** A player's own flowers follow their wind for the hand: East 1 (梅 春), South 2, West 3, North 4. */
+export const FLOWERS: Record<Seat, { number: number; glyphs: string; names: string }> = {
+  east: { number: 1, glyphs: '梅 春', names: 'plum, spring' },
+  south: { number: 2, glyphs: '蘭 夏', names: 'orchid, summer' },
+  west: { number: 3, glyphs: '菊 秋', names: 'chrysanthemum, autumn' },
+  north: { number: 4, glyphs: '竹 冬', names: 'bamboo, winter' },
+};
+
+/** The table's rule: the dealer keeps the deal after winning, or after a drawn hand with no kong. */
+export const DEFAULT_ROTATION: RotationRule = { dealerKeepsOnWin: true, onDraw: 'keeps_unless_kong' };
 
 export const DEFAULT_PLAYER_NAMES = ['Player A', 'Player B', 'Player C', 'Player D'] as const;
 
@@ -74,17 +93,18 @@ export function instantPayoutTemplates(baseUnitCents: Cents): BonusRule[] {
   const u = baseUnitCents;
   // Two thirds of the base unit, rounded to the nearest cent ($3 base -> $2).
   const small = roundRational(2 * u, 3, 'nearest', 1).cents ?? u;
-  const t = (id: string, name: string, kind: BonusRule['kind'], value: number): BonusRule => ({
+  const t = (id: string, name: string, kind: BonusRule['kind'], value: number, countsAsKong = false): BonusRule => ({
     id,
     name,
     kind,
     value,
     enabled: true,
     isExample: true,
+    ...(countsAsKong ? { countsAsKong: true } : {}),
   });
   return [
-    t('sg-kong-discard', 'Kong from a discard (明杠)', 'collect_from_one', u * 2),
-    t('sg-kong-self', 'Self-drawn kong (自摸杠)', 'collect_from_each', small),
+    t('sg-kong-discard', 'Kong from a discard (明杠)', 'collect_from_one', u * 2, true),
+    t('sg-kong-self', 'Self-drawn kong (自摸杠)', 'collect_from_each', small, true),
     t('sg-flower-own', 'Own flower', 'collect_from_each', small),
     t('sg-flower-other', 'Someone else’s flower', 'collect_from_one', small),
     t('sg-animal-own', 'Own spirit animal', 'collect_from_each', small),
@@ -208,6 +228,7 @@ export function exampleConfiguration(): ScoringConfiguration {
       extraCentsWhenDealerPays: 0,
     },
     bonusRules: exampleBonusRules(EXAMPLE_TABLE_OPTIONS.baseUnitCents),
+    rotation: { ...DEFAULT_ROTATION },
   };
 }
 

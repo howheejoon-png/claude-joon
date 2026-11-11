@@ -14,6 +14,7 @@ import { parseBackup, type BackupFile, type ThemePreference } from '../storage/s
 import { downloadFile } from '../utils/report';
 import { RulesSummary } from './RulesSummary';
 import { SharePanel } from '../components/Share';
+import { AnimalPicker } from '../components/Table';
 
 function Row({ icon, label, detail, onClick, testId }: { icon: React.ReactNode; label: string; detail?: string; onClick: () => void; testId?: string }) {
   return (
@@ -288,6 +289,10 @@ function PlayersSheet({ open, onClose, players }: { open: boolean; onClose: () =
             </div>
           </div>
         ))}
+        <div>
+          <div className="mb-2 text-[14px] font-semibold text-ink">Spirit animals</div>
+          <AnimalPicker players={draft} onChange={setDraft} />
+        </div>
         <ErrorList errors={[...issues.filter((i) => i.severity === 'error'), ...errors]} />
       </div>
     </Sheet>

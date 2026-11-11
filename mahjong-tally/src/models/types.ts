@@ -16,10 +16,17 @@ export type TransactionId = string;
 export type Seat = 'east' | 'south' | 'west' | 'north';
 export const SEATS: readonly Seat[] = ['east', 'south', 'west', 'north'] as const;
 
+/** Spirit animals assigned to players at the start of a game (one each). */
+export type SpiritAnimal = 'mouse' | 'cat' | 'chicken' | 'centipede';
+export const SPIRIT_ANIMAL_IDS: readonly SpiritAnimal[] = ['mouse', 'cat', 'chicken', 'centipede'] as const;
+
 export interface Player {
   id: PlayerId;
   name: string;
+  /** Where the player sits (the wind of that seat when the first dealer is East). */
   seat: Seat;
+  /** Optional spirit animal: drawing it yourself is paid by everyone. */
+  animal?: SpiritAnimal;
 }
 
 // ---------------------------------------------------------------------------
@@ -117,6 +124,19 @@ export interface BonusRule {
   enabled: boolean;
   /** Marked as a sample so the UI can label it as non-authoritative. */
   isExample?: boolean;
+  /** A kong payout: a drawn hand with a kong passes the deal (see RotationRule). */
+  countsAsKong?: boolean;
+}
+
+/**
+ * When the deal moves on. Informational only: it drives the dealer / wind
+ * tracker and never changes any payment.
+ */
+export interface RotationRule {
+  /** The dealer keeps the deal after winning. */
+  dealerKeepsOnWin: boolean;
+  /** After a drawn hand: keep the deal, keep it unless a kong was made, or pass it. */
+  onDraw: 'keeps' | 'keeps_unless_kong' | 'passes';
 }
 
 export interface ScoringConfiguration {
@@ -135,6 +155,8 @@ export interface ScoringConfiguration {
   rounding: RoundingRule;
   dealer: DealerRule;
   bonusRules: BonusRule[];
+  /** Dealer rotation (optional for rules saved before it existed). */
+  rotation?: RotationRule;
 }
 
 // ---------------------------------------------------------------------------
@@ -184,6 +206,8 @@ export type RoundOutcome = WinOutcome | DrawOutcome;
 export interface RoundInput {
   outcome: RoundOutcome;
   dealerId?: PlayerId;
+  /** Round (prevailing) wind of this hand. Informational; scoring ignores it. */
+  prevailingWind?: Seat;
   bonuses: AppliedBonus[];
   manualAdjustments: ManualAdjustment[];
 }
@@ -270,6 +294,11 @@ export interface GameSession {
   players: Player[];
   /** Optional initial dealer. */
   initialDealerId?: PlayerId;
+  /**
+   * Manual "the next hand is…" setting (e.g. started the app mid-game). Applies
+   * only while no round with seq >= setAtSeq exists.
+   */
+  nextHand?: { dealerId: PlayerId; prevailingWind: Seat; setAtSeq: number };
   /** Rules used for NEW rounds. Existing rounds keep their own snapshot. */
   config: ScoringConfiguration;
   /** All rounds, including soft-deleted ones (see Round.deletedAt). */

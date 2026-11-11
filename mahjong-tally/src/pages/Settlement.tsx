@@ -1,5 +1,6 @@
-import { ArrowRight, CheckCircle2, Copy, FileDown, Flag, MessageCircle, ShieldAlert } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Copy, FileDown, Flag, MessageCircle, ShieldAlert, Trophy } from 'lucide-react';
 import { useState } from 'react';
+import { navigate } from '../app/router';
 import { useStore } from '../app/store';
 import { Amount, BalanceIndicator, PageHeader, SeatBadge, playerMap } from '../components/domain';
 import { ConfirmDialog, useToast } from '../components/overlay';
@@ -149,7 +150,11 @@ export function Settlement() {
       </div>
       <p className="mt-2 px-1 text-center text-[12px] text-ink-3">Sharing opens your share sheet or WhatsApp with the summary. Nothing is sent automatically.</p>
 
-      <div className="mt-6">
+      <Button className="mt-4" block variant="ghost" icon={<Trophy size={16} />} onClick={() => navigate('/season')} data-testid="settlement-season">
+        Season leaderboard
+      </Button>
+
+      <div className="mt-4">
         {game.status === 'active' ? (
           <Button block variant="gold" icon={<Flag size={16} />} onClick={() => setFinishOpen(true)}>
             Finish game
